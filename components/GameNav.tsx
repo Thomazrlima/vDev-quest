@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { CrownIcon, GridIcon, LogoutIcon, SparkIcon } from "./icons";
+import { CrownIcon, GridIcon, LogoutIcon, ScrollIcon, SparkIcon } from "./icons";
 
 const items = [
   { href: "/dashboard", label: "Painel", icon: GridIcon },
+  { href: "/moderation", label: "Moderação", icon: SparkIcon },
+  { href: "/missions", label: "Missões", icon: ScrollIcon },
   { href: "/characters", label: "Personagem", icon: SparkIcon },
   { href: "/ranking", label: "Ranking", icon: CrownIcon }
 ];
