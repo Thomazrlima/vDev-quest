@@ -1,32 +1,33 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Badge } from "@/components/Badge";
 import { GameNav } from "@/components/GameNav";
-import { ManaSeedAnimatedCharacter } from "@/components/ManaSeedAnimatedCharacter";
 import { ManaSeedAvatar } from "@/components/ManaSeedAvatar";
+import { ManaSeedSpriteLayers } from "@/components/ManaSeedSpriteLayers";
 import { CrownIcon, SparkIcon } from "@/components/icons";
 
 const leaders = [
-  { position: 1, name: "RafaelDev", coupons: 42, exp: "18.560", badges: ["gold", "gold", "blue"] as const },
-  { position: 2, name: "CamilaCode", coupons: 38, exp: "17.940", badges: ["silver", "green", "purple"] as const },
-  { position: 3, name: "LucasByte", coupons: 34, exp: "17.120", badges: ["gold", "blue", "purple"] as const }
+  { position: 1, name: "RafaelDev", coupons: 42, exp: "18.560" },
+  { position: 2, name: "CamilaCode", coupons: 38, exp: "17.940" },
+  { position: 3, name: "LucasByte", coupons: 34, exp: "17.120" }
 ];
 
 const adventurers = [
-  { position: 4, name: "MarcosCmd", title: "Guerreiro de Terminal", coupons: 32, avatar: 3, exp: "15.870", progress: 88, badges: ["gold", "green", "blue"] as const },
-  { position: 5, name: "BiaScript", title: "Tecelã de Interfaces", coupons: 30, avatar: 4, exp: "14.260", progress: 78, badges: ["silver", "purple", "green"] as const },
-  { position: 6, name: "DevJunior", title: "Paladino do Frontend", coupons: 29, avatar: 5, exp: "13.870", progress: 72, badges: ["gold", "blue", "purple"] as const },
-  { position: 7, name: "AnaQA", title: "Sentinela dos Bugs", coupons: 27, avatar: 6, exp: "12.450", progress: 65, badges: ["silver", "green"] as const },
-  { position: 8, name: "GuiTeste", title: "Mago dos Testes", coupons: 25, avatar: 7, exp: "11.780", progress: 57, badges: ["gold", "purple"] as const },
-  { position: 9, name: "LeoStack", title: "Ranger Full-Stack", coupons: 24, avatar: 2, exp: "10.980", progress: 49, badges: ["silver", "blue"] as const },
-  { position: 10, name: "JulioAPI", title: "Alquimista de APIs", coupons: 22, avatar: 8, exp: "9.650", progress: 42, badges: ["gold", "green"] as const }
+  { position: 4, name: "MarcosCmd", title: "Guerreiro de Terminal", coupons: 32, avatar: 3, exp: "15.870", progress: 88 },
+  { position: 5, name: "BiaScript", title: "Tecelã de Interfaces", coupons: 30, avatar: 4, exp: "14.260", progress: 78 },
+  { position: 6, name: "DevJunior", title: "Paladino do Frontend", coupons: 29, avatar: 5, exp: "13.870", progress: 72 },
+  { position: 7, name: "AnaQA", title: "Sentinela dos Bugs", coupons: 27, avatar: 6, exp: "12.450", progress: 65 },
+  { position: 8, name: "GuiTeste", title: "Mago dos Testes", coupons: 25, avatar: 7, exp: "11.780", progress: 57 },
+  { position: 9, name: "LeoStack", title: "Ranger Full-Stack", coupons: 24, avatar: 2, exp: "10.980", progress: 49 },
+  { position: 10, name: "JulioAPI", title: "Alquimista de APIs", coupons: 22, avatar: 8, exp: "9.650", progress: 42 }
 ];
 
-export default function RankingPage() {
-  const [scope, setScope] = useState<"global" | "semanal">("global");
-  const visibleAdventurers = useMemo(() => scope === "global" ? adventurers : [...adventurers].sort((a, b) => b.progress - a.progress), [scope]);
+const podiumBorders = {
+  1: "border-[#d99a2b]",
+  2: "border-[#9a9a8f]",
+  3: "border-[#a9683d]"
+} as const;
 
+export default function RankingPage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_50%_10%,rgba(125,74,18,.16),transparent_35%),linear-gradient(rgba(7,8,7,.93),rgba(7,8,7,.98)),url('/art/quest-landscape.png')] bg-cover bg-fixed bg-center">
       <GameNav />
@@ -41,13 +42,6 @@ export default function RankingPage() {
           <h1 className="pixel-title mx-auto mt-3 max-w-4xl text-3xl sm:text-4xl lg:text-5xl">Ranking de aventureiros</h1>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#999483]">Os maiores heróis, os códigos mais lendários. Conquiste cupons e escreva seu nome no topo.</p>
 
-          <div className="mx-auto mt-6 flex w-fit border-2 border-[#55401d] bg-[#10120f] p-1 shadow-[4px_4px_0_#050605]">
-            {(["global", "semanal"] as const).map((item) => (
-              <button key={item} onClick={() => setScope(item)} className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest transition ${scope === item ? "bg-[#664616] text-gold-light" : "text-[#767267] hover:text-cream"}`}>
-                {item}
-              </button>
-            ))}
-          </div>
         </header>
 
         <section className="mx-auto mt-12 grid max-w-5xl items-end gap-5 md:grid-cols-3" aria-label="Pódio dos três melhores aventureiros">
@@ -55,20 +49,15 @@ export default function RankingPage() {
             const first = leader.position === 1;
             return (
               <article key={leader.position} className={`relative flex flex-col items-center text-center ${leader.position === 1 ? "md:order-2" : leader.position === 2 ? "md:order-1" : "md:order-3"}`}>
-                <div className={`pixel-panel relative w-full border-0 px-4 pb-5 pt-7 shadow-[7px_7px_0_rgba(0,0,0,.72)] ${first ? "bg-[#211b0f] md:pb-8 md:pt-9" : ""}`}>
+                <div className={`pixel-panel relative w-full border-4 px-4 pb-5 pt-7 shadow-[7px_7px_0_rgba(0,0,0,.72)] ${podiumBorders[leader.position as 1 | 2 | 3]} ${first ? "bg-[#211b0f] md:pb-8 md:pt-9" : ""}`}>
                   {first ? <span className="absolute -top-6 left-1/2 z-20 grid h-12 w-12 -translate-x-1/2 place-items-center bg-[#d99a2b] text-[#171109] shadow-[4px_4px_0_#4b2c0a]" aria-label="Primeiro lugar"><CrownIcon className="h-7 w-7" /></span> : null}
-                  <div className={`relative mx-auto grid place-items-end ${first ? "-mt-3 h-72 sm:h-80" : "h-60 sm:h-64"}`}>
-                    <span className={`absolute bottom-1 h-10 rounded-[50%] bg-[#050605]/75 blur-sm ${first ? "w-44" : "w-36"}`} />
-                    <ManaSeedAnimatedCharacter
-                      alt={`Pixel art de corpo inteiro de ${leader.name}`}
-                      className={`mana-seed-podium-character relative z-10 ${first ? "mana-seed-podium-character--first h-72 w-72 sm:h-96 sm:w-96" : "h-64 w-64 sm:h-72 sm:w-72"}`}
-                    />
+                  <div className="relative mx-auto grid h-60 place-items-end sm:h-64">
+                    <div role="img" aria-label={`Pixel art de corpo inteiro de ${leader.name}`} className="mana-seed-sprite relative z-10 h-68 w-68 sm:h-80 sm:w-80">
+                      <ManaSeedSpriteLayers frame={0} />
+                    </div>
                   </div>
                   <h2 className={`mt-5 font-black text-[#f2e2bd] ${first ? "text-xl" : "text-lg"}`}>{leader.name}</h2>
                   <p className="mt-1 text-xs font-black uppercase tracking-wider text-gold">{leader.coupons} cupons</p>
-                  <div className="mt-4 flex justify-center gap-2">
-                    {leader.badges.map((tone, index) => <Badge key={`${tone}-${index}`} tone={tone} compact symbol={index === 2 ? "◆" : "✦"} />)}
-                  </div>
                   <p className="mt-3 text-[10px] text-[#777367]">{leader.exp} EXP</p>
                 </div>
                 <div className={`relative z-10 grid w-[76%] place-items-center bg-[#1b160e] font-black text-gold-light shadow-[6px_6px_0_#030403] ${first ? "h-20 text-4xl md:h-24" : "h-16 text-3xl"}`}>
@@ -90,12 +79,12 @@ export default function RankingPage() {
 
           <div className="overflow-x-auto">
             <div className="min-w-[760px]">
-              <div className="grid grid-cols-[72px_1.5fr_100px_150px_180px] items-center gap-3 border-b-2 border-[#3b2d18] bg-[#0d0f0d] px-5 py-3 text-[10px] font-black uppercase tracking-[0.14em] text-[#bd8a34] sm:px-7">
-                <span>Pos.</span><span>Aventureiro</span><span>Cupons</span><span>Badges</span><span className="text-right">EXP</span>
+              <div className="grid grid-cols-[72px_1.5fr_100px_180px] items-center gap-3 border-b-2 border-[#3b2d18] bg-[#0d0f0d] px-5 py-3 text-[10px] font-black uppercase tracking-[0.14em] text-[#bd8a34] sm:px-7">
+                <span>Pos.</span><span>Aventureiro</span><span>Cupons</span><span className="text-right">EXP</span>
               </div>
 
-              {visibleAdventurers.map((person) => (
-                <div key={person.position} className="group grid grid-cols-[72px_1.5fr_100px_150px_180px] items-center gap-3 border-b border-[#352a19] px-5 py-4 transition hover:bg-[#2a2112] sm:px-7">
+              {adventurers.map((person) => (
+                <div key={person.position} className="group grid grid-cols-[72px_1.5fr_100px_180px] items-center gap-3 border-b border-[#352a19] px-5 py-4 transition hover:bg-[#2a2112] sm:px-7">
                   <span className="text-center text-xl font-black text-[#d6c59f]">{String(person.position).padStart(2, "0")}</span>
                   <div className="flex min-w-0 items-center gap-4">
                     <ManaSeedAvatar size="md" alt={`Avatar de ${person.name}`} className="border-[#785821]" />
@@ -105,9 +94,6 @@ export default function RankingPage() {
                     </div>
                   </div>
                   <span className="w-fit bg-[#211b10] px-3 py-2 text-sm font-black text-gold-light shadow-[2px_2px_0_#050605]">{person.coupons}</span>
-                  <div className="flex gap-2">
-                    {person.badges.map((tone, index) => <Badge key={`${tone}-${index}`} tone={tone} compact symbol={index % 2 ? "✦" : "◆"} />)}
-                  </div>
                   <div className="text-right">
                     <p className="text-xs font-black text-[#ddd0b0]">{person.exp}</p>
                     <div className="mt-2 ml-auto h-3 w-32 border-2 border-[#503b1b] bg-[#090a08] p-[1px]">
