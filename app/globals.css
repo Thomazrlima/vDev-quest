@@ -629,7 +629,7 @@ a {
 .creator-parchment {
   color: #4a351f;
   background:
-    linear-gradient(rgba(7, 8, 6, 0.78), rgba(7, 8, 6, 0.94)),
+    linear-gradient(rgba(8, 10, 8, 0.90), rgba(8, 10, 8, 0.97)),
     url("/art/quest-landscape.png") center / cover fixed;
 }
 
