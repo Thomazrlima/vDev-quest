@@ -6,7 +6,7 @@ import { CrownIcon, GridIcon, LogoutIcon, ScrollIcon, SparkIcon } from "./icons"
 
 const mainItems = [
   { href: "/ranking", label: "Ranking", icon: CrownIcon },
-  { href: "/dashboard", label: "Painel", icon: GridIcon },
+  { href: "/perfil", label: "Perfil", icon: GridIcon },
   { href: "/characters", label: "Personagem", icon: SparkIcon }
 ];
 

@@ -16,7 +16,7 @@ export default function LoginPage() {
   function enterQuest(event?: FormEvent) {
     event?.preventDefault();
     setLoading(true);
-    window.setTimeout(() => router.push("/dashboard"), 450);
+    window.setTimeout(() => router.push("/perfil"), 450);
   }
 
   return (
