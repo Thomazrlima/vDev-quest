@@ -1,6 +1,6 @@
 # v(dev) Quest
 
-Interface mockada em Next.js, App Router e Tailwind CSS para uma plataforma de evolução dev com estética medieval em pixel art.
+Frontend mockado em Next.js, App Router, React e Tailwind CSS para uma plataforma gamificada com estética medieval em pixel art.
 
 ## Executar
 
@@ -9,21 +9,42 @@ npm install
 npm run dev
 ```
 
-Abra `http://localhost:3000/login`. O login é demonstrativo; preencha qualquer e-mail e senha válidos ou use o botão SSO.
+Abra `http://localhost:3000/login`.
+
+## Arquitetura
+
+O projeto segue Atomic Design. O diretório `app/` é exclusivamente a camada de páginas e roteamento do Next; regras, estado e interface ficam fora dele.
+
+```text
+app/                         pages e rotas do App Router
+components/
+  atoms/                     elementos indivisíveis
+  molecules/                 combinações pequenas de atoms
+  organisms/                 blocos funcionais de interface
+  templates/                 composição e estado das páginas
+data/                        dados estáticos e mocks
+services/                    acesso a dados e simulação das APIs
+types/                       contratos de domínio
+utils/                       funções puras compartilhadas
+public/                      assets servidos pela aplicação
+```
+
+Dependências devem apontar para baixo na hierarquia: páginas consomem templates; templates compõem organisms; organisms usam molecules e atoms. Serviços não importam componentes.
 
 ## Rotas
 
-- `/login` — entrada da guilda, formulário local e SSO mockado.
-- `/dashboard` — perfil, nível, insígnias e trilha interativa.
-- `/characters` — criador local com as variações liberadas no Free Sample.
-- `/ranking` — pódio animado, filtro local e posições 4–10.
+- `/login` — autenticação demonstrativa.
+- `/ranking` — ranking e pódio.
+- `/perfil` — perfil, indicadores e acesso ao criador.
+- `/characters` — criador de personagem por camadas.
+- `/missions` — gestão de missões e acesso à moderação.
+- `/missions/new` e `/missions/[id]/edit` — formulário de missão.
+- `/moderation` e `/moderation/[id]` — fila e detalhe de evidências.
 
-## Personagens Mana Seed (Free Sample)
+## Dados mockados
 
-Os personagens utilizam exclusivamente folhas originais do **Mana Seed Farmer Sprite – Free Sample**, copiadas sem alteração para `public/sprites/mana-seed-free/`: corpo humano, sapatos, calça longa, duas camisas, dois cabelos e o chapéu cowboy.
+`services/mission-service.ts` simula a BE-01 e persiste missões no `localStorage`. `services/moderation-service.ts` simula a BE-02 com filtros e ordenação. Os registros iniciais ficam em `data/` e os contratos em `types/`.
 
-`lib/manaSeed.ts` centraliza as dimensões das células (64×64), a grade 16×16, a pilha de camadas, o frame estático e a animação do pódio. A amostra gratuita libera somente walk e jump; por isso, o pódio usa o ciclo walk `[048, 051, 049, 052, 050]` a 240 ms por frame e os avatares estáticos usam o frame `048` com recorte ampliado do rosto.
+## Sprites
 
-O cenário de fundo em `public/art/` é independente. O atlas `adventurer-atlas.png` não é mais referenciado pela interface.
-
-O logo original fornecido está disponível em `public/quest-logo.png`.
+Os personagens usam as folhas do **Mana Seed Farmer Sprite – Free Sample** presentes em `public/sprites/mana-seed-free/`. A configuração da folha fica em `data/mana-seed.ts`; cálculo de frames e composição de camadas ficam em `utils/mana-seed.ts`.

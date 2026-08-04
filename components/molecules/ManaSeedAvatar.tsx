@@ -1,5 +1,5 @@
-import { ManaSeedSpriteLayers } from "@/components/ManaSeedSpriteLayers";
-import { MANA_SEED_FREE } from "@/lib/manaSeed";
+import { ManaSeedSpriteLayers } from "@/components/molecules/ManaSeedSpriteLayers";
+import { MANA_SEED_FREE } from "@/data/mana-seed";
 
 type ManaSeedAvatarProps = {
   size?: "sm" | "md" | "lg" | "xl";

@@ -2,8 +2,10 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { EVIDENCE_TYPES, Mission, MissionFormData, createMission, getMissionById, updateMission } from "@/lib/missions";
-import { ChevronIcon, ScrollIcon, SparkIcon } from "./icons";
+import { Field } from "@/components/atoms/Field";
+import { ChevronIcon, ScrollIcon, SparkIcon } from "@/components/atoms/icons";
+import { missionService } from "@/services/mission-service";
+import { EVIDENCE_TYPES, type Mission, type MissionFormData } from "@/types/mission";
 
 type FieldName = keyof MissionFormData;
 type FieldErrors = Partial<Record<FieldName, string>>;
@@ -40,7 +42,7 @@ export function MissionForm({ missionId }: { missionId?: string }) {
 
   useEffect(() => {
     if (!missionId) return;
-    getMissionById(missionId).then((data) => {
+    missionService.getById(missionId).then((data) => {
       if (!data) {
         setNotice("A missão solicitada não foi encontrada.");
       } else {
@@ -81,8 +83,8 @@ export function MissionForm({ missionId }: { missionId?: string }) {
     setSaving(true);
     setNotice(null);
     try {
-      if (missionId) await updateMission(missionId, form);
-      else await createMission(form);
+      if (missionId) await missionService.update(missionId, form);
+      else await missionService.create(form);
       router.push("/missions?published=1");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Não foi possível salvar a missão. Tente novamente.");
@@ -157,10 +159,6 @@ export function MissionForm({ missionId }: { missionId?: string }) {
 
 function inputClass(error?: string) {
   return `w-full border-2 bg-[#0c0f0c] px-4 py-3 text-sm text-cream outline-none shadow-[inset_3px_3px_0_#060705] transition placeholder:text-[#5e5d55] focus:border-gold disabled:cursor-not-allowed disabled:border-[#42433d] disabled:bg-[#10110f] disabled:text-[#817f73] ${error ? "border-[#bb6240]" : "border-[#76521e]"}`;
-}
-
-function Field({ label, error, className = "", children }: { label: string; error?: string; className?: string; children: React.ReactNode }) {
-  return <label className={`block ${className}`}><span className="mb-2 block text-[11px] font-black uppercase tracking-[0.14em] text-gold-light">{label} <span className="text-gold">*</span></span>{children}{error ? <span className="mt-2 block text-[11px] font-bold text-[#e58c67]">{error}</span> : null}</label>;
 }
 
 function MissionShell({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {

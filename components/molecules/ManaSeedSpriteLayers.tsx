@@ -1,12 +1,12 @@
-import { manaSeedFramePosition, manaSeedLayersFor } from "@/lib/manaSeed";
+import { getManaSeedFramePosition, getManaSeedLayers } from "@/utils/mana-seed";
 
 type ManaSeedSpriteLayersProps = {
   frame: number;
   layers?: readonly string[];
 };
 
-export function ManaSeedSpriteLayers({ frame, layers = manaSeedLayersFor() }: ManaSeedSpriteLayersProps) {
-  const framePosition = manaSeedFramePosition(frame);
+export function ManaSeedSpriteLayers({ frame, layers = getManaSeedLayers() }: ManaSeedSpriteLayersProps) {
+  const framePosition = getManaSeedFramePosition(frame);
 
   return (
     <>
