@@ -20,7 +20,7 @@ export function GameNav() {
     <header className="sticky top-0 z-50 border-b-4 border-[#201706] bg-[#0b0d0cf2] shadow-[0_5px_0_rgba(0,0,0,.55)] backdrop-blur-md">
       <div className="mx-auto flex h-[74px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <button onClick={() => router.push("/dashboard")} className="group flex items-center gap-2" aria-label="Ir para o painel">
-          <Image src="/quest-logo.png" alt="v(dev) Quest" width={154} height={154} className="h-14 w-24 object-cover object-center transition group-hover:brightness-110 sm:w-28" priority />
+          <Image src="/vdev-quest-logo.png" alt="v(dev) Quest" width={512} height={512} className="h-14 w-24 object-contain object-center transition group-hover:brightness-110 sm:w-28" priority />
         </button>
 
         <nav className="flex items-center gap-1 sm:gap-2" aria-label="Navegação principal">
