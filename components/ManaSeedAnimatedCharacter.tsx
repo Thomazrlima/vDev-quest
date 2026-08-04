@@ -9,6 +9,8 @@ type ManaSeedAnimatedCharacterProps = {
   alt: string;
 };
 
+const podiumAnimationEpoch = Date.now();
+
 export function ManaSeedAnimatedCharacter({ className = "", alt }: ManaSeedAnimatedCharacterProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -32,9 +34,9 @@ export function ManaSeedAnimatedCharacter({ className = "", alt }: ManaSeedAnima
   useEffect(() => {
     if (!isVisible) return;
 
-    const timer = window.setInterval(() => {
-      setFrameIndex((current) => (current + 1) % animation.frames.length);
-    }, animation.frameDurationMs);
+    const syncFrame = () => setFrameIndex(Math.floor((Date.now() - podiumAnimationEpoch) / animation.frameDurationMs) % animation.frames.length);
+    syncFrame();
+    const timer = window.setInterval(syncFrame, Math.max(50, animation.frameDurationMs / 2));
 
     return () => window.clearInterval(timer);
   }, [animation.frameDurationMs, animation.frames.length, isVisible]);

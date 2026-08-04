@@ -35,13 +35,13 @@ export default function LoginPage() {
           <div className="max-w-xl">
             <div className="mb-3 flex items-center gap-3 text-gold-light">
               <span className="h-2 w-2 bg-gold shadow-[4px_0_0_#7d531a]" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em]">Capítulo I · O chamado</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em]">Capítulo I · Entre para a guilda</span>
             </div>
             <h1 className="text-balance text-2xl font-black uppercase leading-tight tracking-wide text-[#f5e5bd] [text-shadow:3px_3px_0_#251708] sm:text-4xl lg:text-5xl">
-              Toda grande carreira começa com uma quest.
+              Transforme cada desafio em uma conquista.
             </h1>
             <p className="mt-3 hidden max-w-lg text-sm leading-relaxed text-[#c7b994] sm:block lg:text-base">
-              Evolua suas habilidades, conquiste insígnias e avance pela trilha que transforma código em lenda.
+              Complete missões, acumule cupons e dispute seu lugar entre os maiores aventureiros da guilda.
             </p>
           </div>
         </div>
@@ -57,7 +57,7 @@ export default function LoginPage() {
             <span className="absolute -right-[3px] -top-[3px] h-3 w-3 border-b-2 border-l-2 border-[#d9a43d] bg-[#0c0f0d]" />
 
             <div className="mx-auto -mb-2 -mt-2 flex h-44 max-w-[300px] items-center justify-center overflow-hidden sm:h-48">
-              <Image src="/vdev-quest-logo.png" alt="v(dev) Quest" width={512} height={512} priority className="h-full w-full object-contain [image-rendering:pixelated]" />
+              <Image src="/quest-logo.png" alt="v(dev) Quest" width={512} height={512} priority className="h-full w-full object-contain [image-rendering:pixelated]" />
             </div>
 
             <div className="ornament-line mb-6 text-[10px] font-black uppercase tracking-[0.24em]">

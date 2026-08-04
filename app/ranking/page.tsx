@@ -8,19 +8,19 @@ import { ManaSeedAvatar } from "@/components/ManaSeedAvatar";
 import { CrownIcon, SparkIcon } from "@/components/icons";
 
 const leaders = [
-  { position: 1, name: "RafaelDev", level: 42, exp: "18.560", badges: ["gold", "gold", "blue"] as const },
-  { position: 2, name: "CamilaCode", level: 38, exp: "17.940", badges: ["silver", "green", "purple"] as const },
-  { position: 3, name: "LucasByte", level: 34, exp: "17.120", badges: ["gold", "blue", "purple"] as const }
+  { position: 1, name: "RafaelDev", coupons: 42, exp: "18.560", badges: ["gold", "gold", "blue"] as const },
+  { position: 2, name: "CamilaCode", coupons: 38, exp: "17.940", badges: ["silver", "green", "purple"] as const },
+  { position: 3, name: "LucasByte", coupons: 34, exp: "17.120", badges: ["gold", "blue", "purple"] as const }
 ];
 
 const adventurers = [
-  { position: 4, name: "MarcosCmd", title: "Guerreiro de Terminal", level: 32, avatar: 3, exp: "15.870", progress: 88, badges: ["gold", "green", "blue"] as const },
-  { position: 5, name: "BiaScript", title: "Tecelã de Interfaces", level: 30, avatar: 4, exp: "14.260", progress: 78, badges: ["silver", "purple", "green"] as const },
-  { position: 6, name: "DevJunior", title: "Paladino do Frontend", level: 29, avatar: 5, exp: "13.870", progress: 72, badges: ["gold", "blue", "purple"] as const },
-  { position: 7, name: "AnaQA", title: "Sentinela dos Bugs", level: 27, avatar: 6, exp: "12.450", progress: 65, badges: ["silver", "green"] as const },
-  { position: 8, name: "GuiTeste", title: "Mago dos Testes", level: 25, avatar: 7, exp: "11.780", progress: 57, badges: ["gold", "purple"] as const },
-  { position: 9, name: "LeoStack", title: "Ranger Full-Stack", level: 24, avatar: 2, exp: "10.980", progress: 49, badges: ["silver", "blue"] as const },
-  { position: 10, name: "JulioAPI", title: "Alquimista de APIs", level: 22, avatar: 8, exp: "9.650", progress: 42, badges: ["gold", "green"] as const }
+  { position: 4, name: "MarcosCmd", title: "Guerreiro de Terminal", coupons: 32, avatar: 3, exp: "15.870", progress: 88, badges: ["gold", "green", "blue"] as const },
+  { position: 5, name: "BiaScript", title: "Tecelã de Interfaces", coupons: 30, avatar: 4, exp: "14.260", progress: 78, badges: ["silver", "purple", "green"] as const },
+  { position: 6, name: "DevJunior", title: "Paladino do Frontend", coupons: 29, avatar: 5, exp: "13.870", progress: 72, badges: ["gold", "blue", "purple"] as const },
+  { position: 7, name: "AnaQA", title: "Sentinela dos Bugs", coupons: 27, avatar: 6, exp: "12.450", progress: 65, badges: ["silver", "green"] as const },
+  { position: 8, name: "GuiTeste", title: "Mago dos Testes", coupons: 25, avatar: 7, exp: "11.780", progress: 57, badges: ["gold", "purple"] as const },
+  { position: 9, name: "LeoStack", title: "Ranger Full-Stack", coupons: 24, avatar: 2, exp: "10.980", progress: 49, badges: ["silver", "blue"] as const },
+  { position: 10, name: "JulioAPI", title: "Alquimista de APIs", coupons: 22, avatar: 8, exp: "9.650", progress: 42, badges: ["gold", "green"] as const }
 ];
 
 export default function RankingPage() {
@@ -39,7 +39,7 @@ export default function RankingPage() {
           </div>
           <p className="eyebrow">Salão da glória · Temporada III</p>
           <h1 className="pixel-title mx-auto mt-3 max-w-4xl text-3xl sm:text-4xl lg:text-5xl">Ranking de aventureiros</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#999483]">Os maiores heróis, os códigos mais lendários. Conquiste EXP e escreva seu nome no topo.</p>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#999483]">Os maiores heróis, os códigos mais lendários. Conquiste cupons e escreva seu nome no topo.</p>
 
           <div className="mx-auto mt-6 flex w-fit border-2 border-[#55401d] bg-[#10120f] p-1 shadow-[4px_4px_0_#050605]">
             {(["global", "semanal"] as const).map((item) => (
@@ -55,9 +55,8 @@ export default function RankingPage() {
             const first = leader.position === 1;
             return (
               <article key={leader.position} className={`relative flex flex-col items-center text-center ${leader.position === 1 ? "md:order-2" : leader.position === 2 ? "md:order-1" : "md:order-3"}`}>
-                {first ? <div className="ember absolute -top-8 left-1/2 h-2 w-2 -translate-x-1/2 bg-gold shadow-[18px_10px_0_#a8671d,-20px_16px_0_#d99a2b,4px_-12px_0_#f1c461]" /> : null}
-                <div className={`pixel-panel relative w-full px-4 pb-5 pt-7 ${first ? "border-[#d99a2b] bg-[#211b0f] md:pb-8 md:pt-9" : "border-[#66481d]"}`}>
-                  {first ? <CrownIcon className="absolute -top-7 left-1/2 h-10 w-10 -translate-x-1/2 fill-[#d99a2b] text-[#f3c15a] [filter:drop-shadow(3px_3px_0_#4b2c0a)]" /> : null}
+                <div className={`pixel-panel relative w-full border-0 px-4 pb-5 pt-7 shadow-[7px_7px_0_rgba(0,0,0,.72)] ${first ? "bg-[#211b0f] md:pb-8 md:pt-9" : ""}`}>
+                  {first ? <span className="absolute -top-6 left-1/2 z-20 grid h-12 w-12 -translate-x-1/2 place-items-center bg-[#d99a2b] text-[#171109] shadow-[4px_4px_0_#4b2c0a]" aria-label="Primeiro lugar"><CrownIcon className="h-7 w-7" /></span> : null}
                   <div className={`relative mx-auto grid place-items-end ${first ? "-mt-3 h-72 sm:h-80" : "h-60 sm:h-64"}`}>
                     <span className={`absolute bottom-1 h-10 rounded-[50%] bg-[#050605]/75 blur-sm ${first ? "w-44" : "w-36"}`} />
                     <ManaSeedAnimatedCharacter
@@ -66,13 +65,13 @@ export default function RankingPage() {
                     />
                   </div>
                   <h2 className={`mt-5 font-black text-[#f2e2bd] ${first ? "text-xl" : "text-lg"}`}>{leader.name}</h2>
-                  <p className="mt-1 text-xs font-black uppercase tracking-wider text-gold">Nível {leader.level}</p>
+                  <p className="mt-1 text-xs font-black uppercase tracking-wider text-gold">{leader.coupons} cupons</p>
                   <div className="mt-4 flex justify-center gap-2">
                     {leader.badges.map((tone, index) => <Badge key={`${tone}-${index}`} tone={tone} compact symbol={index === 2 ? "◆" : "✦"} />)}
                   </div>
                   <p className="mt-3 text-[10px] text-[#777367]">{leader.exp} EXP</p>
                 </div>
-                <div className={`relative z-10 grid w-[76%] place-items-center border-x-4 border-b-4 border-[#543913] bg-[#1b160e] font-black text-gold-light shadow-[6px_6px_0_#030403] ${first ? "h-20 text-4xl md:h-24" : "h-16 text-3xl"}`}>
+                <div className={`relative z-10 grid w-[76%] place-items-center bg-[#1b160e] font-black text-gold-light shadow-[6px_6px_0_#030403] ${first ? "h-20 text-4xl md:h-24" : "h-16 text-3xl"}`}>
                   <span className="[text-shadow:3px_3px_0_#4a2e0c]">{leader.position}</span>
                 </div>
               </article>
@@ -92,7 +91,7 @@ export default function RankingPage() {
           <div className="overflow-x-auto">
             <div className="min-w-[760px]">
               <div className="grid grid-cols-[72px_1.5fr_100px_150px_180px] items-center gap-3 border-b-2 border-[#3b2d18] bg-[#0d0f0d] px-5 py-3 text-[10px] font-black uppercase tracking-[0.14em] text-[#bd8a34] sm:px-7">
-                <span>Pos.</span><span>Aventureiro</span><span>Nível</span><span>Badges</span><span className="text-right">EXP</span>
+                <span>Pos.</span><span>Aventureiro</span><span>Cupons</span><span>Badges</span><span className="text-right">EXP</span>
               </div>
 
               {visibleAdventurers.map((person) => (
@@ -105,7 +104,7 @@ export default function RankingPage() {
                       <p className="mt-1 truncate text-[9px] uppercase tracking-wider text-[#777468]">{person.title}</p>
                     </div>
                   </div>
-                  <span className="w-fit border-2 border-[#78561f] bg-[#211b10] px-3 py-2 text-sm font-black text-gold-light shadow-[2px_2px_0_#050605]">{person.level}</span>
+                  <span className="w-fit bg-[#211b10] px-3 py-2 text-sm font-black text-gold-light shadow-[2px_2px_0_#050605]">{person.coupons}</span>
                   <div className="flex gap-2">
                     {person.badges.map((tone, index) => <Badge key={`${tone}-${index}`} tone={tone} compact symbol={index % 2 ? "✦" : "◆"} />)}
                   </div>

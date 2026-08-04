@@ -27,7 +27,7 @@ export const MANA_SEED_FREE = {
     // Free Sample: WALK, primeira direção exibida no guia de animação.
     podiumWalk: {
       frames: [48, 51, 49, 52, 50],
-      frameDurationMs: 240
+      frameDurationMs: 190
     }
   },
   // Primeiro frame da sequência de walk: postura frontal mais neutra disponível.

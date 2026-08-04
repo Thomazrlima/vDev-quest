@@ -170,6 +170,8 @@ a {
 
   .mana-seed-podium-character {
     overflow: visible;
+    animation: podium-walk-forward 1.5s ease-in-out infinite;
+    transform-origin: center bottom;
   }
 
   .mana-seed-podium-character .mana-seed-sprite-layer {
@@ -178,7 +180,7 @@ a {
   }
 
   .mana-seed-podium-character--first .mana-seed-sprite-layer {
-    transform: translateY(22%) scale(1.5);
+    transform: translateY(18%) scale(1.38);
   }
 
   .creator-game-window {
@@ -618,6 +620,11 @@ a {
   animation: soft-pulse 2.8s ease-in-out infinite;
 }
 
+@keyframes podium-walk-forward {
+  0%, 100% { transform: translateY(4px) scale(.94); }
+  50% { transform: translateY(-3px) scale(1.02); }
+}
+
 /* Oficina de personagem: pergaminho, pedra e metal no lugar do painel padrão escuro. */
 .creator-parchment {
   color: #4a351f;
@@ -645,11 +652,9 @@ a {
 .creator-aura-option--active { border-color: #38543b; box-shadow: 0 0 0 2px #ecf0c0, 0 0 0 4px #38543b; }
 .creator-free-note { border: 2px dashed #786242; background: rgba(20, 22, 18, .38); color: #c5ad7f; padding: .6rem; font-size: .53rem; font-weight: 900; line-height: 1.45; text-transform: uppercase; }
 .creator-stage { position: relative; display: flex; min-height: 690px; flex-direction: column; align-items: center; justify-content: flex-end; overflow: hidden; border: 7px solid #5e5344; background: radial-gradient(circle at 50% 42%, #49483a, #252822 68%); box-shadow: 6px 7px 0 rgba(0, 0, 0, .6), inset 0 0 0 3px rgba(194, 161, 94, .18); }
-.creator-stage-title { position: relative; z-index: 5; width: 100%; border-bottom: 2px solid #756142; background: rgba(25, 28, 23, .88); padding: .8rem; color: #e4d0a4; font-size: .64rem; font-weight: 900; letter-spacing: .18em; text-align: center; }
-.creator-stage-title span { color: #a17731; padding: 0 .5rem; }
-.creator-arcane-aura { position: absolute; top: 15%; width: min(96%, 500px); aspect-ratio: 1; border: 3px solid color-mix(in srgb, var(--aura-wash), #fff 32%); border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--aura-wash), transparent 58%) 0 19%, transparent 45%), repeating-conic-gradient(from 8deg, color-mix(in srgb, var(--aura-wash), transparent 30%) 0 4deg, transparent 4deg 15deg); box-shadow: 0 0 28px var(--aura-wash), inset 0 0 38px var(--aura-wash); opacity: .9; transform: rotate(-10deg); }
+.creator-arcane-aura { position: absolute; top: 9%; width: min(96%, 500px); aspect-ratio: 1; border: 3px solid color-mix(in srgb, var(--aura-wash), #fff 32%); border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--aura-wash), transparent 58%) 0 19%, transparent 45%), repeating-conic-gradient(from 8deg, color-mix(in srgb, var(--aura-wash), transparent 30%) 0 4deg, transparent 4deg 15deg); box-shadow: 0 0 28px var(--aura-wash), inset 0 0 38px var(--aura-wash); opacity: .9; transform: rotate(-10deg); }
 .creator-arcane-aura::before, .creator-arcane-aura::after { position: absolute; inset: 8%; content: ""; border: 2px dashed color-mix(in srgb, var(--aura-wash), #fff 45%); border-radius: 50%; }.creator-arcane-aura::after { inset: 20%; border-style: solid; opacity: .62; transform: rotate(45deg); }
-.creator-rune-circle { position: absolute; top: 21%; z-index: 2; display: flex; width: min(84%, 390px); aspect-ratio: 1; align-items: flex-start; justify-content: space-between; border: 0; border-radius: 50%; color: #eadfa3; padding: .9rem 1.5rem; font-size: 1.1rem; font-weight: 900; opacity: .75; text-shadow: 0 0 8px var(--aura-wash); transform: rotate(-10deg); }
+.creator-rune-circle { position: absolute; top: 15%; z-index: 2; display: flex; width: min(84%, 390px); aspect-ratio: 1; align-items: flex-start; justify-content: space-between; border: 0; border-radius: 50%; color: #eadfa3; padding: .9rem 1.5rem; font-size: 1.1rem; font-weight: 900; opacity: .75; text-shadow: 0 0 8px var(--aura-wash); transform: rotate(-10deg); }
 .creator-rune-circle span:nth-child(2) { align-self: flex-end; }.creator-rune-circle span:nth-child(3) { align-self: flex-end; }.creator-rune-circle span:nth-child(4) { align-self: flex-start; }
 .creator-full-sprite { position: relative; z-index: 3; width: min(108%, 500px); height: min(108vw, 500px); margin-top: -.5rem; overflow: visible; image-rendering: pixelated; filter: drop-shadow(9px 10px 0 rgba(0, 0, 0, .48)); }
 .creator-stone-pedestal { position: relative; z-index: 4; width: min(86%, 440px); margin-top: -4.5rem; border: 5px solid #675648; background: linear-gradient(#b9ad91, #71685e 48%, #4b4743); box-shadow: inset 3px 3px 0 #ddd0af, inset -3px -3px 0 #363532, 5px 6px 0 rgba(0, 0, 0, .5); padding: .65rem .75rem .8rem; text-align: center; }
