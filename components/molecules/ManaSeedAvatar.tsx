@@ -5,6 +5,7 @@ type ManaSeedAvatarProps = {
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
   alt?: string;
+  layers?: readonly string[];
 };
 
 const sizes = {
@@ -14,7 +15,7 @@ const sizes = {
   xl: "h-28 w-28 sm:h-32 sm:w-32"
 };
 
-export function ManaSeedAvatar({ size = "md", className = "", alt = "Avatar do aventureiro" }: ManaSeedAvatarProps) {
+export function ManaSeedAvatar({ size = "md", className = "", alt = "Avatar do aventureiro", layers }: ManaSeedAvatarProps) {
   return (
     <div
       role="img"
@@ -22,7 +23,7 @@ export function ManaSeedAvatar({ size = "md", className = "", alt = "Avatar do a
       className={`mana-seed-sprite ${sizes[size]} shrink-0 border-[3px] border-gold bg-ink shadow-[4px_4px_0_#070806] ${className}`}
     >
       <div className="mana-seed-avatar-head-frame" aria-hidden="true">
-        <ManaSeedSpriteLayers frame={MANA_SEED_FREE.staticAvatarFrame} />
+        <ManaSeedSpriteLayers frame={MANA_SEED_FREE.staticAvatarFrame} layers={layers} />
       </div>
     </div>
   );

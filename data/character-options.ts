@@ -8,10 +8,10 @@ export const CHARACTER_PRESETS: CharacterPreset[] = [
 ];
 
 export const CHARACTER_AURAS: CharacterAura[] = [
-  { name: "Druida", color: "#758b47", wash: "rgba(104,139,58,.72)" },
-  { name: "Bardo", color: "#d2a343", wash: "rgba(210,163,67,.72)" },
-  { name: "Guerreiro", color: "#bb6551", wash: "rgba(187,101,81,.7)" },
-  { name: "Clérigo", color: "#4a9ba1", wash: "rgba(74,155,161,.7)" },
-  { name: "Buxro", color: "#8875b8", wash: "rgba(136,117,184,.68)" },
-  { name: "Necromante", color: "#8b8476", wash: "rgba(139,132,118,.66)" }
+  { name: "Druida", color: "#758b47", image: "/art/classes/druida.png" },
+  { name: "Bardo", color: "#d2a343", image: "/art/classes/bardo.png" },
+  { name: "Guerreiro", color: "#bb6551", image: "/art/classes/guerreiro.png" },
+  { name: "Clérigo", color: "#4a9ba1", image: "/art/classes/clerigo.png" },
+  { name: "Bruxo", color: "#8875b8", image: "/art/classes/bruxo.png" },
+  { name: "Necromante", color: "#8b8476", image: "/art/classes/necromante.png" }
 ];

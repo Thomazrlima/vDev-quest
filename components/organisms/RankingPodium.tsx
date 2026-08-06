@@ -1,9 +1,46 @@
 import { CrownIcon } from "@/components/atoms/icons";
+import { RankingBadge } from "@/components/atoms/RankingBadge";
 import { ManaSeedSpriteLayers } from "@/components/molecules/ManaSeedSpriteLayers";
+import { MANA_SEED_FREE } from "@/data/mana-seed";
 import type { RankingLeader } from "@/types/ranking";
+import { getManaSeedLayers } from "@/utils/mana-seed";
 
-const borders = { 1: "border-[#d99a2b]", 2: "border-[#9a9a8f]", 3: "border-[#a9683d]" } as const;
+const podiumOrder = [2, 1, 3] as const;
 
 export function RankingPodium({ leaders }: { leaders: RankingLeader[] }) {
-  return <section className="mx-auto mt-12 grid max-w-5xl items-end gap-5 md:grid-cols-3" aria-label="Pódio dos três melhores aventureiros">{leaders.map((leader) => { const first = leader.position === 1; return <article key={leader.position} className={`relative flex flex-col items-center text-center ${first ? "md:order-2" : leader.position === 2 ? "md:order-1" : "md:order-3"}`}><div className={`pixel-panel relative w-full border-4 px-4 pb-5 pt-7 shadow-[7px_7px_0_rgba(0,0,0,.72)] ${borders[leader.position]} ${first ? "bg-[#211b0f] md:pb-8 md:pt-9" : ""}`}>{first ? <span className="absolute -top-6 left-1/2 z-20 grid h-12 w-12 -translate-x-1/2 place-items-center bg-[#d99a2b] text-[#171109] shadow-[4px_4px_0_#4b2c0a]" aria-label="Primeiro lugar"><CrownIcon className="h-7 w-7" /></span> : null}<div className="relative mx-auto grid h-60 place-items-end sm:h-64"><div role="img" aria-label={`Pixel art de corpo inteiro de ${leader.name}`} className="mana-seed-sprite relative z-10 h-68 w-68 sm:h-80 sm:w-80"><ManaSeedSpriteLayers frame={0} /></div></div><h2 className={`mt-5 font-black text-[#f2e2bd] ${first ? "text-xl" : "text-lg"}`}>{leader.name}</h2><p className="mt-1 text-xs font-black uppercase tracking-wider text-gold">{leader.coupons} cupons</p><p className="mt-3 text-[10px] text-[#777367]">{leader.exp} EXP</p></div><div className={`relative z-10 grid w-[76%] place-items-center bg-[#1b160e] font-black text-gold-light shadow-[6px_6px_0_#030403] ${first ? "h-20 text-4xl md:h-24" : "h-16 text-3xl"}`}><span className="[text-shadow:3px_3px_0_#4a2e0c]">{leader.position}</span></div></article>; })}</section>;
+  const orderedLeaders = podiumOrder.map((position) => leaders.find((leader) => leader.position === position)).filter((leader): leader is RankingLeader => Boolean(leader));
+
+  return (
+    <div className="ranking-podium" role="list" aria-label="Pódio dos três melhores aventureiros">
+      {orderedLeaders.map((leader) => {
+        const first = leader.position === 1;
+
+        return (
+          <article className={`ranking-champion ranking-champion--${leader.position}`} key={leader.position} role="listitem">
+            <div className="ranking-player-plate">
+              {first ? <CrownIcon className="ranking-player-crown" /> : null}
+              <div className="ranking-player-name-row">
+                <strong>{leader.name}</strong>
+                <div className="ranking-player-badges">
+                  {leader.badges.map((badge) => <RankingBadge badge={badge} compact key={badge} />)}
+                </div>
+              </div>
+              <div className="ranking-player-meta">
+                <span>Nível {leader.level}</span>
+                <span>{leader.exp} XP</span>
+              </div>
+            </div>
+
+            <div className="mana-seed-sprite ranking-podium-sprite" role="img" aria-label={`Personagem de ${leader.name}`}>
+              <ManaSeedSpriteLayers frame={MANA_SEED_FREE.staticAvatarFrame} layers={getManaSeedLayers(leader.appearance)} />
+            </div>
+
+            <div className="ranking-podium-step">
+              <strong className="ranking-position-medallion" aria-label={`${leader.position}º lugar`}>{leader.position}</strong>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
 }
