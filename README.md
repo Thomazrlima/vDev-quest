@@ -9,14 +9,14 @@ npm install
 npm run dev
 ```
 
-Abra `http://localhost:3000/login`.
+Abra `http://localhost:3000/ranking`.
 
 ## Arquitetura
 
 O projeto segue Atomic Design. O diretório `app/` é exclusivamente a camada de páginas e roteamento do Next; regras, estado e interface ficam fora dele.
 
 ```text
-app/                         pages e rotas do App Router
+app/                         páginas e rotas do App Router
 components/
   atoms/                     elementos indivisíveis
   molecules/                 combinações pequenas de atoms
@@ -33,7 +33,6 @@ Dependências devem apontar para baixo na hierarquia: páginas consomem template
 
 ## Rotas
 
-- `/login` — autenticação demonstrativa.
 - `/ranking` — ranking e pódio.
 - `/perfil` — perfil, indicadores e acesso ao criador.
 - `/characters` — criador de personagem por camadas.

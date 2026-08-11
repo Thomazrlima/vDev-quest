@@ -21,11 +21,12 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
+  padding-top: 88px;
   color: var(--cream);
   background:
     linear-gradient(rgba(7, 8, 6, 0.78), rgba(7, 8, 6, 0.94)),
     url("/art/quest-landscape.png") center / cover fixed;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Pixelify Sans", "Courier New", Courier, monospace;
 }
 
 button,

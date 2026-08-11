@@ -58,10 +58,6 @@ export function CrownIcon(props: IconProps) {
   return <IconBase {...props}><path d="m3 8 4 3 5-7 5 7 4-3-2 10H5L3 8Z" /><path d="M5 21h14" /></IconBase>;
 }
 
-export function LogoutIcon(props: IconProps) {
-  return <IconBase {...props}><path d="M10 4H4v16h6M14 8l4 4-4 4M8 12h10" /></IconBase>;
-}
-
 export function SparkIcon(props: IconProps) {
   return <IconBase {...props}><path d="m12 2 1.5 6.5L20 10l-6.5 1.5L12 18l-1.5-6.5L4 10l6.5-1.5L12 2Z" /></IconBase>;
 }
