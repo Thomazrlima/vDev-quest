@@ -625,6 +625,119 @@ a {
   50% { transform: translateY(-3px) scale(1.02); }
 }
 
+/* Selo de carregamento: o logo flutua em passos sobre um halo e a barra corre em blocos. */
+.quest-loader {
+  display: grid;
+  justify-items: center;
+  gap: .95rem;
+  padding: 2.6rem 1.25rem;
+  text-align: center;
+}
+
+.quest-loader--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  align-content: center;
+  padding: 1.25rem;
+  background:
+    linear-gradient(rgba(6, 8, 6, .93), rgba(6, 8, 6, .985)),
+    url("/art/quest-landscape.png") center / cover fixed;
+}
+
+.quest-loader--leaving {
+  animation: quest-loader-out 260ms ease forwards;
+  pointer-events: none;
+}
+
+.quest-loader__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.quest-loader__halo {
+  position: absolute;
+  width: 155%;
+  aspect-ratio: 1;
+  background: radial-gradient(circle, rgba(217, 154, 43, .32), rgba(217, 154, 43, .07) 45%, transparent 68%);
+  animation: quest-loader-halo 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.quest-loader__mark {
+  position: relative;
+  animation: quest-loader-bob 1.6s steps(4, end) infinite;
+  filter: drop-shadow(4px 6px 0 rgba(0, 0, 0, .5));
+}
+
+.quest-loader__image {
+  width: clamp(78px, 19vw, 132px);
+  height: auto;
+}
+
+.quest-loader--fullscreen .quest-loader__image {
+  width: clamp(104px, 26vw, 176px);
+}
+
+.quest-loader__label {
+  margin: 0;
+  color: #f1c461;
+  font-size: .76rem;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-shadow: 2px 2px 0 #3c2b0e;
+  text-transform: uppercase;
+}
+
+.quest-loader__bar {
+  display: block;
+  width: min(236px, 66vw);
+  height: 14px;
+  overflow: hidden;
+  border: 2px solid #58411c;
+  background: #070806;
+  box-shadow: inset 2px 2px 0 #030403;
+  padding: 2px;
+}
+
+.quest-loader__bar span {
+  display: block;
+  width: 42%;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #b8731e 0 8px, #e2a940 8px 12px);
+  box-shadow: inset 0 2px 0 rgba(255, 234, 149, .22);
+  animation: quest-loader-bar 1.25s steps(9, end) infinite;
+}
+
+.quest-loader__hint {
+  margin: 0;
+  color: #8d887a;
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+@keyframes quest-loader-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes quest-loader-halo {
+  0%, 100% { opacity: .45; transform: scale(.9); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+
+@keyframes quest-loader-bar {
+  from { transform: translateX(-115%); }
+  to { transform: translateX(255%); }
+}
+
+@keyframes quest-loader-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
 /* Vilarejo navegável: mapa em escala 2.5x, câmera que segue o avatar e placas de destino. */
 .lobby {
   position: fixed;

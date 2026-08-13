@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Field } from "@/components/atoms/Field";
 import { ChevronIcon, ScrollIcon, SparkIcon } from "@/components/atoms/icons";
+import { QuestLoader } from "@/components/atoms/QuestLoader";
 import { missionService } from "@/services/mission-service";
 import { EVIDENCE_TYPES, type Mission, type MissionFormData } from "@/types/mission";
 
@@ -94,7 +95,7 @@ export function MissionForm({ missionId }: { missionId?: string }) {
   }
 
   if (loading) {
-    return <MissionShell title={title}><div className="pixel-panel p-8 text-center text-sm text-[#a9a18f]">Carregando pergaminho da missão...</div></MissionShell>;
+    return <MissionShell title={title}><div className="pixel-panel"><QuestLoader label="Carregando pergaminho da missão..." /></div></MissionShell>;
   }
 
   if (missionId && !mission) {

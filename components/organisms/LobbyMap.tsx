@@ -90,7 +90,9 @@ function samePose(a: LobbyPlayerPose, b: LobbyPlayerPose) {
   );
 }
 
-export function LobbyMap() {
+/** `onReady` avisa quando a arte do mapa terminou de carregar (ou falhou), para
+ *  quem estiver segurando a tela de abertura poder sair da frente. */
+export function LobbyMap({ onReady }: { onReady?: () => void }) {
   const router = useRouter();
   const [pose, setPose] = useState<LobbyPlayerPose>(() =>
     toIdlePose(LOBBY_MAP.spawnDirection),
@@ -510,6 +512,8 @@ export function LobbyMap() {
           alt=""
           className="lobby__map"
           height={LOBBY_MAP.size}
+          onError={onReady}
+          onLoad={onReady}
           priority
           quality={92}
           src={LOBBY_MAP.src}
