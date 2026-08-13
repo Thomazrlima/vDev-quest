@@ -1,4 +1,4 @@
-import { GameNav } from "@/components/organisms/GameNav";
+import { LobbyReturnLink } from "@/components/atoms/LobbyReturnLink";
 import { RankingPodium } from "@/components/organisms/RankingPodium";
 import { RankingTable } from "@/components/organisms/RankingTable";
 import { RANKING_ENTRIES, RANKING_LEADERS } from "@/data/ranking";
@@ -6,7 +6,7 @@ import { RANKING_ENTRIES, RANKING_LEADERS } from "@/data/ranking";
 export function RankingTemplate() {
   return (
     <div className="ranking-page min-h-screen">
-      <GameNav />
+      <LobbyReturnLink />
       <main>
         <section className="ranking-castle-hall" aria-labelledby="ranking-title">
           <div className="ranking-castle-backdrop" aria-hidden="true" />

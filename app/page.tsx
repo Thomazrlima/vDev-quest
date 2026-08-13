@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
+import { LobbyTemplate } from "@/components/templates/LobbyTemplate";
 
-export default function Home() {
-  redirect("/ranking");
-}
+export default function Home() { return <LobbyTemplate />; }
