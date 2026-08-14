@@ -1,4 +1,6 @@
 import { LOBBY_CORRIDORS, LOBBY_DESTINATIONS, LOBBY_MAP } from "@/mocks/data/lobby-map";
+import { MANA_SEED_POSES } from "@/mocks/data/mana-seed";
+import type { ManaSeedFrame } from "@/types/character";
 import type { LobbyCorridor, LobbyDestination, LobbyDirection, LobbyPoint } from "@/types/lobby";
 
 const MOVEMENT_KEYS: Record<string, LobbyDirection> = {
@@ -12,13 +14,24 @@ const MOVEMENT_KEYS: Record<string, LobbyDirection> = {
     arrowright: "right",
 };
 
-export const IDLE_FRAME: Record<LobbyDirection, number> = { down: 0, up: 16, left: 32, right: 32 };
+/**
+ * As poses saem da mesma tabela da oficina de personagem — o ciclo de caminhada
+ * tem 6 quadros, e nas vistas de frente e de costas os três últimos são os três
+ * primeiros espelhados (é o que faz o herói trocar de perna). O mapa só tem uma
+ * folha lateral, virada para a direita: quem cuida do lado esquerdo é o CSS.
+ */
+export const IDLE_FRAME: Record<LobbyDirection, ManaSeedFrame> = {
+    down: MANA_SEED_POSES.idle.down[0],
+    up: MANA_SEED_POSES.idle.up[0],
+    left: MANA_SEED_POSES.idle.side[0],
+    right: MANA_SEED_POSES.idle.side[0],
+};
 
-export const WALK_FRAMES: Record<LobbyDirection, readonly number[]> = {
-    down: [48, 49, 50, 49],
-    up: [52, 53, 54, 53],
-    left: [64, 65, 66, 65],
-    right: [64, 65, 66, 65],
+export const WALK_FRAMES: Record<LobbyDirection, readonly ManaSeedFrame[]> = {
+    down: MANA_SEED_POSES.walk.down,
+    up: MANA_SEED_POSES.walk.up,
+    left: MANA_SEED_POSES.walk.side,
+    right: MANA_SEED_POSES.walk.side,
 };
 
 export function clamp(value: number, min: number, max: number) {
@@ -44,9 +57,9 @@ export function directionFromVector(vector: LobbyPoint, fallback: LobbyDirection
     return vector.y > 0 ? "down" : "up";
 }
 
-export function walkFrame(direction: LobbyDirection, time: number) {
+export function walkFrame(direction: LobbyDirection, time: number): ManaSeedFrame {
     const frames = WALK_FRAMES[direction];
-    return frames[Math.floor(time / 130) % frames.length];
+    return frames[Math.floor(time / MANA_SEED_POSES.walk.frameDuration) % frames.length];
 }
 
 /** Ponto do segmento AB mais próximo de P, com o parâmetro já limitado a [0, 1]. */

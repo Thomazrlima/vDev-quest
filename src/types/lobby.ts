@@ -18,4 +18,6 @@ export type LobbyDestination = {
 
 export type LobbyDirection = "down" | "up" | "left" | "right";
 
-export type LobbyPlayerPose = { direction: LobbyDirection; frame: number; moving: boolean };
+/** `flipped` é o espelho que o próprio quadro pede (metade do ciclo de caminhada
+ *  é desenhada assim); virar o herói para a esquerda é outra coisa, e fica no CSS. */
+export type LobbyPlayerPose = { direction: LobbyDirection; frame: number; flipped: boolean; moving: boolean };
