@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Sparkle } from "pixelarticons/react";
 import { Link } from "@tanstack/react-router";
 import { ManaSeedAvatar } from "@/components/ManaSeed/ManaSeedAvatar";
 import { Button } from "@/components/ui/Button";
@@ -6,7 +7,6 @@ import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ExperienceProgress } from "@/components/ui/ExperienceProgress";
 import { Heading } from "@/components/ui/Heading";
-import { SparkIcon } from "@/components/icons";
 import { renderTextWithNumericFont } from "@/lib/typography";
 import { getManaSeedLayers } from "@/utils/mana-seed";
 import { useStoredCharacter } from "@/utils/use-stored-character";
@@ -23,7 +23,6 @@ export function ProfileSummary() {
                 <div className="relative mx-auto lg:mx-0">
                     <div className="absolute -inset-3 border-2 border-dashed border-orange-dark" />
                     <ManaSeedAvatar size="xl" alt={`Avatar de ${character.name}`} layers={layers} className="relative border-4 shadow-pixel" />
-                    <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 border-2 border-orange-dark bg-(--color-primary-dark) px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary-light shadow-[3px_3px_0_var(--color-black)]">Guerreiro</span>
                 </div>
                 <div className="text-center lg:text-left">
                     <Eyebrow className="mb-2">Perfil do aventureiro</Eyebrow>
@@ -32,7 +31,7 @@ export function ProfileSummary() {
                     <p className="mt-5 max-w-lg text-sm leading-relaxed text-(--color-white-muted)">Complete missões, acumule cupons e acompanhe suas conquistas na guilda.</p>
                     <Button asChild className="mt-6 px-5 text-[10px]">
                         <Link to="/characters">
-                            <SparkIcon className="h-4 w-4" /> Criar personagem
+                            <Sparkle className="h-4 w-4" /> Criar personagem
                         </Link>
                     </Button>
                 </div>

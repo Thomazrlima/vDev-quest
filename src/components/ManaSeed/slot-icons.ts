@@ -1,19 +1,21 @@
-import { BootIcon, CloakIcon, DressIcon, GlassesIcon, GloveIcon, HairIcon, HatIcon, OverallsIcon, PantsIcon, ShirtIcon, ShoeIcon, SockIcon, VestIcon, type IconProps } from "@/components/icons";
+import { Backpack, Bell, CornerDownRight, CornerRightDown, CornerRightUp, Crown, GitBranch, Hand, Shield, Shirt, Sunglasses, Tent, User } from "pixelarticons/react";
 import type { ManaSeedIcon } from "@/types/character";
-import type { ComponentType } from "react";
+import type { ComponentType, SVGProps } from "react";
+
+type IconProps = SVGProps<SVGSVGElement>;
 
 export const MANA_SEED_ICONS: Record<ManaSeedIcon, ComponentType<IconProps>> = {
-    hair: HairIcon,
-    hat: HatIcon,
-    glasses: GlassesIcon,
-    shirt: ShirtIcon,
-    pants: PantsIcon,
-    overalls: OverallsIcon,
-    dress: DressIcon,
-    vest: VestIcon,
-    sock: SockIcon,
-    shoe: ShoeIcon,
-    boot: BootIcon,
-    glove: GloveIcon,
-    cloak: CloakIcon,
+    hair: User,
+    hat: Crown,
+    glasses: Sunglasses,
+    shirt: Shirt,
+    pants: GitBranch,
+    overalls: Backpack,
+    dress: Bell,
+    vest: Shield,
+    sock: CornerDownRight,
+    shoe: CornerRightDown,
+    boot: CornerRightUp,
+    glove: Hand,
+    cloak: Tent,
 };

@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { Smile } from "pixelarticons/react";
 import { ColorPalette } from "./ColorPalette";
-import { FaceIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { MANA_SEED_ICONS } from "@/components/ManaSeed/slot-icons";
 import { MANA_SEED_SLOTS } from "@/mocks/data/mana-seed";
@@ -22,15 +22,15 @@ export function CharacterColorsPanel({ appearance, bodyType, colors, onChange }:
             <div className="grid grid-cols-6 gap-1.5" role="group" aria-label="Peça a colorir">
                 {targets.map((entry) => {
                     const label = entry === "skin" ? "Pele" : getManaSeedSlot(entry).label;
-                    const Icon = entry === "skin" ? FaceIcon : MANA_SEED_ICONS[getManaSeedSlot(entry).icon];
+                    const Icon = entry === "skin" ? Smile : MANA_SEED_ICONS[getManaSeedSlot(entry).icon];
                     return (
-                        <Button key={entry} type="button" onClick={() => setTarget(entry)} aria-pressed={entry === active} aria-label={`Colorir ${label}`} title={label} className={`aspect-square h-auto w-full border-2 p-0 shadow-[2px_2px_0_var(--color-black)] ${entry === active ? "border-primary bg-[var(--color-orange-dark)] text-primary-light" : "border-[var(--color-orange-dark)] bg-[var(--color-black)] text-[var(--color-orange)]"}`}>
+                        <Button key={entry} type="button" onClick={() => setTarget(entry)} aria-pressed={entry === active} aria-label={`Colorir ${label}`} title={label} className={`aspect-square h-auto w-full border-2 p-0 shadow-[2px_2px_0_var(--color-black)] ${entry === active ? "border-primary bg-primary text-[var(--color-black)]" : "border-[var(--color-primary-dark)] bg-[var(--color-black)] text-primary"}`}>
                             <Icon className="h-6 w-6" />
                         </Button>
                     );
                 })}
             </div>
-            <p className="mt-4 text-[.66rem] font-black uppercase tracking-[.14em] text-[var(--color-orange)]">{active === "skin" ? "Tom de pele" : `Cor · ${getManaSeedSlot(active).label}`}</p>
+            <p className="mt-4 text-[.66rem] font-black uppercase tracking-[.14em] text-primary">{active === "skin" ? "Tom de pele" : `Cor · ${getManaSeedSlot(active).label}`}</p>
             {kind ? <ColorPalette ramps={MANA_SEED_RAMPS[kind]} value={colors[active]} onChange={(index) => onChange(active, index)} /> : null}
             <p className="mt-3 text-[10px] font-bold leading-[1.5] text-[var(--color-white-muted)]">As peças vêm pintadas com rampas de teste; a cor escolhida troca a rampa inteira do sprite.</p>
         </div>

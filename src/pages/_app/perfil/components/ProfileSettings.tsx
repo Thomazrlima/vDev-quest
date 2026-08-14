@@ -1,4 +1,4 @@
-import { GridIcon, ScrollIcon } from "@/components/icons";
+import { MapPin, Menu } from "pixelarticons/react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -6,9 +6,9 @@ import { Heading } from "@/components/ui/Heading";
 import type { NavigationMode } from "@/utils/navigation-preference";
 import { useNavigationMode } from "@/utils/use-navigation-mode";
 
-const OPTIONS: { value: NavigationMode; label: string; helper: string; icon: typeof GridIcon }[] = [
-    { value: "map", label: "Navegação pelo mapa", helper: "Ande com o herói e entre pelas placas de cada destino.", icon: ScrollIcon },
-    { value: "navbar", label: "Navegação tradicional", helper: "Menu fixo com Ranking, Missões e Perfil sempre à mão.", icon: GridIcon },
+const OPTIONS: { value: NavigationMode; label: string; helper: string; icon: typeof Menu }[] = [
+    { value: "map", label: "Navegação pelo mapa", helper: "Ande com o herói e entre pelas placas de cada destino.", icon: MapPin },
+    { value: "navbar", label: "Navegação tradicional", helper: "Menu fixo com Ranking, Missões e Perfil sempre à mão.", icon: Menu },
 ];
 
 export function ProfileSettings() {
