@@ -19,7 +19,7 @@ export function ProfileSummary() {
                 </div>
                 <div className="text-center lg:text-left">
                     <Eyebrow className="mb-2">Perfil do aventureiro</Eyebrow>
-                    <h1 className="text-3xl font-black tracking-tight text-primary-light sm:text-4xl">Rafael Martins</h1>
+                    <h1 className="text-3xl font-black tracking-tight text-primary-light sm:text-4xl">Rafael Tomaz</h1>
                     <p className="mt-1 text-xs font-bold text-(--color-black-muted)">@RafaelDev · membro desde a Temporada I</p>
                     <p className="mt-5 max-w-lg text-sm leading-relaxed text-(--color-white-muted)">Complete missões, acumule cupons e acompanhe suas conquistas na guilda.</p>
                     <Button asChild className="mt-6 px-5 text-[10px]">
