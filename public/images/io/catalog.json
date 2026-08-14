@@ -1,0 +1,1120 @@
+{
+    "generated_from": "Mana Seed assets by Seliel the Shaper",
+    "systems": {
+        "character-base": {
+            "id": "char_a",
+            "sheet_size": "512x512",
+            "frame_size": "64x64",
+            "grid": "8 x 8 frames per page",
+            "note": "Every part exists once per animation PAGE. To equip a part you need the sheet for the page you are currently animating.",
+            "pages": {
+                "p1": "walk, run, push, pull, jump (idle base page)",
+                "p1B": "alt page 1 \u2014 carrying a two-handed tool/weapon",
+                "p1C": "alt page 1 \u2014 same as p1B, different standing frame",
+                "p2": "farming, mining, woodcutting",
+                "p3": "fishing",
+                "p4": "misc (smithing, climbing, toe tap)",
+                "pBOW1": "bow \u2014 draw/sheath, parry, idle",
+                "pBOW2": "bow \u2014 shooting",
+                "pBOW3": "bow \u2014 hurt, death, extras",
+                "pONE1": "one-handed \u2014 draw/sheath, parry, idle",
+                "pONE2": "one-handed \u2014 attacks",
+                "pONE3": "one-handed \u2014 hurt, death, extras",
+                "pPOL1": "polearm \u2014 draw/sheath, parry, idle",
+                "pPOL2": "polearm \u2014 attacks",
+                "pPOL3": "polearm \u2014 hurt, death, extras"
+            },
+            "draw_order": ["0bot", "0bas", "1out", "2clo", "3fac", "4har", "5hat", "6tla", "7tlb"],
+            "layers": [
+                {
+                    "layer": "0bas",
+                    "dir": "0bas-body",
+                    "items": [
+                        {
+                            "code": "demn",
+                            "name": "demon",
+                            "dir": "character-base/layers/0bas-body/demn-demon",
+                            "pages": ["p1", "p1B", "p1C"],
+                            "variants": ["01", "02"],
+                            "file_pattern": "char_a_{page}_0bas_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "gbln",
+                            "name": "goblin",
+                            "dir": "character-base/layers/0bas-body/gbln-goblin",
+                            "pages": ["p1", "p1B", "p1C"],
+                            "variants": ["01"],
+                            "file_pattern": "char_a_{page}_0bas_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "humn",
+                            "name": "human",
+                            "dir": "character-base/layers/0bas-body/humn-human",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4", "pBOW1", "pBOW2", "pBOW3", "pONE1", "pONE2", "pONE3", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10"],
+                            "file_pattern": "char_a_{page}_0bas_{code}_v{variant}.png"
+                        }
+                    ]
+                },
+                {
+                    "layer": "0bot",
+                    "dir": "0bot-behind-character",
+                    "items": [
+                        {
+                            "code": "lnpl",
+                            "name": "long cloak back",
+                            "dir": "character-base/layers/0bot-behind-character/lnpl-long-cloak-back",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"],
+                            "file_pattern": "char_a_{page}_0bot_{code}_v{variant}.png"
+                        }
+                    ]
+                },
+                {
+                    "layer": "1out",
+                    "dir": "1out-outfit",
+                    "items": [
+                        {
+                            "code": "alch",
+                            "name": "alchemist coat",
+                            "dir": "character-base/layers/1out-outfit/alch-alchemist-coat",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_1out_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "angl",
+                            "name": "angler pants",
+                            "dir": "character-base/layers/1out-outfit/angl-angler-pants",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_1out_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "bksm",
+                            "name": "blacksmith apron",
+                            "dir": "character-base/layers/1out-outfit/bksm-blacksmith-apron",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_1out_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "boxr",
+                            "name": "boxers",
+                            "dir": "character-base/layers/1out-outfit/boxr-boxers",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4", "pBOW1", "pBOW2", "pBOW3", "pONE1", "pONE2", "pONE3", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["01"],
+                            "file_pattern": "char_a_{page}_1out_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "fstr",
+                            "name": "forester tunic",
+                            "dir": "character-base/layers/1out-outfit/fstr-forester-tunic",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4", "pBOW1", "pBOW2", "pBOW3", "pONE1", "pONE2", "pONE3", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_1out_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "pfdr",
+                            "name": "peasant farmer dress",
+                            "dir": "character-base/layers/1out-outfit/pfdr-peasant-farmer-dress",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_1out_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "pfpn",
+                            "name": "peasant farmer pants",
+                            "dir": "character-base/layers/1out-outfit/pfpn-peasant-farmer-pants",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4", "pBOW1", "pBOW2", "pBOW3", "pONE1", "pONE2", "pONE3", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_1out_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "undi",
+                            "name": "undies",
+                            "dir": "character-base/layers/1out-outfit/undi-undies",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4", "pBOW1", "pBOW2", "pBOW3", "pONE1", "pONE2", "pONE3", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["01"],
+                            "file_pattern": "char_a_{page}_1out_{code}_v{variant}.png"
+                        }
+                    ]
+                },
+                {
+                    "layer": "2clo",
+                    "dir": "2clo-cloak",
+                    "items": [
+                        {
+                            "code": "lnpl",
+                            "name": "long cloak",
+                            "dir": "character-base/layers/2clo-cloak/lnpl-long-cloak",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"],
+                            "file_pattern": "char_a_{page}_2clo_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "mnpl",
+                            "name": "mantle",
+                            "dir": "character-base/layers/2clo-cloak/mnpl-mantle",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"],
+                            "file_pattern": "char_a_{page}_2clo_{code}_v{variant}.png"
+                        }
+                    ]
+                },
+                {
+                    "layer": "3fac",
+                    "dir": "3fac-face",
+                    "items": [
+                        {
+                            "code": "gogl",
+                            "name": "goggles",
+                            "dir": "character-base/layers/3fac-face/gogl-goggles",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_3fac_{code}_v{variant}.png"
+                        }
+                    ]
+                },
+                {
+                    "layer": "4har",
+                    "dir": "4har-hair",
+                    "items": [
+                        {
+                            "code": "bob1",
+                            "name": "bob",
+                            "dir": "character-base/layers/4har-hair/bob1-bob",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4", "pBOW1", "pBOW2", "pBOW3", "pONE1", "pONE2", "pONE3", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"],
+                            "file_pattern": "char_a_{page}_4har_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "bob2",
+                            "name": "bob alt",
+                            "dir": "character-base/layers/4har-hair/bob2-bob-alt",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"],
+                            "file_pattern": "char_a_{page}_4har_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "dap1",
+                            "name": "dapper",
+                            "dir": "character-base/layers/4har-hair/dap1-dapper",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4", "pBOW1", "pBOW2", "pBOW3", "pONE1", "pONE2", "pONE3", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"],
+                            "file_pattern": "char_a_{page}_4har_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "flat",
+                            "name": "flattop",
+                            "dir": "character-base/layers/4har-hair/flat-flattop",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"],
+                            "file_pattern": "char_a_{page}_4har_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "fro1",
+                            "name": "afro",
+                            "dir": "character-base/layers/4har-hair/fro1-afro",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"],
+                            "file_pattern": "char_a_{page}_4har_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "pon1",
+                            "name": "ponytail",
+                            "dir": "character-base/layers/4har-hair/pon1-ponytail",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11a", "11b", "12", "13"],
+                            "file_pattern": "char_a_{page}_4har_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "spk2",
+                            "name": "spiky",
+                            "dir": "character-base/layers/4har-hair/spk2-spiky",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"],
+                            "file_pattern": "char_a_{page}_4har_{code}_v{variant}.png"
+                        }
+                    ]
+                },
+                {
+                    "layer": "5hat",
+                    "dir": "5hat-hat",
+                    "items": [
+                        {
+                            "code": "band",
+                            "name": "bandana",
+                            "dir": "character-base/layers/5hat-hat/band-bandana",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_5hat_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "hddn",
+                            "name": "hood down",
+                            "dir": "character-base/layers/5hat-hat/hddn-hood-down",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"],
+                            "file_pattern": "char_a_{page}_5hat_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "hdpl",
+                            "name": "hood up",
+                            "dir": "character-base/layers/5hat-hat/hdpl-hood-up",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"],
+                            "file_pattern": "char_a_{page}_5hat_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "pfbn",
+                            "name": "peasant bonnet",
+                            "dir": "character-base/layers/5hat-hat/pfbn-peasant-bonnet",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_5hat_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "pfht",
+                            "name": "peasant hat",
+                            "dir": "character-base/layers/5hat-hat/pfht-peasant-hat",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4", "pBOW1", "pBOW2", "pBOW3", "pONE1", "pONE2", "pONE3", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_5hat_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "pnty",
+                            "name": "pointed hat",
+                            "dir": "character-base/layers/5hat-hat/pnty-pointed-hat",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4", "pBOW1", "pBOW2", "pBOW3", "pONE1", "pONE2", "pONE3", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_5hat_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "rnht",
+                            "name": "rain hat",
+                            "dir": "character-base/layers/5hat-hat/rnht-rain-hat",
+                            "pages": ["p1", "p1B", "p1C", "p2", "p3", "p4"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_5hat_{code}_v{variant}.png"
+                        }
+                    ]
+                },
+                {
+                    "layer": "6tla",
+                    "dir": "6tla-tool-main",
+                    "items": [
+                        {
+                            "code": "ax01",
+                            "name": "axe",
+                            "dir": "character-base/layers/6tla-tool-main/ax01-axe",
+                            "pages": ["p1", "pONE1", "pONE2", "pONE3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "bnet",
+                            "name": "bug net",
+                            "dir": "character-base/layers/6tla-tool-main/bnet-bug-net",
+                            "pages": ["p2"],
+                            "variants": ["01"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "bo01",
+                            "name": "bow short",
+                            "dir": "character-base/layers/6tla-tool-main/bo01-bow-short",
+                            "pages": ["pBOW1", "pBOW2", "pBOW3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "bo02",
+                            "name": "bow recurve",
+                            "dir": "character-base/layers/6tla-tool-main/bo02-bow-recurve",
+                            "pages": ["pBOW1", "pBOW2", "pBOW3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "bo03",
+                            "name": "bow long",
+                            "dir": "character-base/layers/6tla-tool-main/bo03-bow-long",
+                            "pages": ["pBOW1", "pBOW2", "pBOW3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "farm",
+                            "name": "farming tools",
+                            "dir": "character-base/layers/6tla-tool-main/farm-farming-tools",
+                            "pages": ["p1B", "p2", "p4"],
+                            "variants": ["01"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "hb01",
+                            "name": "halberd",
+                            "dir": "character-base/layers/6tla-tool-main/hb01-halberd",
+                            "pages": ["p1B", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "mc01",
+                            "name": "mace",
+                            "dir": "character-base/layers/6tla-tool-main/mc01-mace",
+                            "pages": ["p1", "pONE1", "pONE2", "pONE3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "mine",
+                            "name": "pickaxe",
+                            "dir": "character-base/layers/6tla-tool-main/mine-pickaxe",
+                            "pages": ["p2"],
+                            "variants": ["01"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "roda",
+                            "name": "fishing rod",
+                            "dir": "character-base/layers/6tla-tool-main/roda-fishing-rod",
+                            "pages": ["p3"],
+                            "variants": ["01"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "smth",
+                            "name": "smithing hammer",
+                            "dir": "character-base/layers/6tla-tool-main/smth-smithing-hammer",
+                            "pages": ["p4"],
+                            "variants": ["01"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "sp01",
+                            "name": "spear",
+                            "dir": "character-base/layers/6tla-tool-main/sp01-spear",
+                            "pages": ["p1B", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "sp02",
+                            "name": "spear alt",
+                            "dir": "character-base/layers/6tla-tool-main/sp02-spear-alt",
+                            "pages": ["p1B", "pPOL1", "pPOL2", "pPOL3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "sw01",
+                            "name": "sword",
+                            "dir": "character-base/layers/6tla-tool-main/sw01-sword",
+                            "pages": ["p1", "pONE1", "pONE2", "pONE3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "sw02",
+                            "name": "twin blade sword",
+                            "dir": "character-base/layers/6tla-tool-main/sw02-twin-blade-sword",
+                            "pages": ["pONE1", "pONE2", "pONE3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "wood",
+                            "name": "woodcutting axe",
+                            "dir": "character-base/layers/6tla-tool-main/wood-woodcutting-axe",
+                            "pages": ["p1C", "p2", "p4"],
+                            "variants": ["01"],
+                            "file_pattern": "char_a_{page}_6tla_{code}_v{variant}.png"
+                        }
+                    ]
+                },
+                {
+                    "layer": "7tlb",
+                    "dir": "7tlb-tool-offhand",
+                    "items": [
+                        {
+                            "code": "qv01",
+                            "name": "quiver",
+                            "dir": "character-base/layers/7tlb-tool-offhand/qv01-quiver",
+                            "pages": ["pBOW1", "pBOW2", "pBOW3"],
+                            "variants": ["01", "02", "03", "04", "05", "06", "07", "08"],
+                            "file_pattern": "char_a_{page}_7tlb_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "sh01",
+                            "name": "shield round wood",
+                            "dir": "character-base/layers/7tlb-tool-offhand/sh01-shield-round-wood",
+                            "pages": ["p1", "pONE1", "pONE2", "pONE3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_7tlb_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "sh02",
+                            "name": "shield round metal",
+                            "dir": "character-base/layers/7tlb-tool-offhand/sh02-shield-round-metal",
+                            "pages": ["p1", "pONE1", "pONE2", "pONE3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_7tlb_{code}_v{variant}.png"
+                        },
+                        {
+                            "code": "sh03",
+                            "name": "shield kite",
+                            "dir": "character-base/layers/7tlb-tool-offhand/sh03-shield-kite",
+                            "pages": ["p1", "pONE1", "pONE2", "pONE3"],
+                            "variants": ["01", "02", "03", "04", "05"],
+                            "file_pattern": "char_a_{page}_7tlb_{code}_v{variant}.png"
+                        }
+                    ]
+                }
+            ]
+        },
+        "farmer-sprite-system": {
+            "id": "fbas",
+            "cell_size": "64x64",
+            "note": "One sheet per part, all animations on the same sheet. Slice at 64x64 and use guides/farmer base cell reference.png.",
+            "draw_order": ["00undr", "01body", "02sock", "03fot1", "04lwr1", "05shrt", "06lwr2", "07fot2", "08lwr3", "09hand", "10outr", "11neck", "12face", "13hair", "14head", "15over"],
+            "palette_codes": {
+                "00a": "single 3-colour ramp",
+                "00b": "single 4-colour ramp",
+                "00c": "two 3-colour ramps",
+                "00d": "one 4-colour ramp + one 3-colour ramp",
+                "00f": "one 4-colour ramp + the 5-colour hair ramp"
+            },
+            "layers": [
+                {
+                    "layer": "00undr",
+                    "dir": "00undr-under-everything",
+                    "items": [
+                        {
+                            "code": "cloakplain",
+                            "name": "cloakplain",
+                            "file": "farmer-sprite-system/layers/00undr-under-everything/fbas_00undr_cloakplain_00d.png",
+                            "palette": "00d",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "cloakwithmantleplain",
+                            "name": "cloakwithmantleplain",
+                            "file": "farmer-sprite-system/layers/00undr-under-everything/fbas_00undr_cloakwithmantleplain_00b.png",
+                            "palette": "00b",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "01body",
+                    "dir": "01body-body",
+                    "items": [
+                        {
+                            "code": "human",
+                            "name": "human",
+                            "file": "farmer-sprite-system/layers/01body-body/fbas_01body_human_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "humannolegs",
+                            "name": "humannolegs",
+                            "file": "farmer-sprite-system/layers/01body-body/fbas_01body_humannolegs_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "02sock",
+                    "dir": "02sock-legwear",
+                    "items": [
+                        {
+                            "code": "sockshigh",
+                            "name": "sockshigh",
+                            "file": "farmer-sprite-system/layers/02sock-legwear/fbas_02sock_sockshigh_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "sockslow",
+                            "name": "sockslow",
+                            "file": "farmer-sprite-system/layers/02sock-legwear/fbas_02sock_sockslow_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "stockings",
+                            "name": "stockings",
+                            "file": "farmer-sprite-system/layers/02sock-legwear/fbas_02sock_stockings_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "03fot1",
+                    "dir": "03fot1-shoes-under-pants",
+                    "items": [
+                        {
+                            "code": "boots",
+                            "name": "boots",
+                            "file": "farmer-sprite-system/layers/03fot1-shoes-under-pants/fbas_03fot1_boots_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "sandals",
+                            "name": "sandals",
+                            "file": "farmer-sprite-system/layers/03fot1-shoes-under-pants/fbas_03fot1_sandals_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "shoes",
+                            "name": "shoes",
+                            "file": "farmer-sprite-system/layers/03fot1-shoes-under-pants/fbas_03fot1_shoes_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "04lwr1",
+                    "dir": "04lwr1-pants-shorts",
+                    "items": [
+                        {
+                            "code": "longpants",
+                            "name": "longpants",
+                            "file": "farmer-sprite-system/layers/04lwr1-pants-shorts/fbas_04lwr1_longpants_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "onepiece",
+                            "name": "onepiece",
+                            "file": "farmer-sprite-system/layers/04lwr1-pants-shorts/fbas_04lwr1_onepiece_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "onepieceboobs",
+                            "name": "onepieceboobs",
+                            "file": "farmer-sprite-system/layers/04lwr1-pants-shorts/fbas_04lwr1_onepieceboobs_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "shorts",
+                            "name": "shorts",
+                            "file": "farmer-sprite-system/layers/04lwr1-pants-shorts/fbas_04lwr1_shorts_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "undies",
+                            "name": "undies",
+                            "file": "farmer-sprite-system/layers/04lwr1-pants-shorts/fbas_04lwr1_undies_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "05shrt",
+                    "dir": "05shrt-shirts",
+                    "items": [
+                        {
+                            "code": "bra",
+                            "name": "bra",
+                            "file": "farmer-sprite-system/layers/05shrt-shirts/fbas_05shrt_bra_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "longshirt",
+                            "name": "longshirt",
+                            "file": "farmer-sprite-system/layers/05shrt-shirts/fbas_05shrt_longshirt_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "longshirtboobs",
+                            "name": "longshirtboobs",
+                            "file": "farmer-sprite-system/layers/05shrt-shirts/fbas_05shrt_longshirtboobs_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "shortshirt",
+                            "name": "shortshirt",
+                            "file": "farmer-sprite-system/layers/05shrt-shirts/fbas_05shrt_shortshirt_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "shortshirtboobs",
+                            "name": "shortshirtboobs",
+                            "file": "farmer-sprite-system/layers/05shrt-shirts/fbas_05shrt_shortshirtboobs_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "tanktop",
+                            "name": "tanktop",
+                            "file": "farmer-sprite-system/layers/05shrt-shirts/fbas_05shrt_tanktop_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "tanktopboobs",
+                            "name": "tanktopboobs",
+                            "file": "farmer-sprite-system/layers/05shrt-shirts/fbas_05shrt_tanktopboobs_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "06lwr2",
+                    "dir": "06lwr2-overalls",
+                    "items": [
+                        {
+                            "code": "overalls",
+                            "name": "overalls",
+                            "file": "farmer-sprite-system/layers/06lwr2-overalls/fbas_06lwr2_overalls_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "overallsboobs",
+                            "name": "overallsboobs",
+                            "file": "farmer-sprite-system/layers/06lwr2-overalls/fbas_06lwr2_overallsboobs_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "shortalls",
+                            "name": "shortalls",
+                            "file": "farmer-sprite-system/layers/06lwr2-overalls/fbas_06lwr2_shortalls_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "shortallsboobs",
+                            "name": "shortallsboobs",
+                            "file": "farmer-sprite-system/layers/06lwr2-overalls/fbas_06lwr2_shortallsboobs_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "07fot2",
+                    "dir": "07fot2-boots-over-pants",
+                    "items": [
+                        {
+                            "code": "cuffedboots",
+                            "name": "cuffedboots",
+                            "file": "farmer-sprite-system/layers/07fot2-boots-over-pants/fbas_07fot2_cuffedboots_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "curlytoeshoes",
+                            "name": "curlytoeshoes",
+                            "file": "farmer-sprite-system/layers/07fot2-boots-over-pants/fbas_07fot2_curlytoeshoes_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "08lwr3",
+                    "dir": "08lwr3-skirts-dresses",
+                    "items": [
+                        {
+                            "code": "frillydress",
+                            "name": "frillydress",
+                            "file": "farmer-sprite-system/layers/08lwr3-skirts-dresses/fbas_08lwr3_frillydress_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "frillydressboobs",
+                            "name": "frillydressboobs",
+                            "file": "farmer-sprite-system/layers/08lwr3-skirts-dresses/fbas_08lwr3_frillydressboobs_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "frillyskirt",
+                            "name": "frillyskirt",
+                            "file": "farmer-sprite-system/layers/08lwr3-skirts-dresses/fbas_08lwr3_frillyskirt_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "longdress",
+                            "name": "longdress",
+                            "file": "farmer-sprite-system/layers/08lwr3-skirts-dresses/fbas_08lwr3_longdress_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "longdressboobs",
+                            "name": "longdressboobs",
+                            "file": "farmer-sprite-system/layers/08lwr3-skirts-dresses/fbas_08lwr3_longdressboobs_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "longskirt",
+                            "name": "longskirt",
+                            "file": "farmer-sprite-system/layers/08lwr3-skirts-dresses/fbas_08lwr3_longskirt_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "09hand",
+                    "dir": "09hand-handwear",
+                    "items": [
+                        {
+                            "code": "gloves",
+                            "name": "gloves",
+                            "file": "farmer-sprite-system/layers/09hand-handwear/fbas_09hand_gloves_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "10outr",
+                    "dir": "10outr-outerwear",
+                    "items": [
+                        {
+                            "code": "suspenders",
+                            "name": "suspenders",
+                            "file": "farmer-sprite-system/layers/10outr-outerwear/fbas_10outr_suspenders_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "vest",
+                            "name": "vest",
+                            "file": "farmer-sprite-system/layers/10outr-outerwear/fbas_10outr_vest_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "11neck",
+                    "dir": "11neck-neckwear",
+                    "items": [
+                        {
+                            "code": "cloakplain",
+                            "name": "cloakplain",
+                            "file": "farmer-sprite-system/layers/11neck-neckwear/fbas_11neck_cloakplain_00d.png",
+                            "palette": "00d",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "cloakwithmantleplain",
+                            "name": "cloakwithmantleplain",
+                            "file": "farmer-sprite-system/layers/11neck-neckwear/fbas_11neck_cloakwithmantleplain_00b.png",
+                            "palette": "00b",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "mantleplain",
+                            "name": "mantleplain",
+                            "file": "farmer-sprite-system/layers/11neck-neckwear/fbas_11neck_mantleplain_00b.png",
+                            "palette": "00b",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "scarf",
+                            "name": "scarf",
+                            "file": "farmer-sprite-system/layers/11neck-neckwear/fbas_11neck_scarf_00b.png",
+                            "palette": "00b",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "12face",
+                    "dir": "12face-facewear",
+                    "items": [
+                        {
+                            "code": "glasses",
+                            "name": "glasses",
+                            "file": "farmer-sprite-system/layers/12face-facewear/fbas_12face_glasses_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "shades",
+                            "name": "shades",
+                            "file": "farmer-sprite-system/layers/12face-facewear/fbas_12face_shades_00a.png",
+                            "palette": "00a",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "13hair",
+                    "dir": "13hair-hair",
+                    "items": [
+                        {
+                            "code": "afro",
+                            "name": "afro",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_afro_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "afropuffs",
+                            "name": "afropuffs",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_afropuffs_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "bob1",
+                            "name": "bob1",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_bob1_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "bob2",
+                            "name": "bob2",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_bob2_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "bushy",
+                            "name": "bushy",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_bushy_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "dapper",
+                            "name": "dapper",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_dapper_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "flattop",
+                            "name": "flattop",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_flattop_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "longbound",
+                            "name": "longbound",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_longbound_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "longboundclasped",
+                            "name": "longboundclasped",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_longboundclasped_00f.png",
+                            "palette": "00f",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "longwavy",
+                            "name": "longwavy",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_longwavy_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "mohawk",
+                            "name": "mohawk",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_mohawk_00_e.png",
+                            "palette": "00",
+                            "hidden_by_hats": true
+                        },
+                        {
+                            "code": "ponytail1",
+                            "name": "ponytail1",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_ponytail1_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "spiky1",
+                            "name": "spiky1",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_spiky1_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "spiky2",
+                            "name": "spiky2",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_spiky2_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "topknot",
+                            "name": "topknot",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_topknot_00f.png",
+                            "palette": "00f",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "twintail",
+                            "name": "twintail",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_twintail_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        },
+                        {
+                            "code": "twists",
+                            "name": "twists",
+                            "file": "farmer-sprite-system/layers/13hair-hair/fbas_13hair_twists_00.png",
+                            "palette": "00",
+                            "hidden_by_hats": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "14head",
+                    "dir": "14head-headwear",
+                    "items": [
+                        {
+                            "code": "bandana",
+                            "name": "bandana",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_bandana_00b_e.png",
+                            "palette": "00b",
+                            "hides_hair": true
+                        },
+                        {
+                            "code": "boaterhat",
+                            "name": "boaterhat",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_boaterhat_00d.png",
+                            "palette": "00d",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "boaterhat",
+                            "name": "boaterhat",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_boaterhat_01.png",
+                            "palette": "01",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "cowboyhat",
+                            "name": "cowboyhat",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_cowboyhat_00d.png",
+                            "palette": "00d",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "cowboyhat",
+                            "name": "cowboyhat",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_cowboyhat_01.png",
+                            "palette": "01",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "floppyhat",
+                            "name": "floppyhat",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_floppyhat_00d.png",
+                            "palette": "00d",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "floppyhat",
+                            "name": "floppyhat",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_floppyhat_01.png",
+                            "palette": "01",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "headscarf",
+                            "name": "headscarf",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_headscarf_00b_e.png",
+                            "palette": "00b",
+                            "hides_hair": true
+                        },
+                        {
+                            "code": "mushroom1",
+                            "name": "mushroom1",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_mushroom1_00d.png",
+                            "palette": "00d",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "mushroom1",
+                            "name": "mushroom1",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_mushroom1_01.png",
+                            "palette": "01",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "mushroom1",
+                            "name": "mushroom1",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_mushroom1_02.png",
+                            "palette": "02",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "mushroom1",
+                            "name": "mushroom1",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_mushroom1_03.png",
+                            "palette": "03",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "mushroom1",
+                            "name": "mushroom1",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_mushroom1_04.png",
+                            "palette": "04",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "mushroom1",
+                            "name": "mushroom1",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_mushroom1_05.png",
+                            "palette": "05",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "strawhat",
+                            "name": "strawhat",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_strawhat_00d.png",
+                            "palette": "00d",
+                            "hides_hair": false
+                        },
+                        {
+                            "code": "strawhat",
+                            "name": "strawhat",
+                            "file": "farmer-sprite-system/layers/14head-headwear/fbas_14head_strawhat_01.png",
+                            "palette": "01",
+                            "hides_hair": false
+                        }
+                    ]
+                },
+                {
+                    "layer": "15over",
+                    "dir": "15over-over-everything",
+                    "items": []
+                }
+            ]
+        }
+    }
+}

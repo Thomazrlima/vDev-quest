@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { ManaSeedAvatar } from "@/components/ManaSeed/ManaSeedAvatar";
 import { Card } from "@/components/ui/Card";
 import { ExperienceProgress } from "@/components/ui/ExperienceProgress";
@@ -14,6 +15,7 @@ const podiumBorderColor = {
 } as const;
 
 export function RankingTable({ entries }: { entries: RankingEntry[] }) {
+    const portraits = useMemo(() => new Map(entries.map((person) => [person.position, getManaSeedLayers(person.appearance, person.bodyType, person.colors)])), [entries]);
     const rowClass = "grid min-h-[82px] grid-cols-[72px_minmax(280px,1.45fr)_minmax(260px,.9fr)] items-center gap-3.5 border-b px-6 transition odd:bg-black-soft even:bg-black-muted hover:bg-primary-overlay last:border-b-0 max-[760px]:min-h-0 max-[760px]:grid-cols-[38px_minmax(0,1fr)] max-[760px]:grid-rows-[auto_auto] max-[760px]:gap-x-3 max-[760px]:gap-y-2.5 max-[760px]:px-3 max-[760px]:py-3.5";
     return (
         <Card as="section" className="mx-auto w-[min(1180px,100%)] overflow-hidden border-4 border-primary bg-black-overlay" aria-labelledby="ranking-table-title">
@@ -31,7 +33,7 @@ export function RankingTable({ entries }: { entries: RankingEntry[] }) {
                             <article className={cn(rowClass, borderColor)} key={person.position}>
                                 <strong className={cn("text-center text-2xl text-primary-light max-[760px]:col-start-1 max-[760px]:row-span-2 max-[760px]:row-start-1 max-[760px]:grid max-[760px]:place-items-center max-[760px]:border-r max-[760px]:text-lg", borderColor)}>{renderTextWithNumericFont(String(person.position).padStart(2, "0"))}</strong>
                                 <div className="flex min-w-0 items-center gap-3.75 max-[760px]:col-start-2 max-[760px]:gap-2.5">
-                                    <ManaSeedAvatar size="md" alt={`Retrato de ${person.name}`} layers={getManaSeedLayers(person.appearance)} className={cn("bg-black max-[760px]:h-11.5 max-[760px]:w-11.5 max-[760px]:border-2", borderColor)} />
+                                    <ManaSeedAvatar size="md" alt={`Retrato de ${person.name}`} layers={portraits.get(person.position)} className={cn("bg-black max-[760px]:h-11.5 max-[760px]:w-11.5 max-[760px]:border-2", borderColor)} />
                                     <div className="min-w-0">
                                         <div className="flex min-w-0 items-center gap-2.25 max-[760px]:flex-wrap max-[760px]:gap-x-1.5 max-[760px]:gap-y-1.25">
                                             <h3 className="min-w-0 overflow-hidden truncate text-[.98rem] font-black text-primary-light max-[760px]:text-[.82rem]">{person.name}</h3>

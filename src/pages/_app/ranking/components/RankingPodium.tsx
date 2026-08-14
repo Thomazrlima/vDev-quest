@@ -1,7 +1,7 @@
+import { Fragment, useMemo } from "react";
 import { ManaSeedSpriteLayers } from "@/components/ManaSeed/ManaSeedSpriteLayers";
-import { Fragment } from "react";
 import { RankingBadge } from "./RankingBadge";
-import { MANA_SEED_FREE } from "@/mocks/data/mana-seed";
+import { MANA_SEED } from "@/mocks/data/mana-seed";
 import type { RankingLeader } from "@/types/ranking";
 import { cn } from "@/lib/tailwind";
 import { renderTextWithNumericFont } from "@/lib/typography";
@@ -35,6 +35,7 @@ const cardBorderColor = {
 } as const;
 
 export function RankingPodium({ leaders }: { leaders: RankingLeader[] }) {
+    const portraits = useMemo(() => new Map(leaders.map((leader) => [leader.position, getManaSeedLayers(leader.appearance, leader.bodyType, leader.colors)])), [leaders]);
     const orderedLeaders = podiumOrder.map((position) => leaders.find((leader) => leader.position === position)).filter((leader): leader is RankingLeader => Boolean(leader));
 
     return (
@@ -61,7 +62,7 @@ export function RankingPodium({ leaders }: { leaders: RankingLeader[] }) {
                                 </div>
                             </Card>
                             <div className="relative z-1 -mt-1 -translate-y-2.5 h-[clamp(160px,28vw,295px)] w-[clamp(160px,28vw,295px)] filter-[drop-shadow(7px_8px_0_var(--color-black-overlay))] max-[760px]:h-[clamp(125px,38vw,170px)] max-[760px]:w-[clamp(125px,38vw,170px)]">
-                                <ManaSeedSpriteLayers frame={MANA_SEED_FREE.staticAvatarFrame} layers={getManaSeedLayers(leader.appearance)} />
+                                <ManaSeedSpriteLayers frame={MANA_SEED.staticAvatarFrame} layers={portraits.get(leader.position)} />
                             </div>
                         </article>
                     </Fragment>
