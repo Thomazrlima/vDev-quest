@@ -5,6 +5,7 @@ import { JOYSTICK_DEADZONE, JOYSTICK_RADIUS, LobbyJoystick } from "@/components/
 import { LobbyMinimap, MINIMAP_SCALE } from "@/components/Lobby/LobbyMinimap";
 import { ManaSeedSpriteLayers } from "@/components/ManaSeed/ManaSeedSpriteLayers";
 import { LOBBY_CORRIDORS, LOBBY_DESTINATIONS, LOBBY_MAP } from "@/mocks/data/lobby-map";
+import type { ManaSeedFrame } from "@/types/character";
 import type { LobbyDestinationIcon, LobbyDirection, LobbyHref, LobbyPlayerPose, LobbyPoint } from "@/types/lobby";
 import { IDLE_FRAME, clamp, directionFromVector, getDestinationByHref, getDestinationForPoint, isMovementKey, movementVector, resolveMove, shouldIgnoreKeyboardEvent, walkFrame } from "@/utils/lobby-navigation";
 import { findLobbyPath, snapToNavmesh } from "@/utils/lobby-pathfinding";
@@ -40,12 +41,16 @@ const DESTINATION_ICONS: Record<LobbyDestinationIcon, typeof CrownIcon> = {
     scroll: ScrollIcon,
 };
 
+function toPose(direction: LobbyDirection, cell: ManaSeedFrame, moving: boolean): LobbyPlayerPose {
+    return { direction, frame: cell.index, flipped: Boolean(cell.flip), moving };
+}
+
 function toIdlePose(direction: LobbyDirection): LobbyPlayerPose {
-    return { direction, frame: IDLE_FRAME[direction], moving: false };
+    return toPose(direction, IDLE_FRAME[direction], false);
 }
 
 function samePose(a: LobbyPlayerPose, b: LobbyPlayerPose) {
-    return a.direction === b.direction && a.frame === b.frame && a.moving === b.moving;
+    return a.direction === b.direction && a.frame === b.frame && a.flipped === b.flipped && a.moving === b.moving;
 }
 
 /** Volta pelo mesmo portão por onde saiu, resolvido antes do primeiro render. */
@@ -330,11 +335,7 @@ export function LobbyMap({ onReady }: { onReady?: () => void }) {
             }
 
             const direction = directionFromVector(vector, poseRef.current.direction);
-            const nextPose: LobbyPlayerPose = {
-                direction,
-                frame: moving ? walkFrame(direction, time) : IDLE_FRAME[direction],
-                moving,
-            };
+            const nextPose = toPose(direction, moving ? walkFrame(direction, time) : IDLE_FRAME[direction], moving);
 
             if (!samePose(nextPose, poseRef.current)) {
                 poseRef.current = nextPose;
@@ -475,7 +476,7 @@ export function LobbyMap({ onReady }: { onReady?: () => void }) {
                 <div className={`lobby__player lobby__player--${pose.direction} ${pose.moving ? "lobby__player--moving" : ""}`} ref={playerRef}>
                     <span className="lobby__player-shadow" aria-hidden="true" />
                     <span className="lobby__player-sprite">
-                        <ManaSeedSpriteLayers frame={pose.frame} layers={avatarLayers} />
+                        <ManaSeedSpriteLayers flipped={pose.flipped} frame={pose.frame} layers={avatarLayers} />
                     </span>
                 </div>
             </div>
