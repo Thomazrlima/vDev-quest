@@ -1,0 +1,5 @@
+src/schemas/
+.cursor
+.claude
+.github
+src/routeTree.gen.ts
