@@ -1,13 +1,16 @@
-import type { ManaSeedAppearance } from "@/types/character";
+import type { BodyType, ManaSeedAppearance, ManaSeedColors } from "@/types/character";
 
 export type RankingBadgeType = "champion" | "guardian" | "arcane" | "streak";
 
 type RankingPlayer = {
     name: string;
+    title: string;
     level: number;
     badges: RankingBadgeType[];
     exp: string;
     appearance: ManaSeedAppearance;
+    bodyType: BodyType;
+    colors: ManaSeedColors;
 };
 
 export type RankingLeader = RankingPlayer & {
@@ -16,6 +19,5 @@ export type RankingLeader = RankingPlayer & {
 
 export type RankingEntry = RankingPlayer & {
     position: number;
-    title: string;
     progress: number;
 };

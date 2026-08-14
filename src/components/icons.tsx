@@ -91,6 +91,86 @@ export function AccessoryIcon(props: IconProps) {
     );
 }
 
+export function HatIcon(props: IconProps) {
+    return (
+        <IconBase {...props}>
+            <path d="M7 14V8a5 5 0 0 1 10 0v6" />
+            <path d="M3 14h18v3H3z" />
+        </IconBase>
+    );
+}
+
+export function GlassesIcon(props: IconProps) {
+    return (
+        <IconBase {...props}>
+            <path d="M3 9h7v6H3zM14 9h7v6h-7z" />
+            <path d="M10 12h4" />
+        </IconBase>
+    );
+}
+
+export function DressIcon(props: IconProps) {
+    return (
+        <IconBase {...props}>
+            <path d="M9 3h6l1 5 4 13H4L8 8l1-5Z" />
+            <path d="M8 8h8" />
+        </IconBase>
+    );
+}
+
+export function OverallsIcon(props: IconProps) {
+    return (
+        <IconBase {...props}>
+            <path d="M8 3v5h8V3" />
+            <path d="M6 8h12v13h-4l-2-7-2 7H6V8Z" />
+        </IconBase>
+    );
+}
+
+export function VestIcon(props: IconProps) {
+    return (
+        <IconBase {...props}>
+            <path d="M8 3 4 6v15h5V3ZM16 3l4 3v15h-5V3Z" />
+            <path d="m9 3 3 6 3-6" />
+        </IconBase>
+    );
+}
+
+export function SockIcon(props: IconProps) {
+    return (
+        <IconBase {...props}>
+            <path d="M8 3h6v9l4 4-4 5-6-6V3Z" />
+            <path d="M8 7h6" />
+        </IconBase>
+    );
+}
+
+export function BootIcon(props: IconProps) {
+    return (
+        <IconBase {...props}>
+            <path d="M7 3h6v10l5 3v5H7V3Z" />
+            <path d="M7 8h6M5 21h16" />
+        </IconBase>
+    );
+}
+
+export function GloveIcon(props: IconProps) {
+    return (
+        <IconBase {...props}>
+            <path d="M6 10V6a2 2 0 0 1 4 0v4M10 10V4a2 2 0 0 1 4 0v6M14 10V6a2 2 0 0 1 4 0v8l-3 7H8l-2-6V9" />
+        </IconBase>
+    );
+}
+
+export function CloakIcon(props: IconProps) {
+    return (
+        <IconBase {...props}>
+            <path d="M12 3 6 6 3 21h18L18 6l-6-3Z" />
+            <path d="M9 5c1 3 5 3 6 0" />
+        </IconBase>
+    );
+}
+
 export function ShieldIcon(props: IconProps) {
     return (
         <IconBase {...props}>
@@ -145,7 +225,7 @@ export function MissionsNavIcon(props: IconProps) {
 export function RankingNavIcon(props: IconProps) {
     return (
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-            <path d="M21 21H3v-2h18v2Zm-2-4H5v-2h14v2ZM5 5h2v2H5v8H3V3h2v2Zm16 10h-2V7h-2V5h2V3h2v12ZM9 9H7V7h2v2Zm8 0h-2V7h2v2Zm-6-2H9V5h2v2Zm4 0h-2V5h2v2Zm-2-2h-2V3h2v2Z" />
+            <path d="M16 17h-3v2h2v2H9v-2h2v-2H8v-2h8v2Zm2-12h4v6h-2V7h-2v4h2v2h-2v2h-2V5H8v10H6v-2H4v-2h2V7H4v4H2V5h4V3h12v2Z" />
         </svg>
     );
 }

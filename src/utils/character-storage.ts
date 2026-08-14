@@ -1,5 +1,6 @@
-import { DEFAULT_MANA_SEED_APPEARANCE, MANA_SEED_FREE } from "@/mocks/data/mana-seed";
+import { DEFAULT_MANA_SEED_APPEARANCE, EMPTY_MANA_SEED_APPEARANCE, MANA_SEED_SLOTS } from "@/mocks/data/mana-seed";
 import type { ManaSeedAppearance } from "@/types/character";
+import { getManaSeedItem } from "@/utils/mana-seed";
 
 export const CHARACTER_STORAGE_KEY = "vdev-quest-character";
 export const CHARACTER_UPDATED_EVENT = "vdev-quest-character-updated";
@@ -18,17 +19,20 @@ function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null;
 }
 
-function hasKey<T extends object>(source: T, key: unknown): key is keyof T {
-    return typeof key === "string" && key in source;
-}
-
+/** Só entra o que ainda existe nas fichas: uma peça renomeada volta como slot vazio, não quebra o avatar. */
 function parseAppearance(value: unknown): ManaSeedAppearance | null {
     if (!isRecord(value)) return null;
-    const { hair, shirt, headwear } = value;
-    if (!hasKey(MANA_SEED_FREE.hairstyles, hair)) return null;
-    if (!hasKey(MANA_SEED_FREE.shirts, shirt)) return null;
-    if (!hasKey(MANA_SEED_FREE.headwear, headwear)) return null;
-    return { hair, shirt, headwear };
+
+    const appearance = { ...EMPTY_MANA_SEED_APPEARANCE };
+    let recognized = false;
+    for (const { slot } of MANA_SEED_SLOTS) {
+        const code = value[slot];
+        if (typeof code !== "string" || !getManaSeedItem(slot, code)) continue;
+        appearance[slot] = code;
+        recognized = true;
+    }
+
+    return recognized ? appearance : null;
 }
 
 export function readStoredCharacter(): StoredCharacter {

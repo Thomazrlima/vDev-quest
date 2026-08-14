@@ -1,11 +1,12 @@
 import { ManaSeedSpriteLayers } from "@/components/ManaSeed/ManaSeedSpriteLayers";
-import { MANA_SEED_FREE } from "@/mocks/data/mana-seed";
+import { MANA_SEED } from "@/mocks/data/mana-seed";
+import type { ManaSeedLayer } from "@/types/character";
 
 type ManaSeedAvatarProps = {
     size?: "sm" | "md" | "lg" | "xl";
     className?: string;
     alt?: string;
-    layers?: readonly string[];
+    layers?: readonly ManaSeedLayer[];
 };
 
 const sizes = {
@@ -19,7 +20,7 @@ export function ManaSeedAvatar({ size = "md", className = "", alt = "Avatar do a
     return (
         <div role="img" aria-label={alt} className={`relative block isolate overflow-hidden ${sizes[size]} shrink-0 border-[3px] border-primary bg-black shadow-[4px_4px_0_var(--color-black)] [image-rendering:pixelated] ${className}`}>
             <div className="absolute -left-full top-[-58%] h-[300%] w-[300%]" aria-hidden="true">
-                <ManaSeedSpriteLayers frame={MANA_SEED_FREE.staticAvatarFrame} layers={layers} />
+                <ManaSeedSpriteLayers frame={MANA_SEED.staticAvatarFrame} layers={layers} />
             </div>
         </div>
     );

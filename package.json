@@ -25,6 +25,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
+        "@rolldown/binding-win32-x64-msvc": "^1.2.4",
         "@tailwindcss/vite": "4.3.3",
         "@tanstack/router-plugin": "1.168.26",
         "@types/node": "26.2.0",

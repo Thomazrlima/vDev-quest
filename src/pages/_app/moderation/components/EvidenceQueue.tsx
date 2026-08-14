@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/Button";
 import { Loading } from "@/components/ui/Loading";
 import type { EvidenceSubmission } from "@/types/moderation";
 import { formatDate } from "@/utils/date";
+import { renderTextWithNumericFont } from "@/lib/typography";
 
 export function EvidenceQueue({ evidences, loading, onOpen }: { evidences: EvidenceSubmission[]; loading: boolean; onOpen: (id: string) => void }) {
     if (loading) return <Loading message="Buscando evidências pendentes..." />;
@@ -28,13 +29,13 @@ export function EvidenceQueue({ evidences, loading, onOpen }: { evidences: Evide
                     <span className="flex items-center gap-3">
                         <span className="grid h-9 w-9 shrink-0 place-items-center border-2 border-[var(--color-orange-dark)] bg-[var(--color-orange-dark)] text-[10px] font-black text-primary-light">{evidence.collaborator.initials}</span>
                         <span>
-                            <strong className="block text-sm text-[var(--color-orange-light)]">{evidence.collaborator.name}</strong>
-                            <small className="mt-1 block text-[10px] text-[var(--color-black-muted)] md:hidden">{evidence.missionTitle}</small>
+                            <strong className="block text-sm text-[var(--color-orange-light)]">{renderTextWithNumericFont(evidence.collaborator.name)}</strong>
+                            <small className="mt-1 block text-[10px] text-[var(--color-black-muted)] md:hidden">{renderTextWithNumericFont(evidence.missionTitle)}</small>
                         </span>
                     </span>
-                    <span className="hidden text-xs font-bold text-[var(--color-primary-light)] md:block">{evidence.missionTitle}</span>
-                    <span className="text-xs text-[var(--color-white-muted)]">{evidence.evidenceType}</span>
-                    <time className="text-xs text-[var(--color-black-muted)]">{formatDate(evidence.submittedAt)}</time>
+                    <span className="hidden text-xs font-bold text-[var(--color-primary-light)] md:block">{renderTextWithNumericFont(evidence.missionTitle)}</span>
+                    <span className="text-xs text-[var(--color-white-muted)]">{renderTextWithNumericFont(evidence.evidenceType)}</span>
+                    <time className="text-xs text-[var(--color-black-muted)]">{renderTextWithNumericFont(formatDate(evidence.submittedAt))}</time>
                     <span className="flex items-center justify-between gap-3">
                         <strong className="border-2 border-[var(--color-orange-dark)] bg-[var(--color-orange-dark)] px-2 py-1 text-[9px] uppercase tracking-wider text-primary-light">{evidence.status}</strong>
                         <ChevronIcon className="h-4 w-4 text-[var(--color-orange)] transition group-hover:text-primary-light" />
