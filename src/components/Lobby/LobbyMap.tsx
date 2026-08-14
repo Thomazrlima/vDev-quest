@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { CrownIcon, GridIcon, ScrollIcon } from "@/components/icons";
 import { JOYSTICK_DEADZONE, JOYSTICK_RADIUS, LobbyJoystick } from "@/components/Lobby/LobbyJoystick";
@@ -6,12 +6,13 @@ import { LobbyMinimap, MINIMAP_SCALE } from "@/components/Lobby/LobbyMinimap";
 import { ManaSeedSpriteLayers } from "@/components/ManaSeed/ManaSeedSpriteLayers";
 import { LOBBY_CORRIDORS, LOBBY_DESTINATIONS, LOBBY_MAP } from "@/mocks/data/lobby-map";
 import type { LobbyDestinationIcon, LobbyDirection, LobbyHref, LobbyPlayerPose, LobbyPoint } from "@/types/lobby";
-import { CHARACTER_UPDATED_EVENT, readStoredCharacter } from "@/utils/character-storage";
 import { IDLE_FRAME, clamp, directionFromVector, getDestinationByHref, getDestinationForPoint, isMovementKey, movementVector, resolveMove, shouldIgnoreKeyboardEvent, walkFrame } from "@/utils/lobby-navigation";
 import { findLobbyPath, snapToNavmesh } from "@/utils/lobby-pathfinding";
 import { readLobbyExit, rememberLobbyExit } from "@/utils/lobby-session";
 import { getManaSeedLayers } from "@/utils/mana-seed";
 import { useCoarsePointer } from "@/utils/use-coarse-pointer";
+import { useSpritesReady } from "@/utils/use-sprites-ready";
+import { useStoredCharacter } from "@/utils/use-stored-character";
 
 const WORLD_SIZE = LOBBY_MAP.size * LOBBY_MAP.zoom;
 const SPRITE_SIZE = 64 * LOBBY_MAP.zoom * LOBBY_MAP.playerScale;
@@ -56,8 +57,8 @@ function initialSpawn() {
     };
 }
 
-/** `onReady` avisa quando a arte do mapa terminou de carregar (ou falhou), para
- *  quem estiver segurando a tela de abertura poder sair da frente. */
+/** `onReady` avisa quando a arte do mapa e o avatar terminaram de carregar (ou falharam),
+ *  para quem estiver segurando a tela de abertura poder sair da frente. */
 export function LobbyMap({ onReady }: { onReady?: () => void }) {
     const router = useRouter();
     const navigate = useNavigate();
@@ -65,10 +66,16 @@ export function LobbyMap({ onReady }: { onReady?: () => void }) {
     const [pose, setPose] = useState<LobbyPlayerPose>(spawn.pose);
     const [activeHref, setActiveHref] = useState<LobbyHref | null>(() => getDestinationForPoint(spawn.position)?.href ?? null);
     const [transitionHref, setTransitionHref] = useState<LobbyHref | null>(null);
-    const [avatarLayers, setAvatarLayers] = useState(() => getManaSeedLayers(readStoredCharacter().appearance));
     const [debug] = useState(() => window.location.search.includes("debug"));
     const [tapMarker, setTapMarker] = useState<LobbyPoint | null>(null);
     const touchInput = useCoarsePointer();
+
+    // Mesma ficha da oficina, cor e corpo incluídos: o herói do vilarejo é o que foi montado lá.
+    const character = useStoredCharacter();
+    const avatarLayers = useMemo(() => getManaSeedLayers(character.appearance, character.bodyType, character.colors), [character]);
+    const spritesReady = useSpritesReady(avatarLayers);
+    const [mapArtReady, setMapArtReady] = useState(false);
+    const handleMapArt = useCallback(() => setMapArtReady(true), []);
 
     const viewportRef = useRef<HTMLDivElement>(null);
     const worldRef = useRef<HTMLDivElement>(null);
@@ -289,18 +296,11 @@ export function LobbyMap({ onReady }: { onReady?: () => void }) {
         return () => observer.disconnect();
     }, [cameraTarget, paint]);
 
+    // Só há vilarejo para mostrar quando a arte chegou e o avatar tem as texturas na cor
+    // escolhida: avisar antes é entregar o herói pintado nas rampas de teste.
     useEffect(() => {
-        function refreshAvatar() {
-            setAvatarLayers(getManaSeedLayers(readStoredCharacter().appearance));
-        }
-
-        window.addEventListener(CHARACTER_UPDATED_EVENT, refreshAvatar);
-        window.addEventListener("storage", refreshAvatar);
-        return () => {
-            window.removeEventListener(CHARACTER_UPDATED_EVENT, refreshAvatar);
-            window.removeEventListener("storage", refreshAvatar);
-        };
-    }, []);
+        if (mapArtReady && spritesReady) onReady?.();
+    }, [mapArtReady, onReady, spritesReady]);
 
     useEffect(() => {
         let animationFrame = 0;
@@ -409,7 +409,7 @@ export function LobbyMap({ onReady }: { onReady?: () => void }) {
             <div className="lobby__world" ref={worldRef}>
                 {tapMarker ? <span aria-hidden="true" className="lobby__tap-marker" style={{ left: `${tapMarker.x * LOBBY_MAP.zoom}px`, top: `${tapMarker.y * LOBBY_MAP.zoom}px` }} /> : null}
 
-                <img alt="" className="lobby__map" height={LOBBY_MAP.size} onError={onReady} onLoad={onReady} src={LOBBY_MAP.src} width={LOBBY_MAP.size} />
+                <img alt="" className="lobby__map" height={LOBBY_MAP.size} onError={handleMapArt} onLoad={handleMapArt} src={LOBBY_MAP.src} width={LOBBY_MAP.size} />
 
                 {debug ? (
                     <div className="lobby__debug" aria-hidden="true">

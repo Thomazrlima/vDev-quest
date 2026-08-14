@@ -4,7 +4,7 @@ import { CharacterLayersPanel } from "./components/CharacterLayersPanel";
 import { CharacterPresetPanel } from "./components/CharacterPresetPanel";
 import { CharacterPreview } from "./components/CharacterPreview";
 import { CHARACTER_AURAS } from "@/mocks/data/character-options";
-import { DEFAULT_MANA_SEED_COLORS, EMPTY_MANA_SEED_APPEARANCE } from "@/mocks/data/mana-seed";
+import { EMPTY_MANA_SEED_APPEARANCE } from "@/mocks/data/mana-seed";
 import { Button } from "@/components/ui/Button";
 import type { BodyType, CharacterPreset, ManaSeedAppearance, ManaSeedColors, ManaSeedSlot } from "@/types/character";
 import { readStoredCharacter, saveStoredCharacter } from "@/utils/character-storage";
@@ -20,16 +20,18 @@ function CharacterCreatorPage() {
     const [storedCharacter] = useState(readStoredCharacter);
     const [appearance, setAppearance] = useState<ManaSeedAppearance>(storedCharacter.appearance);
     const [name, setName] = useState(storedCharacter.name);
-    const [bodyType, setBodyType] = useState<BodyType>("hero");
+    const [bodyType, setBodyType] = useState<BodyType>(storedCharacter.bodyType);
     // No class picker on this page any more; the preview still labels the default class.
     const [aura] = useState(CHARACTER_AURAS[0]);
     const [activePreset, setActivePreset] = useState("");
-    const [colors, setColors] = useState<ManaSeedColors>(DEFAULT_MANA_SEED_COLORS);
+    const [colors, setColors] = useState<ManaSeedColors>(storedCharacter.colors);
     const layers = useMemo(() => getManaSeedLayers(appearance, bodyType, colors), [appearance, bodyType, colors]);
 
+    // O vilarejo remonta o avatar a partir deste registro, então a cor e o corpo entram
+    // junto com as peças: gravar só a aparência devolvia o herói nas rampas de teste.
     useEffect(() => {
-        saveStoredCharacter({ appearance, name });
-    }, [appearance, name]);
+        saveStoredCharacter({ appearance, name, colors, bodyType });
+    }, [appearance, bodyType, colors, name]);
 
     function rotate(slot: ManaSeedSlot, direction: -1 | 1) {
         setActivePreset("");

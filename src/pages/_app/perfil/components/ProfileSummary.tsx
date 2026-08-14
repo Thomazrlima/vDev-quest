@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { ManaSeedAvatar } from "@/components/ManaSeed/ManaSeedAvatar";
 import { Button } from "@/components/ui/Button";
@@ -7,15 +8,21 @@ import { ExperienceProgress } from "@/components/ui/ExperienceProgress";
 import { Heading } from "@/components/ui/Heading";
 import { SparkIcon } from "@/components/icons";
 import { renderTextWithNumericFont } from "@/lib/typography";
+import { getManaSeedLayers } from "@/utils/mana-seed";
+import { useStoredCharacter } from "@/utils/use-stored-character";
 
 export function ProfileSummary() {
+    // O retrato é o personagem montado na oficina, não o herói de exemplo das fichas.
+    const character = useStoredCharacter();
+    const layers = useMemo(() => getManaSeedLayers(character.appearance, character.bodyType, character.colors), [character]);
+
     return (
         <Card className="relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,var(--color-orange-overlay),transparent_36%)]" />
             <div className="relative grid gap-7 p-5 sm:p-8 lg:grid-cols-[auto_1fr_auto] lg:items-center lg:p-10">
                 <div className="relative mx-auto lg:mx-0">
                     <div className="absolute -inset-3 border-2 border-dashed border-orange-dark" />
-                    <ManaSeedAvatar size="xl" alt="Avatar de RafaelDev" className="relative border-4 shadow-pixel" />
+                    <ManaSeedAvatar size="xl" alt={`Avatar de ${character.name}`} layers={layers} className="relative border-4 shadow-pixel" />
                     <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 border-2 border-orange-dark bg-(--color-primary-dark) px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary-light shadow-[3px_3px_0_var(--color-black)]">Guerreiro</span>
                 </div>
                 <div className="text-center lg:text-left">

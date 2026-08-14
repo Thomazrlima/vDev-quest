@@ -1,5 +1,5 @@
-import { DEFAULT_MANA_SEED_APPEARANCE, EMPTY_MANA_SEED_APPEARANCE, MANA_SEED_SLOTS } from "@/mocks/data/mana-seed";
-import type { ManaSeedAppearance } from "@/types/character";
+import { DEFAULT_MANA_SEED_APPEARANCE, DEFAULT_MANA_SEED_COLORS, EMPTY_MANA_SEED_APPEARANCE, MANA_SEED_SLOTS } from "@/mocks/data/mana-seed";
+import type { BodyType, ManaSeedAppearance, ManaSeedColors } from "@/types/character";
 import { getManaSeedItem } from "@/utils/mana-seed";
 
 export const CHARACTER_STORAGE_KEY = "vdev-quest-character";
@@ -8,11 +8,16 @@ export const CHARACTER_UPDATED_EVENT = "vdev-quest-character-updated";
 export type StoredCharacter = {
     name: string;
     appearance: ManaSeedAppearance;
+    /** Índice de rampa por peça, e o tom de pele do corpo. */
+    colors: ManaSeedColors;
+    bodyType: BodyType;
 };
 
 const DEFAULT_CHARACTER: StoredCharacter = {
     name: "Seu Nome",
     appearance: DEFAULT_MANA_SEED_APPEARANCE,
+    colors: DEFAULT_MANA_SEED_COLORS,
+    bodyType: "hero",
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -35,6 +40,24 @@ function parseAppearance(value: unknown): ManaSeedAppearance | null {
     return recognized ? appearance : null;
 }
 
+/**
+ * Cor gravada é um índice de rampa, resolvido contra a tabela que a peça equipada declara.
+ * Um índice fora de faixa é o padrão da peça: `buildRecolor` daria a volta na tabela e
+ * pintaria uma cor que o jogador nunca escolheu.
+ */
+function parseColors(value: unknown): ManaSeedColors {
+    if (!isRecord(value)) return DEFAULT_MANA_SEED_COLORS;
+
+    const colors = { ...DEFAULT_MANA_SEED_COLORS };
+    for (const target of Object.keys(DEFAULT_MANA_SEED_COLORS) as (keyof ManaSeedColors)[]) {
+        const index = value[target];
+        if (typeof index !== "number" || !Number.isInteger(index) || index < 0) continue;
+        colors[target] = index;
+    }
+
+    return colors;
+}
+
 export function readStoredCharacter(): StoredCharacter {
     const stored = window.localStorage.getItem(CHARACTER_STORAGE_KEY);
     if (!stored) return DEFAULT_CHARACTER;
@@ -46,6 +69,8 @@ export function readStoredCharacter(): StoredCharacter {
         return {
             name: typeof parsed.name === "string" && parsed.name.trim() ? parsed.name : DEFAULT_CHARACTER.name,
             appearance: appearance ?? DEFAULT_CHARACTER.appearance,
+            colors: parseColors(parsed.colors),
+            bodyType: parsed.bodyType === "heroine" ? "heroine" : "hero",
         };
     } catch {
         return DEFAULT_CHARACTER;
