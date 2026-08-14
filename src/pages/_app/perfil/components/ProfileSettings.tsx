@@ -7,8 +7,8 @@ import type { NavigationMode } from "@/utils/navigation-preference";
 import { useNavigationMode } from "@/utils/use-navigation-mode";
 
 const OPTIONS: { value: NavigationMode; label: string; helper: string; icon: typeof GridIcon }[] = [
-    { value: "map", label: "Pelo vilarejo", helper: "Ande com o herói e entre pelas placas de cada destino.", icon: ScrollIcon },
-    { value: "navbar", label: "Pela barra", helper: "Menu fixo com Ranking, Missões e Perfil sempre à mão.", icon: GridIcon },
+    { value: "map", label: "Navegação pelo mapa", helper: "Ande com o herói e entre pelas placas de cada destino.", icon: ScrollIcon },
+    { value: "navbar", label: "Navegação tradicional", helper: "Menu fixo com Ranking, Missões e Perfil sempre à mão.", icon: GridIcon },
 ];
 
 export function ProfileSettings() {
