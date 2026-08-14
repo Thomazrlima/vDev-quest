@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Sparkle, User, UserSharp } from "pixelarticons/react";
 import { Button } from "@/components/ui/Button";
 import { CharacterColorsPanel } from "./CharacterColorsPanel";
-import { Input } from "@/components/ui/Input";
 import { LayerSelector } from "./LayerSelector";
 import { MANA_SEED_ICONS } from "@/components/ManaSeed/slot-icons";
 import type { BodyType, ManaSeedAppearance, ManaSeedColors, ManaSeedSlot } from "@/types/character";
@@ -16,18 +15,16 @@ const GROUPS: { id: string; label: string; slots: ManaSeedSlot[] }[] = [
 ];
 
 type CharacterLayersPanelProps = {
-    name: string;
     bodyType: BodyType;
     appearance: ManaSeedAppearance;
     colors: ManaSeedColors;
-    onNameChange: (value: string) => void;
     onBodyTypeChange: (value: BodyType) => void;
     onRotate: (slot: ManaSeedSlot, direction: -1 | 1) => void;
     onColorChange: (target: ManaSeedSlot | "skin", index: number) => void;
     onReset: () => void;
 };
 
-export function CharacterLayersPanel({ name, bodyType, appearance, colors, onNameChange, onBodyTypeChange, onRotate, onColorChange, onReset }: CharacterLayersPanelProps) {
+export function CharacterLayersPanel({ bodyType, appearance, colors, onBodyTypeChange, onRotate, onColorChange, onReset }: CharacterLayersPanelProps) {
     const [group, setGroup] = useState(GROUPS[0].id);
     const activeGroup = GROUPS.find((entry) => entry.id === group) ?? GROUPS[0];
 
@@ -41,7 +38,6 @@ export function CharacterLayersPanel({ name, bodyType, appearance, colors, onNam
                 </div>
                 <Sparkle className="h-4 w-4" />
             </header>
-            <Input label="Nome do herói" value={name} maxLength={18} onChange={(event) => onNameChange(event.target.value)} containerClassName="mt-5" className="border-[3px] border-[var(--color-primary-dark)] bg-[var(--color-black)] p-[.7rem] text-[.85rem] font-black shadow-[inset_3px_3px_0_var(--color-primary-overlay)] focus:border-primary" />
             <div className="mt-4 flex flex-col gap-2">
                 <span className="text-[.66rem] font-black uppercase tracking-[.14em] text-primary">BASE</span>
                 <div className="flex flex-wrap items-center gap-2">

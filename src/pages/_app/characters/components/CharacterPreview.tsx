@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from "pixelarticons/react";
 import { ManaSeedSpriteLayers } from "@/components/ManaSeed/ManaSeedSpriteLayers";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { getManaSeedAnimation, MANA_SEED_POSES } from "@/mocks/data/mana-seed";
 import type { ManaSeedDirection, ManaSeedLayer, ManaSeedPose } from "@/types/character";
 
@@ -14,7 +15,7 @@ const DIRECTIONS: { value: ManaSeedDirection; icon: typeof ArrowDown; label: str
 
 const POSES = Object.keys(MANA_SEED_POSES) as ManaSeedPose[];
 
-export function CharacterPreview({ name, layers }: { name: string; layers: readonly ManaSeedLayer[] }) {
+export function CharacterPreview({ name, onNameChange, layers }: { name: string; onNameChange: (value: string) => void; layers: readonly ManaSeedLayer[] }) {
     const [pose, setPose] = useState<ManaSeedPose>("idle");
     const [direction, setDirection] = useState<ManaSeedDirection>("down");
     const [step, setStep] = useState(0);
@@ -55,6 +56,7 @@ export function CharacterPreview({ name, layers }: { name: string; layers: reado
                     <ManaSeedSpriteLayers frame={cell.index} flipped={Boolean(cell.flip) !== mirrored} layers={layers} />
                 </div>
             </div>
+            <Input label="Nome do herói" value={name} maxLength={18} onChange={(event) => onNameChange(event.target.value)} containerClassName="relative z-[4] mb-4 w-[min(86%,20rem)]" className="border-2 border-[var(--color-primary-dark)] bg-[var(--color-black)] p-3 text-[.85rem] font-black shadow-[inset_.2rem_.2rem_0_var(--color-primary-overlay)] focus:border-primary" />
         </section>
     );
 }

@@ -85,8 +85,8 @@ function CharacterCreatorPage() {
             </div>
             <div className="mt-2 grid gap-5 xl:grid-cols-[285px_minmax(360px,1fr)_350px] xl:items-stretch">
                 <CharacterPresetPanel activePreset={activePreset} onPreset={selectPreset} />
-                <CharacterPreview name={name} layers={paintedLayers} />
-                <CharacterLayersPanel name={name} bodyType={bodyType} appearance={appearance} colors={colors} onNameChange={setName} onBodyTypeChange={setBodyType} onRotate={rotate} onColorChange={changeColor} onReset={reset} />
+                <CharacterPreview name={name} onNameChange={setName} layers={paintedLayers} />
+                <CharacterLayersPanel bodyType={bodyType} appearance={appearance} colors={colors} onBodyTypeChange={setBodyType} onRotate={rotate} onColorChange={changeColor} onReset={reset} />
             </div>
             <footer className="mt-6 flex justify-center">
                 <p className="text-center text-[10px] font-black uppercase tracking-[.16em] text-[var(--color-primary-dark)]">Alterações salvas automaticamente</p>
