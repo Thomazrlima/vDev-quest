@@ -1,4 +1,5 @@
 import { Fragment, useMemo } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { ManaSeedSpriteLayers } from "@/components/ManaSeed/ManaSeedSpriteLayers";
 import { RankingBadge } from "./RankingBadge";
 import { MANA_SEED } from "@/mocks/data/mana-seed";
@@ -9,6 +10,7 @@ import { Card } from "@/components/ui/Card";
 import { getManaSeedLayers } from "@/utils/mana-seed";
 
 const podiumOrder = [2, 1, 3] as const;
+const podiumImage = "/images/assets/podio.png";
 
 const leaderPlacement = {
     1: "left-1/2 bottom-[29.5%] w-[30%] -translate-x-1/2",
@@ -40,36 +42,53 @@ const avatarMobilePlacement = {
     3: "max-[760px]:translate-y-[clamp(-1px,calc(50px_-_13vw),5px)]",
 } as const;
 
+const entranceOrder = {
+    1: 0,
+    2: 1,
+    3: 2,
+} as const;
+
 export function RankingPodium({ leaders }: { leaders: RankingLeader[] }) {
+    const reduceMotion = useReducedMotion();
     const portraits = useMemo(() => new Map(leaders.map((leader) => [leader.position, getManaSeedLayers(leader.appearance, leader.bodyType, leader.colors)])), [leaders]);
     const orderedLeaders = podiumOrder.map((position) => leaders.find((leader) => leader.position === position)).filter((leader): leader is RankingLeader => Boolean(leader));
 
     return (
         <div className="relative z-4 mx-auto mt-2.5 h-[clamp(300px,52vw,530px)] w-full max-w-255 max-[760px]:left-1/2 max-[760px]:w-[108%] max-[760px]:-translate-x-1/2 max-[760px]:mt-20" role="list" aria-label="Pódio dos três melhores aventureiros">
-            <img src="/images/assets/podio.png" alt="" aria-hidden="true" className="pointer-events-none absolute bottom-[-13.2%] left-0 z-0 w-full select-none filter-[drop-shadow(0_12px_0_var(--color-black-overlay))] [image-rendering:pixelated] max-[760px]:bottom-0" />
+            <motion.img initial={reduceMotion ? false : { opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ opacity: { duration: 0.5, ease: "easeOut" }, y: { duration: 0.5, ease: "easeOut" } }} src={podiumImage} alt="" aria-hidden="true" className="pointer-events-none absolute bottom-[-13.2%] left-0 z-0 w-full select-none filter-[drop-shadow(0_12px_0_var(--color-black-overlay))] [image-rendering:pixelated] max-[760px]:bottom-0" />
             {orderedLeaders.map((leader) => {
+                const entranceDelay = entranceOrder[leader.position] * 0.12;
+
                 return (
                     <Fragment key={leader.position}>
-                        <strong className={cn("pointer-events-none absolute z-3 font-black leading-none text-[clamp(2.6rem,6vw,4.6rem)] drop-shadow-[0_0_10px_currentColor] [text-shadow:3px_3px_0_#0f0e0e,-1px_-1px_0_#f4f4f4] max-[760px]:text-[clamp(2.2rem,10vw,3.2rem)]", rankPlacement[leader.position], rankColor[leader.position])} aria-label={`${leader.position}º lugar`}>
+                        <motion.strong
+                            initial={reduceMotion ? false : { opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: entranceDelay, duration: 0.35 }}
+                            className={cn("pointer-events-none absolute z-3 font-black leading-none text-[clamp(2.6rem,6vw,4.6rem)] drop-shadow-[0_0_10px_currentColor] [text-shadow:3px_3px_0_#0f0e0e,-1px_-1px_0_#f4f4f4] max-[760px]:text-[clamp(2.2rem,10vw,3.2rem)]", rankPlacement[leader.position], rankColor[leader.position])}
+                            aria-label={`${leader.position}º lugar`}
+                        >
                             {renderTextWithNumericFont(leader.position)}
-                        </strong>
+                        </motion.strong>
                         <article className={cn("absolute flex flex-col items-center text-center", leaderPlacement[leader.position])} role="listitem">
-                            <Card className={cn("relative z-2 flex w-[92%] flex-col items-center px-3 py-2 pb-8.75 text-center max-[760px]:w-full max-[760px]:px-1.5 max-[760px]:py-1.5 max-[760px]:pb-7", cardBorderColor[leader.position])}>
-                                <strong className="block w-full translate-y-1.5 overflow-hidden truncate text-center text-[clamp(.84rem,1.9vw,1.16rem)] font-black text-primary-light max-[760px]:text-[clamp(.64rem,3.1vw,.82rem)]">{leader.name}</strong>
-                                <p className="mt-1 w-full translate-y-1.5 overflow-hidden truncate text-center text-[clamp(.5rem,1vw,.62rem)] font-black uppercase tracking-[.08em] text-primary max-[760px]:text-[clamp(.4rem,1.65vw,.5rem)]">{leader.title}</p>
-                                <div className="mt-2 flex w-full translate-y-1.5 items-center justify-center gap-2.5 text-center text-[.8rem] font-black uppercase tracking-[.08em] text-primary-light max-[760px]:mt-1.5 max-[760px]:gap-1.5 max-[760px]:text-[.56rem]">
-                                    <span>{renderTextWithNumericFont(`Nível ${leader.level}`)}</span>
-                                    <span className="border-l border-primary-light pl-2.5 text-primary-light max-[760px]:pl-1.5">{renderTextWithNumericFont(`${leader.exp} XP`)}</span>
+                            <motion.div initial={reduceMotion ? false : { opacity: 0, y: -28 }} animate={{ opacity: 1, y: 0 }} transition={{ opacity: { delay: entranceDelay, duration: 0.45, ease: "easeOut" }, y: { delay: entranceDelay, duration: 0.45, ease: "easeOut" } }} className="flex w-full flex-col items-center">
+                                <Card className={cn("relative z-2 flex w-[92%] flex-col items-center px-3 py-2 pb-8.75 text-center max-[760px]:w-full max-[760px]:px-1.5 max-[760px]:py-1.5 max-[760px]:pb-7", cardBorderColor[leader.position])}>
+                                    <strong className="block w-full translate-y-1.5 overflow-hidden truncate text-center text-[clamp(.84rem,1.9vw,1.16rem)] font-black text-primary-light max-[760px]:text-[clamp(.64rem,3.1vw,.82rem)]">{leader.name}</strong>
+                                    <p className="mt-1 w-full translate-y-1.5 overflow-hidden truncate text-center text-[clamp(.5rem,1vw,.62rem)] font-black uppercase tracking-[.08em] text-primary max-[760px]:text-[clamp(.4rem,1.65vw,.5rem)]">{leader.title}</p>
+                                    <div className="mt-2 flex w-full translate-y-1.5 items-center justify-center gap-2.5 text-center text-[.8rem] font-black uppercase tracking-[.08em] text-primary-light max-[760px]:mt-1.5 max-[760px]:gap-1.5 max-[760px]:text-[.56rem]">
+                                        <span>{renderTextWithNumericFont(`Nível ${leader.level}`)}</span>
+                                        <span className="border-l border-primary-light pl-2.5 text-primary-light max-[760px]:pl-1.5">{renderTextWithNumericFont(`${leader.exp} XP`)}</span>
+                                    </div>
+                                    <div className="absolute bottom-0 left-1/2 z-3 flex -translate-x-1/2 translate-y-1/2 items-center justify-center gap-1 max-[760px]:gap-0.5">
+                                        {leader.badges.map((badge) => (
+                                            <RankingBadge badge={badge} className="h-6.5 w-6.5 [&_svg]:h-3.5 [&_svg]:w-3.5 max-[760px]:h-5.5 max-[760px]:w-5.5 max-[760px]:[&_svg]:h-3 max-[760px]:[&_svg]:w-3" compact key={badge} />
+                                        ))}
+                                    </div>
+                                </Card>
+                                <div className={cn("relative z-1 -mt-1 -translate-y-2.5 h-[clamp(160px,28vw,295px)] w-[clamp(160px,28vw,295px)] filter-[drop-shadow(7px_8px_0_var(--color-black-overlay))] max-[760px]:h-[clamp(148px,45vw,195px)] max-[760px]:w-[clamp(148px,45vw,195px)]", avatarMobilePlacement[leader.position])}>
+                                    <ManaSeedSpriteLayers frame={MANA_SEED.staticAvatarFrame} layers={portraits.get(leader.position)} />
                                 </div>
-                                <div className="absolute bottom-0 left-1/2 z-3 flex -translate-x-1/2 translate-y-1/2 items-center justify-center gap-1 max-[760px]:gap-0.5">
-                                    {leader.badges.map((badge) => (
-                                        <RankingBadge badge={badge} className="h-6.5 w-6.5 [&_svg]:h-3.5 [&_svg]:w-3.5 max-[760px]:h-5.5 max-[760px]:w-5.5 max-[760px]:[&_svg]:h-3 max-[760px]:[&_svg]:w-3" compact key={badge} />
-                                    ))}
-                                </div>
-                            </Card>
-                            <div className={cn("relative z-1 -mt-1 -translate-y-2.5 h-[clamp(160px,28vw,295px)] w-[clamp(160px,28vw,295px)] filter-[drop-shadow(7px_8px_0_var(--color-black-overlay))] max-[760px]:h-[clamp(148px,45vw,195px)] max-[760px]:w-[clamp(148px,45vw,195px)]", avatarMobilePlacement[leader.position])}>
-                                <ManaSeedSpriteLayers frame={MANA_SEED.staticAvatarFrame} layers={portraits.get(leader.position)} />
-                            </div>
+                            </motion.div>
                         </article>
                     </Fragment>
                 );

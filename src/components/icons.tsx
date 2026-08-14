@@ -225,7 +225,7 @@ export function MissionsNavIcon(props: IconProps) {
 export function RankingNavIcon(props: IconProps) {
     return (
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-            <path d="M21 21H3v-2h18v2Zm-2-4H5v-2h14v2ZM5 5h2v2H5v8H3V3h2v2Zm16 10h-2V7h-2V5h2V3h2v12ZM9 9H7V7h2v2Zm8 0h-2V7h2v2Zm-6-2H9V5h2v2Zm4 0h-2V5h2v2Zm-2-2h-2V3h2v2Z" />
+            <path d="M16 17h-3v2h2v2H9v-2h2v-2H8v-2h8v2Zm2-12h4v6h-2V7h-2v4h2v2h-2v2h-2V5H8v10H6v-2H4v-2h2V7H4v4H2V5h4V3h12v2Z" />
         </svg>
     );
 }

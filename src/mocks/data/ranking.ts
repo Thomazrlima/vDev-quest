@@ -1,6 +1,8 @@
 import { createManaSeedAppearance, createManaSeedColors } from "@/mocks/data/mana-seed";
 import type { RankingEntry, RankingLeader } from "@/types/ranking";
 
+export const RANKING_UPDATED_AT = "2026-08-14T09:30:00-03:00";
+
 export const RANKING_LEADERS: RankingLeader[] = [
     { position: 1, name: "RafaelDev", title: "Arquiteto da Guilda", level: 58, badges: ["champion", "guardian", "streak"], exp: "18.560", bodyType: "hero", appearance: createManaSeedAppearance({ hair: "dapper", neck: "cloakplain", shirt: "longshirt", pants: "longpants", boots: "cuffedboots" }), colors: createManaSeedColors({ skin: 5, hair: 37, neck: 38, shirt: 2, pants: 32, boots: 32 }) },
     { position: 2, name: "CamilaCode", title: "Tecelã de Interfaces", level: 54, badges: ["arcane", "streak"], exp: "17.940", bodyType: "heroine", appearance: createManaSeedAppearance({ hair: "longwavy", shirt: "tanktop", skirt: "longskirt", socks: "stockings", shoes: "shoes" }), colors: createManaSeedColors({ skin: 1, hair: 34, shirt: 46, skirt: 44, socks: 0, shoes: 33 }) },

@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { ManaSeedAvatar } from "@/components/ManaSeed/ManaSeedAvatar";
 import { Card } from "@/components/ui/Card";
 import { ExperienceProgress } from "@/components/ui/ExperienceProgress";

@@ -25,10 +25,10 @@ export function NavBar() {
                             {(item, { active, indicator, select }) => {
                                 const Icon = item.icon;
                                 return (
-                                    <Button key={item.href} type="button" onClick={select} variant="ghost" className={`h-12 gap-2 border-2 px-3 text-[12px] uppercase tracking-wider lg:px-4 lg:text-[13px] ${active ? "border-transparent text-primary-light" : "border-transparent text-(--color-white-muted) hover:border-transparent hover:shadow-[inset_0_0_0_2px_var(--color-primary)] hover:text-(--color-white-muted)"}`} aria-current={active ? "page" : undefined}>
+                                    <Button key={item.href} type="button" onClick={select} variant="ghost" className={`h-12 items-center gap-2 border-2 px-3 text-[12px] uppercase leading-none tracking-wider lg:px-4 lg:text-[13px] ${active ? "border-transparent text-primary-light" : "border-transparent text-(--color-white-muted) hover:border-transparent hover:shadow-[inset_0_0_0_2px_var(--color-primary)] hover:text-(--color-white-muted)"}`} aria-current={active ? "page" : undefined}>
                                         {indicator}
-                                        <Icon className="relative z-10 h-5 w-5" />
-                                        <span className="relative z-10">{item.label}</span>
+                                        <Icon className="relative z-10 h-5 w-5 shrink-0" />
+                                        <span className="relative z-10 leading-none">{item.label}</span>
                                     </Button>
                                 );
                             }}
@@ -42,9 +42,9 @@ export function NavBar() {
                     {(item, { active, indicator, select }) => {
                         const Icon = item.icon;
                         return (
-                            <Button key={item.href} type="button" onClick={select} variant="ghost" className={`h-full min-w-0 flex-1 flex-col gap-1.5 border-x-2 border-y-0 px-1 py-1 text-[10px] tracking-wide ${active ? "text-primary-light" : "text-(--color-white-muted) hover:text-primary-light"}`} aria-current={active ? "page" : undefined}>
+                            <Button key={item.href} type="button" onClick={select} variant="ghost" className={`h-full min-w-0 flex-1 flex-col items-center gap-1.5 border-x-2 border-y-0 px-1 py-1 text-[10px] leading-none tracking-wide ${active ? "text-primary-light" : "text-(--color-white-muted) hover:text-primary-light"}`} aria-current={active ? "page" : undefined}>
                                 {indicator}
-                                <Icon className="relative z-10 h-4 w-4" />
+                                <Icon className="relative z-10 h-4 w-4 shrink-0" />
                                 <span className="relative z-10 leading-none">{item.label}</span>
                             </Button>
                         );
