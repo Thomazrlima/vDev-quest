@@ -18,7 +18,7 @@ const sizes = {
 
 export function ManaSeedAvatar({ size = "md", className = "", alt = "Avatar do aventureiro", layers }: ManaSeedAvatarProps) {
     return (
-        <div role="img" aria-label={alt} className={`relative block isolate overflow-hidden ${sizes[size]} shrink-0 border-[3px] border-primary bg-black shadow-[4px_4px_0_var(--color-black)] [image-rendering:pixelated] ${className}`}>
+        <div role="img" aria-label={alt} className={`relative block isolate aspect-square overflow-hidden ${sizes[size]} shrink-0 border-[3px] border-primary bg-black shadow-[4px_4px_0_var(--color-black)] [image-rendering:pixelated] ${className}`}>
             <div className="absolute -left-full top-[-58%] h-[300%] w-[300%]" aria-hidden="true">
                 <ManaSeedSpriteLayers frame={MANA_SEED.staticAvatarFrame} layers={layers} />
             </div>

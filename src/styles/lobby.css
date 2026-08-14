@@ -260,6 +260,7 @@
     left: 0;
     top: 0;
     z-index: 6;
+    aspect-ratio: 1;
     width: var(--lobby-sprite);
     height: var(--lobby-sprite);
     margin-left: calc(var(--lobby-sprite) / -2);

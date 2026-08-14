@@ -85,7 +85,7 @@ export function RankingPodium({ leaders }: { leaders: RankingLeader[] }) {
                                         ))}
                                     </div>
                                 </Card>
-                                <div className={cn("relative z-1 -mt-1 -translate-y-2.5 h-[clamp(160px,28vw,295px)] w-[clamp(160px,28vw,295px)] filter-[drop-shadow(7px_8px_0_var(--color-black-overlay))] max-[760px]:h-[clamp(148px,45vw,195px)] max-[760px]:w-[clamp(148px,45vw,195px)]", avatarMobilePlacement[leader.position])}>
+                                <div className={cn("relative z-1 -mt-1 aspect-square -translate-y-2.5 h-[clamp(160px,28vw,295px)] w-[clamp(160px,28vw,295px)] filter-[drop-shadow(7px_8px_0_var(--color-black-overlay))] max-[760px]:h-[clamp(148px,45vw,195px)] max-[760px]:w-[clamp(148px,45vw,195px)]", avatarMobilePlacement[leader.position])}>
                                     <ManaSeedSpriteLayers frame={MANA_SEED.staticAvatarFrame} layers={portraits.get(leader.position)} />
                                 </div>
                             </motion.div>

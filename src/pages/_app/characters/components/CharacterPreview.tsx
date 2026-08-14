@@ -46,8 +46,8 @@ export function CharacterPreview({ name, onNameChange, layers }: { name: string;
                     ))}
                 </div>
             </div>
-            <div role="img" aria-label={`Prévia de ${name || "novo herói"}`} className="relative z-[3] -mt-6 h-[min(122vw,620px)] w-[min(122%,620px)] overflow-visible [image-rendering:pixelated] [filter:drop-shadow(9px_10px_0_var(--color-black-overlay))]">
-                <div className="absolute inset-0 origin-bottom [transform:translateY(10%)_scale(1.16)]">
+            <div role="img" aria-label={`Prévia de ${name || "novo herói"}`} className="relative z-[3] -mt-6 aspect-square w-[min(122%,38.75rem)] overflow-visible [image-rendering:pixelated] [filter:drop-shadow(9px_10px_0_var(--color-black-overlay))]">
+                <div className="absolute inset-0 origin-bottom [transform:translateY(20%)_scale(1.16)]">
                     {/*
                      `flip` é opcional no quadro, e `undefined !== false` é verdadeiro: sem o
                      `Boolean` o perfil direito também saía espelhado, e as duas setas laterais
