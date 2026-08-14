@@ -45,6 +45,13 @@ function loadRankingAssets(layers: ReturnType<typeof getManaSeedLayers>) {
     return rankingAssetsPromise;
 }
 
+/**
+ * O hall e a parede vão de ponta a ponta, então a folga que o layout reserva para o atalho
+ * flutuante de volta ao vilarejo apareceria aqui como uma faixa da paisagem por cima da arte.
+ * Com a barra de navegação ligada a medida é zero e isto não muda nada.
+ */
+const BLEED_UNDER_RETURN_LINK = "mt-[calc(var(--lobby-return-allowance,0px)*-1)]";
+
 export const Route = createFileRoute("/_app/ranking/")({
     component: RankingPage,
 });
@@ -68,14 +75,14 @@ function RankingPage() {
 
     if (!assetsLoaded) {
         return (
-            <main className="min-h-[calc(100vh-5.5rem)] overflow-x-hidden bg-(--color-black)">
+            <main className={`min-h-[calc(100vh-5.5rem)] overflow-x-hidden bg-(--color-black) ${BLEED_UNDER_RETURN_LINK}`}>
                 <Loading message="Preparando o Hall da Fama..." className="min-h-[calc(100vh-5.5rem)] uppercase tracking-[.12em]" />
             </main>
         );
     }
 
     return (
-        <main className="overflow-x-hidden bg-(--color-black)">
+        <main className={`overflow-x-hidden bg-(--color-black) ${BLEED_UNDER_RETURN_LINK}`}>
             <section className="relative min-h-185 overflow-hidden border-b-8 border-(--color-black) bg-(--color-black) bg-[url('/images/backgrounds/hall.png')] bg-cover bg-position-[center_46%] px-4 pt-7.5 shadow-[inset_0_-20px_48px_var(--color-black-overlay),inset_0_8px_28px_var(--color-black-overlay)] max-[760px]:min-h-152.5 max-[760px]:bg-position-[center_top] max-[760px]:bg-size-[auto_100%] max-[760px]:px-1.5 max-[760px]:pt-15">
                 <div className="pointer-events-none absolute inset-0 z-0 bg-[rgb(15_14_14/45%)]" aria-hidden="true" />
                 <header className="relative z-5 mx-auto grid aspect-2172/724 w-[min(840px,calc(100%-32px))] place-items-center text-center max-[760px]:w-[min(100%,calc(100%-14px))] max-[760px]:translate-y-5">
