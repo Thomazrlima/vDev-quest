@@ -1,56 +1,44 @@
-import { FaceIcon, PantsIcon, ShirtIcon, ShoeIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { renderTextWithNumericFont } from "@/lib/typography";
 
-import { CHARACTER_AURAS, CHARACTER_PRESETS } from "@/mocks/data/character-options";
-import type { CharacterAura, CharacterPreset } from "@/types/character";
+import { MANA_SEED_ICONS } from "@/components/ManaSeed/slot-icons";
+import { CHARACTER_PRESETS } from "@/mocks/data/character-options";
+import type { CharacterPreset } from "@/types/character";
 
-const icons = { shirt: ShirtIcon, face: FaceIcon, shoe: ShoeIcon, pants: PantsIcon };
-
-export function CharacterPresetPanel({ activePreset, aura, onPreset, onAura }: { activePreset: string; aura: CharacterAura; onPreset: (preset: CharacterPreset) => void; onAura: (aura: CharacterAura) => void }) {
+export function CharacterPresetPanel({ activePreset, onPreset }: { activePreset: string; onPreset: (preset: CharacterPreset) => void }) {
     return (
-        <section className="border-[5px] border-[var(--color-orange-dark)] bg-[linear-gradient(135deg,var(--color-black-overlay),var(--color-black-overlay))] p-4 shadow-[0_0_0_3px_var(--color-orange-dark),6px_7px_0_var(--color-black-overlay),inset_0_0_0_2px_var(--color-orange-overlay)] sm:p-5" aria-label="Pre-sets de traje e classe">
+        <section className="border-[5px] border-[var(--color-orange-dark)] bg-[linear-gradient(135deg,var(--color-black-overlay),var(--color-black-overlay))] p-4 shadow-[0_0_0_3px_var(--color-orange-dark),6px_7px_0_var(--color-black-overlay),inset_0_0_0_2px_var(--color-orange-overlay)] sm:p-5" aria-label="Pre-sets de traje">
             <header className="flex items-center justify-between border-b-2 border-[var(--color-orange-dark)] pb-[.7rem] text-center text-white">
                 <span>✦</span>
                 <div>
-                    <p className="m-0 text-[.78rem] font-black tracking-[.13em]">PRE-SETS</p>
-                    <small className="mt-[.2rem] block text-[.5rem] font-black tracking-[.16em] text-[var(--color-orange)]">TRAJES DO HERÓI</small>
+                    <p className="m-0 text-[.85rem] font-black tracking-[.13em]">PRE-SETS</p>
+                    <small className="mt-[.2rem] block text-[.56rem] font-black tracking-[.16em] text-[var(--color-orange)]">TRAJES DO HERÓI</small>
                 </div>
                 <span>✦</span>
             </header>
-            <p className="mt-4 text-[.68rem] leading-[1.5] text-[var(--color-white-muted)]">Escolha um conjunto para equipar o aventureiro de uma vez.</p>
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <p className="mt-4 text-[.72rem] leading-[1.5] text-[var(--color-white-muted)]">Escolha um conjunto para equipar o aventureiro de uma vez.</p>
+            <div className="mt-4 flex flex-wrap gap-3">
                 {CHARACTER_PRESETS.map((preset) => {
-                    const Icon = icons[preset.icon];
+                    const Icon = MANA_SEED_ICONS[preset.icon];
                     return (
                         <Button
                             type="button"
                             key={preset.id}
                             onClick={() => onPreset(preset)}
-                            className={`min-h-[116px] border-[3px] bg-[var(--color-black)] p-[.6rem] text-center text-[var(--color-orange-light)] shadow-[inset_2px_2px_0_var(--color-orange-overlay),3px_3px_0_var(--color-black)] hover:brightness-105 ${activePreset === preset.id ? "border-primary bg-[var(--color-orange-dark)] shadow-[inset_0_0_0_2px_var(--color-orange-overlay),0_0_0_2px_var(--color-orange-dark),3px_3px_0_var(--color-black)]" : "border-[var(--color-orange-dark)]"}`}
+                            aria-pressed={activePreset === preset.id}
+                            aria-label={`${preset.label} — ${preset.helper}`}
+                            className={`group relative h-14 w-14 shrink-0 border-[3px] bg-[var(--color-black)] p-0 text-[var(--color-orange-light)] shadow-[inset_2px_2px_0_var(--color-orange-overlay),3px_3px_0_var(--color-black)] hover:brightness-110 ${activePreset === preset.id ? "border-primary bg-[var(--color-orange-dark)] shadow-[inset_0_0_0_2px_var(--color-orange-overlay),0_0_0_2px_var(--color-orange-dark),3px_3px_0_var(--color-black)]" : "border-[var(--color-orange-dark)]"}`}
                         >
-                            <span className="mx-auto grid h-[2.4rem] w-[2.4rem] place-items-center border-2 border-[var(--color-orange-dark)] bg-[var(--color-orange-dark)] text-primary-light shadow-[inset_2px_2px_0_var(--color-orange-overlay)]">
-                                <Icon className="h-7 w-7" />
+                            <Icon className="h-8 w-8" />
+                            <span className="pointer-events-none invisible absolute left-1/2 top-full z-20 mt-2 w-max max-w-45 -translate-x-1/2 border-2 border-[var(--color-orange)] bg-[var(--color-black)] px-2 py-1.5 text-left opacity-0 shadow-[3px_3px_0_var(--color-black-overlay)] transition-opacity group-hover:visible group-hover:opacity-100 group-focus-visible:visible group-focus-visible:opacity-100">
+                                <strong className="block text-[11px] uppercase leading-none tracking-wide text-[var(--color-orange-light)]">{preset.label}</strong>
+                                <small className="mt-1 block text-[10px] normal-case leading-tight tracking-normal text-[var(--color-white-muted)]">{preset.helper}</small>
                             </span>
-                            <strong className="mt-2 block text-[10px] uppercase tracking-wide">{preset.label}</strong>
-                            <small className="mt-1 block text-[8px] leading-tight opacity-75">{preset.helper}</small>
                         </Button>
                     );
                 })}
             </div>
-            <div className="mt-6 border-t-2 border-[var(--color-orange)] pt-5">
-                <p className="text-[.56rem] font-black uppercase tracking-[.14em] text-[var(--color-orange)]">ESCOLHA SUA CLASSE</p>
-                <div className="mt-3 grid grid-cols-3 gap-2">
-                    {CHARACTER_AURAS.map((option) => (
-                        <Button type="button" key={option.name} title={option.name} aria-label={`Classe ${option.name}`} onClick={() => onAura(option)} className={`overflow-hidden border-2 bg-[var(--color-black)] p-[3px] shadow-[2px_2px_0_var(--color-black)] hover:brightness-110 ${aura.name === option.name ? "border-primary bg-[var(--color-orange-dark)] shadow-[0_0_0_2px_var(--color-orange-dark),3px_3px_0_var(--color-black)]" : "border-[var(--color-orange-dark)]"}`}>
-                            <img src={option.image} alt="" width={512} height={512} className="block aspect-square h-auto w-full [image-rendering:pixelated] object-cover" />
-                            <small className="block truncate py-[.32rem_.08rem_.18rem] text-[.43rem] font-black uppercase leading-none tracking-[.02em] text-[var(--color-orange-light)]">{option.name}</small>
-                        </Button>
-                    ))}
-                </div>
-                <p className="mt-3 text-center text-[9px] font-black uppercase tracking-wider text-[var(--color-orange-light)]">Classe ativa: {aura.name}</p>
-            </div>
-            <aside className="mt-5 border-2 border-dashed border-[var(--color-orange-dark)] bg-[var(--color-black-overlay)] p-[.6rem] text-[.53rem] font-black uppercase leading-[1.45] text-[var(--color-orange)]">{renderTextWithNumericFont("O pacote atual fornece 2 cabelos, 2 camisas e 1 acessório. Novas camadas surgem quando houver novos sprites.")}</aside>
+            <aside className="mt-5 border-2 border-dashed border-[var(--color-orange-dark)] bg-[var(--color-black-overlay)] p-[.6rem] text-[.58rem] font-black uppercase leading-[1.45] text-[var(--color-orange)]">{renderTextWithNumericFont("O pacote atual fornece 17 cabelos, 16 chapéus e 13 camadas equipáveis. As cores de cada peça vêm prontas do sprite.")}</aside>
         </section>
     );
 }
