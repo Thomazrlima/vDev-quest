@@ -47,7 +47,12 @@ export function CharacterPreview({ name, aura, bodyType, layers }: { name: strin
             </div>
             <div role="img" aria-label={`Prévia de ${name || "novo herói"}`} className="relative z-[3] -mt-6 h-[min(122vw,620px)] w-[min(122%,620px)] overflow-visible [image-rendering:pixelated] [filter:drop-shadow(9px_10px_0_var(--color-black-overlay))]">
                 <div className="absolute inset-0 origin-bottom [transform:translateY(10%)_scale(1.16)]">
-                    <ManaSeedSpriteLayers frame={cell.index} flipped={cell.flip !== mirrored} layers={layers} />
+                    {/*
+                     `flip` é opcional no quadro, e `undefined !== false` é verdadeiro: sem o
+                     `Boolean` o perfil direito também saía espelhado, e as duas setas laterais
+                     mostravam o herói virado para o mesmo lado.
+                    */}
+                    <ManaSeedSpriteLayers frame={cell.index} flipped={Boolean(cell.flip) !== mirrored} layers={layers} />
                 </div>
             </div>
             <div className="relative z-[4] -mt-[4.5rem] w-[min(86%,440px)] border-[5px] border-[var(--color-orange)] bg-[linear-gradient(var(--color-primary),var(--color-white-soft)_48%,var(--color-black-soft))] p-[.65rem_.75rem_.8rem] text-center shadow-[inset_3px_3px_0_var(--color-primary-light),inset_-3px_-3px_0_var(--color-black-soft),5px_6px_0_var(--color-black-overlay)]">
