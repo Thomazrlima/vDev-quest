@@ -1,0 +1,609 @@
+/* Selo de carregamento: o logo flutua em passos sobre um halo e a barra corre em blocos. */
+.quest-loader {
+    display: grid;
+    justify-items: center;
+    gap: 0.95rem;
+    padding: 2.6rem 1.25rem;
+    text-align: center;
+}
+
+.quest-loader--fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    align-content: center;
+    padding: 1.25rem;
+    background:
+        linear-gradient(rgba(6, 8, 6, 0.93), rgba(6, 8, 6, 0.985)),
+        url("/images/backgrounds/quest-landscape.png") center / cover fixed;
+}
+
+.quest-loader--leaving {
+    animation: quest-loader-out 260ms ease forwards;
+    pointer-events: none;
+}
+
+.quest-loader__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+}
+
+.quest-loader__halo {
+    position: absolute;
+    width: 155%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(217, 154, 43, 0.32), rgba(217, 154, 43, 0.07) 45%, transparent 68%);
+    animation: quest-loader-halo 2.4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.quest-loader__mark {
+    position: relative;
+    animation: quest-loader-bob 1.6s steps(4, end) infinite;
+    filter: drop-shadow(4px 6px 0 rgba(0, 0, 0, 0.5));
+}
+
+.quest-loader__image {
+    width: clamp(78px, 19vw, 132px);
+    height: auto;
+}
+
+.quest-loader--fullscreen .quest-loader__image {
+    width: clamp(104px, 26vw, 176px);
+}
+
+.quest-loader__label {
+    margin: 0;
+    color: #f1c461;
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-shadow: 2px 2px 0 #3c2b0e;
+    text-transform: uppercase;
+}
+
+.quest-loader__bar {
+    display: block;
+    width: min(236px, 66vw);
+    height: 14px;
+    overflow: hidden;
+    border: 2px solid #58411c;
+    background: #070806;
+    box-shadow: inset 2px 2px 0 #030403;
+    padding: 2px;
+}
+
+.quest-loader__bar span {
+    display: block;
+    width: 42%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #b8731e 0 8px, #e2a940 8px 12px);
+    box-shadow: inset 0 2px 0 rgba(255, 234, 149, 0.22);
+    animation: quest-loader-bar 1.25s steps(9, end) infinite;
+}
+
+.quest-loader__hint {
+    margin: 0;
+    color: #8d887a;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+@keyframes quest-loader-bob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes quest-loader-halo {
+    0%,
+    100% {
+        opacity: 0.45;
+        transform: scale(0.9);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.06);
+    }
+}
+
+@keyframes quest-loader-bar {
+    from {
+        transform: translateX(-115%);
+    }
+    to {
+        transform: translateX(255%);
+    }
+}
+
+@keyframes quest-loader-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Vilarejo navegável: mapa em escala 2.5x, câmera que segue o avatar e placas de destino. */
+.lobby {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: #070806;
+}
+
+.lobby__viewport {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    isolation: isolate;
+    /* O arrasto do manche é nosso: sem isso o navegador rola/dá pinch no lugar. */
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.lobby__world {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--lobby-world);
+    height: var(--lobby-world);
+    will-change: transform;
+}
+
+.lobby__map {
+    display: block;
+    width: var(--lobby-world);
+    height: var(--lobby-world);
+    image-rendering: pixelated;
+    user-select: none;
+    pointer-events: none;
+}
+
+.lobby__marker {
+    position: absolute;
+    z-index: 4;
+    transform: translate(-50%, -100%);
+}
+
+.lobby__sign {
+    display: grid;
+    gap: 4px;
+    justify-items: center;
+    border: 3px solid #24170b;
+    background: linear-gradient(180deg, #3b2712, #23170b);
+    color: #f0dfb6;
+    padding: 7px 10px 6px;
+    cursor: pointer;
+    box-shadow:
+        inset 0 0 0 2px rgba(250, 210, 112, 0.14),
+        4px 5px 0 rgba(0, 0, 0, 0.55);
+    transition:
+        filter 120ms ease,
+        transform 120ms ease;
+}
+
+.lobby__sign:hover,
+.lobby__marker--near .lobby__sign {
+    filter: brightness(1.18);
+    transform: translateY(-2px);
+}
+
+.lobby__marker--near .lobby__sign {
+    border-color: #d99a2b;
+    box-shadow:
+        0 0 0 3px rgba(217, 154, 43, 0.34),
+        inset 0 0 0 2px rgba(250, 210, 112, 0.2),
+        5px 6px 0 rgba(0, 0, 0, 0.58);
+}
+
+.lobby__sign-icon {
+    width: 20px;
+    height: 20px;
+    color: #f1c461;
+    filter: drop-shadow(2px 2px 0 #2d1808);
+}
+
+.lobby__sign-label {
+    font-size: 0.62rem;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.lobby__prompt {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 12px);
+    z-index: 10;
+    width: max-content;
+    max-width: 260px;
+    margin: 0;
+    border: 3px solid #1b1308;
+    background: #f0dfb6;
+    color: #17110a;
+    padding: 8px 11px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    line-height: 1.25;
+    text-align: center;
+    transform: translateX(-50%);
+    box-shadow:
+        4px 4px 0 rgba(0, 0, 0, 0.58),
+        inset 0 0 0 2px rgba(217, 154, 43, 0.22);
+}
+
+.lobby__prompt::after {
+    position: absolute;
+    left: 50%;
+    bottom: -11px;
+    width: 16px;
+    height: 16px;
+    content: "";
+    border-right: 3px solid #1b1308;
+    border-bottom: 3px solid #1b1308;
+    background: #f0dfb6;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.lobby__player {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 6;
+    width: var(--lobby-sprite);
+    height: var(--lobby-sprite);
+    margin-left: calc(var(--lobby-sprite) / -2);
+    margin-top: calc(var(--lobby-sprite) * -0.8);
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* Os pés do sprite ficam na linha 43/64 do quadro, ou seja, a ~30% da base —
+   a sombra é centrada nessa linha, não no rodapé do quadro. */
+.lobby__player-shadow {
+    position: absolute;
+    left: 50%;
+    bottom: 26%;
+    width: 28%;
+    height: 8%;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.42);
+    transform: translateX(-50%);
+}
+
+.lobby__player-sprite {
+    position: absolute;
+    display: block;
+    inset: 0;
+    isolation: isolate;
+    overflow: visible;
+    image-rendering: pixelated;
+    filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.34));
+    transform-origin: center bottom;
+}
+
+.lobby__player--left .lobby__player-sprite {
+    transform: scaleX(-1);
+}
+
+.lobby__player--moving .lobby__player-sprite {
+    animation: lobby-walk-bob 260ms steps(2, end) infinite;
+}
+
+.lobby__player--left.lobby__player--moving .lobby__player-sprite {
+    animation: lobby-walk-bob-left 260ms steps(2, end) infinite;
+}
+
+.lobby__fade {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: #020302;
+    opacity: 0;
+    pointer-events: none;
+    animation: lobby-fade 220ms ease forwards;
+}
+
+@keyframes lobby-walk-bob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes lobby-walk-bob-left {
+    0%,
+    100% {
+        transform: translateY(0) scaleX(-1);
+    }
+    50% {
+        transform: translateY(-3px) scaleX(-1);
+    }
+}
+
+@keyframes lobby-fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.82;
+    }
+}
+
+.lobby__hud {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border: 3px solid #4b3518;
+    background: rgba(8, 10, 8, 0.86);
+    padding: 8px 14px 8px 9px;
+    box-shadow:
+        4px 5px 0 rgba(0, 0, 0, 0.55),
+        inset 0 0 0 2px rgba(241, 196, 97, 0.07);
+}
+
+.lobby__brand {
+    display: grid;
+    width: 54px;
+    height: 40px;
+    place-items: center;
+}
+
+.lobby__brand-image {
+    width: 50px;
+    height: 38px;
+}
+
+.lobby__hud-text {
+    display: grid;
+    gap: 3px;
+}
+
+.lobby__hud-name {
+    margin: 0;
+    color: #f1c461;
+    font-size: 0.82rem;
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 2px 2px 0 #2d1808;
+}
+
+.lobby__hud-hint {
+    margin: 0;
+    color: #a49a86;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.lobby__hud-hint b {
+    color: #d9c79b;
+}
+
+.lobby-minimap {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    z-index: 20;
+    overflow: hidden;
+    border: 3px solid #4b3518;
+    background: #0b0d0b;
+    box-shadow:
+        4px 5px 0 rgba(0, 0, 0, 0.55),
+        inset 0 0 0 2px rgba(241, 196, 97, 0.07);
+}
+
+.lobby-minimap__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0.72;
+    image-rendering: pixelated;
+}
+
+.lobby-minimap__pin {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border: 2px solid #2d1808;
+    background: #f1c461;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.lobby-minimap__dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 9px;
+    height: 9px;
+    margin: -4.5px 0 0 -4.5px;
+    border: 2px solid #10140f;
+    border-radius: 50%;
+    background: #eb5f4a;
+    will-change: transform;
+}
+
+/* Rotas reais para leitores de tela e toque: o teclado não pode ser o único caminho. */
+.lobby__routes {
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    z-index: 20;
+    display: flex;
+    gap: 8px;
+    transform: translateX(-50%);
+}
+
+.lobby__route {
+    border: 2px solid #4b3518;
+    background: rgba(8, 10, 8, 0.82);
+    color: #d9c79b;
+    padding: 6px 11px;
+    font-size: 0.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.lobby__route:hover {
+    border-color: #d99a2b;
+    color: #f1c461;
+}
+
+/* Manche flutuante: nasce onde o dedo encostou, some ao soltar. */
+.lobby-joystick {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 24;
+    display: grid;
+    place-items: center;
+    border: 3px solid rgba(241, 196, 97, 0.5);
+    border-radius: 50%;
+    background: rgba(8, 10, 8, 0.42);
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.5);
+    transition: opacity 120ms ease;
+    will-change: transform;
+}
+
+.lobby-joystick--active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lobby-joystick__knob {
+    width: 44px;
+    height: 44px;
+    border: 3px solid #24170b;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #f1c461, #b6801f);
+    box-shadow:
+        0 0 0 2px rgba(250, 210, 112, 0.25),
+        3px 4px 0 rgba(0, 0, 0, 0.5);
+    will-change: transform;
+}
+
+/* Alvo do toque: pisca uma vez no destino escolhido e some. */
+.lobby__tap-marker {
+    position: absolute;
+    z-index: 3;
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    border: 3px solid #f1c461;
+    border-radius: 50%;
+    animation: lobby-tap-pulse 900ms ease-out infinite;
+    pointer-events: none;
+}
+
+@keyframes lobby-tap-pulse {
+    0% {
+        opacity: 0.9;
+        transform: scale(0.45);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
+
+.lobby__debug-corridor {
+    position: absolute;
+    background: rgba(90, 200, 255, 0.22);
+    box-shadow: inset 0 0 0 2px rgba(90, 200, 255, 0.5);
+    pointer-events: none;
+}
+
+.lobby__debug-arrival {
+    position: absolute;
+    border: 2px dashed rgba(255, 120, 90, 0.85);
+    border-radius: 50%;
+    background: rgba(255, 120, 90, 0.16);
+    pointer-events: none;
+}
+
+.lobby-return {
+    position: fixed;
+    left: 14px;
+    top: 14px;
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 3px solid #4b3518;
+    background: rgba(8, 10, 8, 0.9);
+    color: #f0dfb6;
+    padding: 7px 12px;
+    font-size: 0.64rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+}
+
+.lobby-return:hover {
+    border-color: #d99a2b;
+    color: #f1c461;
+}
+
+.lobby-return__key {
+    border: 2px solid #5c4523;
+    background: #16180f;
+    color: #a49a86;
+    padding: 1px 5px;
+    font: inherit;
+    font-size: 0.54rem;
+}
+
+@media (max-width: 760px) {
+    .lobby__hud {
+        left: 10px;
+        top: 10px;
+        padding: 6px 10px 6px 7px;
+    }
+
+    .lobby__brand {
+        display: none;
+    }
+
+    /* Escala o conjunto em vez do tamanho: o sistema de coordenadas interno do
+     minimapa continua sendo o mesmo que o loop de animação usa para o ponto. */
+    .lobby-minimap {
+        right: 10px;
+        top: 10px;
+        transform: scale(0.7);
+        transform-origin: top right;
+    }
+
+    .lobby__sign-label {
+        font-size: 0.54rem;
+    }
+
+    .lobby__prompt {
+        max-width: 190px;
+        font-size: 0.58rem;
+    }
+
+    .lobby-return {
+        left: 10px;
+        top: 10px;
+    }
+}
