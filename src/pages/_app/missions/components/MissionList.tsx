@@ -2,6 +2,7 @@ import { ScrollIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Loading } from "@/components/ui/Loading";
+import { renderTextWithNumericFont } from "@/lib/typography";
 import type { Mission } from "@/types/mission";
 
 export function MissionList({ missions, loading, onOpen }: { missions: Mission[]; loading: boolean; onOpen: (mission: Mission) => void }) {
@@ -23,12 +24,12 @@ export function MissionList({ missions, loading, onOpen }: { missions: Mission[]
                                 <ScrollIcon className="h-5 w-5" />
                             </span>
                             <div className="min-w-0">
-                                <h2 className="truncate text-sm font-black text-[var(--color-orange-light)]">{mission.title}</h2>
-                                <p className="mt-1 text-[10px] text-[var(--color-black-muted)]">{mission.hasProgress ? "Em andamento · edição bloqueada" : `${mission.status} · ${mission.updatedAt}`}</p>
+                                <h2 className="truncate text-sm font-black text-[var(--color-orange-light)]">{renderTextWithNumericFont(mission.title)}</h2>
+                                <p className="mt-1 text-[10px] text-[var(--color-black-muted)]">{renderTextWithNumericFont(mission.hasProgress ? "Em andamento · edição bloqueada" : `${mission.status} · ${mission.updatedAt}`)}</p>
                             </div>
                         </div>
-                        <span className="hidden text-xs text-[var(--color-white-muted)] sm:block">{mission.evidenceType}</span>
-                        <strong className="hidden text-xs font-black text-primary-light sm:block">{mission.xp} EXP</strong>
+                        <span className="hidden text-xs text-[var(--color-white-muted)] sm:block">{renderTextWithNumericFont(mission.evidenceType)}</span>
+                        <strong className="hidden text-xs font-black text-primary-light sm:block">{renderTextWithNumericFont(`${mission.xp} EXP`)}</strong>
                         <Button variant="secondary" onClick={() => onOpen(mission)} className="border-2 px-3 py-2 text-[10px]">
                             {mission.hasProgress ? "Ver" : "Editar"}
                         </Button>

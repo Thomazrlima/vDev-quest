@@ -7,6 +7,7 @@ import { EvidenceQueue } from "./components/EvidenceQueue";
 import { ModerationFilters } from "./components/ModerationFilters";
 import { moderationService } from "@/mocks/services/moderation";
 import type { EvidenceSubmission } from "@/types/moderation";
+import { renderTextWithNumericFont } from "@/lib/typography";
 
 const collaborators = moderationService.collaborators();
 const missions = moderationService.missions();
@@ -55,7 +56,7 @@ function ModerationPage() {
     const count = (
         <div className="flex items-center gap-2 border-2 border-[var(--color-orange-dark)] bg-[var(--color-primary-dark)] px-4 py-3 text-[10px] font-black uppercase tracking-wider text-primary-light shadow-[4px_4px_0_var(--color-orange-dark)]">
             <GridIcon className="h-4 w-4" />
-            {loading ? "Atualizando fila" : evidences.length + " pendência" + (evidences.length === 1 ? "" : "s")}
+            {renderTextWithNumericFont(loading ? "Atualizando fila" : evidences.length + " pendência" + (evidences.length === 1 ? "" : "s"))}
         </div>
     );
 
@@ -77,7 +78,7 @@ function ModerationPage() {
                 />
                 <EvidenceQueue evidences={evidences} loading={loading} onOpen={(id) => navigate({ to: "/moderation/$id", params: { id } })} />
             </Card>
-            <p className="mt-4 text-[10px] text-[var(--color-black-muted)]">A fila é ordenada da evidência mais antiga para a mais recente. A busca utiliza debounce de 350 ms.</p>
+            <p className="mt-4 text-[10px] text-[var(--color-black-muted)]">{renderTextWithNumericFont("A fila é ordenada da evidência mais antiga para a mais recente. A busca utiliza debounce de 350 ms.")}</p>
         </main>
     );
 }

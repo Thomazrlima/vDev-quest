@@ -1,5 +1,6 @@
 import { cloneElement, type ButtonHTMLAttributes, type ReactElement } from "react";
 import { cn } from "@/lib/tailwind";
+import { renderTextWithNumericFont } from "@/lib/typography";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     variant?: "primary" | "secondary" | "ghost";
@@ -48,7 +49,7 @@ export function Button(props: ButtonProps | ButtonAsChildProps) {
 
     return (
         <button className={classes} disabled={inactive || disabled} {...buttonProps}>
-            {children}
+            {typeof children === "string" || typeof children === "number" ? renderTextWithNumericFont(children) : children}
         </button>
     );
 }

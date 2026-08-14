@@ -1,5 +1,6 @@
 import { FaceIcon, PantsIcon, ShirtIcon, ShoeIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
+import { renderTextWithNumericFont } from "@/lib/typography";
 
 import { CHARACTER_AURAS, CHARACTER_PRESETS } from "@/mocks/data/character-options";
 import type { CharacterAura, CharacterPreset } from "@/types/character";
@@ -49,7 +50,7 @@ export function CharacterPresetPanel({ activePreset, aura, onPreset, onAura }: {
                 </div>
                 <p className="mt-3 text-center text-[9px] font-black uppercase tracking-wider text-[var(--color-orange-light)]">Classe ativa: {aura.name}</p>
             </div>
-            <aside className="mt-5 border-2 border-dashed border-[var(--color-orange-dark)] bg-[var(--color-black-overlay)] p-[.6rem] text-[.53rem] font-black uppercase leading-[1.45] text-[var(--color-orange)]">O pacote atual fornece 2 cabelos, 2 camisas e 1 acessório. Novas camadas surgem quando houver novos sprites.</aside>
+            <aside className="mt-5 border-2 border-dashed border-[var(--color-orange-dark)] bg-[var(--color-black-overlay)] p-[.6rem] text-[.53rem] font-black uppercase leading-[1.45] text-[var(--color-orange)]">{renderTextWithNumericFont("O pacote atual fornece 2 cabelos, 2 camisas e 1 acessório. Novas camadas surgem quando houver novos sprites.")}</aside>
         </section>
     );
 }

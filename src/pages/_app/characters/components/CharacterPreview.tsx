@@ -1,6 +1,7 @@
 import { ManaSeedSpriteLayers } from "@/components/ManaSeed/ManaSeedSpriteLayers";
 import { MANA_SEED_FREE } from "@/mocks/data/mana-seed";
 import type { BodyType, CharacterAura } from "@/types/character";
+import { renderTextWithNumericFont } from "@/lib/typography";
 
 export function CharacterPreview({ name, aura, bodyType, layers }: { name: string; aura: CharacterAura; bodyType: BodyType; layers: readonly string[] }) {
     return (
@@ -9,7 +10,7 @@ export function CharacterPreview({ name, aura, bodyType, layers }: { name: strin
                 <ManaSeedSpriteLayers frame={MANA_SEED_FREE.staticAvatarFrame} layers={layers} />
             </div>
             <div className="relative z-[4] -mt-[4.5rem] w-[min(86%,440px)] border-[5px] border-[var(--color-orange)] bg-[linear-gradient(var(--color-primary),var(--color-white-soft)_48%,var(--color-black-soft))] p-[.65rem_.75rem_.8rem] text-center shadow-[inset_3px_3px_0_var(--color-primary-light),inset_-3px_-3px_0_var(--color-black-soft),5px_6px_0_var(--color-black-overlay)]">
-                <strong className="inline-block border-2 border-[var(--color-black-soft)] bg-[var(--color-orange)] px-[.8rem] py-[.24rem] text-[.58rem] font-black uppercase tracking-[.16em] text-[var(--color-orange-dark)]">{name || "HERÓI SEM NOME"}</strong>
+                <strong className="inline-block border-2 border-[var(--color-black-soft)] bg-[var(--color-orange)] px-[.8rem] py-[.24rem] text-[.58rem] font-black uppercase tracking-[.16em] text-[var(--color-orange-dark)]">{renderTextWithNumericFont(name || "HERÓI SEM NOME")}</strong>
             </div>
             <p className="relative z-[5] my-4 text-[.58rem] font-black uppercase tracking-[.1em] text-[var(--color-orange)]">
                 <span className="mr-[.35rem] inline-block h-[.65rem] w-[.65rem] align-[-1px] border border-[var(--color-orange-dark)]" style={{ backgroundColor: aura.color }} /> Classe: {aura.name} <b className="mx-[.4rem]">·</b> {bodyType === "hero" ? "Herói" : "Heroína"}

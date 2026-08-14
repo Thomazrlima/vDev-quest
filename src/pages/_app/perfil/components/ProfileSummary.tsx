@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { SparkIcon } from "@/components/icons";
+import { renderTextWithNumericFont } from "@/lib/typography";
 
 export function ProfileSummary() {
     return (
@@ -32,15 +33,15 @@ export function ProfileSummary() {
                         <div>
                             <Eyebrow>Cupons conquistados</Eyebrow>
                             <Heading as="strong" className="mt-1 block text-4xl">
-                                42
+                                {renderTextWithNumericFont(42)}
                             </Heading>
                         </div>
-                        <span className="mb-1 text-[10px] font-bold text-(--color-black-muted)">42 cupons</span>
+                        <span className="mb-1 text-[10px] font-bold text-(--color-black-muted)">{renderTextWithNumericFont("42 cupons")}</span>
                     </div>
                     <div className="mt-3 h-4 border-2 border-orange-dark bg-black p-0.5 shadow-[inset_2px_2px_0_var(--color-black)]">
                         <div className="h-full w-[72%] bg-[repeating-linear-gradient(90deg,var(--color-primary)_0_8px,var(--color-primary-light)_8px_12px)]" />
                     </div>
-                    <p className="mt-2 text-right text-[10px] text-(--color-black-muted)">8 cupons para a próxima recompensa</p>
+                    <p className="mt-2 text-right text-[10px] text-(--color-black-muted)">{renderTextWithNumericFont("8 cupons para a próxima recompensa")}</p>
                 </div>
             </div>
         </Card>

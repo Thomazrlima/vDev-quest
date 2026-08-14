@@ -46,6 +46,7 @@
 
 @theme {
     --font-pixel: "Pixelify Sans", "Courier New", Courier, monospace;
+    --font-numeric: "VT323", "Courier New", Courier, monospace;
 
     --color-alpha-zero: transparent;
 
@@ -100,4 +101,6 @@
     --shadow-pixel: 6px 6px 0 var(--color-black);
 
     --background-image-noise: radial-gradient(circle at 20% 20%, var(--color-primary-overlay) 0 1px, var(--color-alpha-zero) 1px), radial-gradient(circle at 80% 60%, var(--color-white-overlay) 0 1px, var(--color-alpha-zero) 1px);
+    --background-image-card: linear-gradient(135deg, var(--color-black-muted), var(--color-black-soft) 48%, var(--color-black));
+    --shadow-card: 0 0 0 2px var(--color-primary-dark), 5px 5px 0 var(--color-black-overlay), inset 0 0 0 2px var(--color-primary-dark);
 }

@@ -1,9 +1,28 @@
-import type { ComponentPropsWithoutRef, ElementType } from "react";
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import { cn } from "@/lib/tailwind";
+import { renderTextWithNumericFont } from "@/lib/typography";
 
-type CardProps<T extends ElementType> = { as?: T } & ComponentPropsWithoutRef<T>;
+type CardProps<T extends ElementType> = {
+    as?: T;
+    children?: ReactNode;
+    icon?: ReactNode;
+    label?: string;
+    value?: string;
+} & Omit<ComponentPropsWithoutRef<T>, "children">;
 
-export function Card<T extends ElementType = "section">({ as, className, ...props }: CardProps<T>) {
+export function Card<T extends ElementType = "section">({ as, children, className, icon, label, value, ...props }: CardProps<T>) {
     const Component = as ?? "section";
-    return <Component className={cn("border-[3px] border-[var(--color-orange-dark)] bg-[linear-gradient(135deg,var(--color-white-overlay),transparent_40%),var(--color-black)] shadow-[0_0_0_3px_var(--color-orange-dark),7px_7px_0_var(--color-black-overlay),inset_0_0_0_2px_var(--color-orange-overlay)]", className)} {...props} />;
+    return (
+        <Component className={cn("border-0.75 border-primary bg-card shadow-card", className)} {...props}>
+            {children ?? (
+                <>
+                    <strong className="block text-2xl font-black text-primary-light">{renderTextWithNumericFont(value)}</strong>
+                    <span className="mt-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-wider text-black-muted">
+                        {icon}
+                        {label}
+                    </span>
+                </>
+            )}
+        </Component>
+    );
 }

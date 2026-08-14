@@ -1,9 +1,9 @@
 import type { RankingEntry, RankingLeader } from "@/types/ranking";
 
 export const RANKING_LEADERS: RankingLeader[] = [
-    { position: 1, name: "RafaelDev", level: 58, badges: ["champion", "guardian", "streak"], exp: "18.560", appearance: { hair: "dapper", shirt: "short", headwear: "none" } },
-    { position: 2, name: "CamilaCode", level: 54, badges: ["arcane", "streak"], exp: "17.940", appearance: { hair: "bob", shirt: "shortBoobs", headwear: "none" } },
-    { position: 3, name: "LucasByte", level: 51, badges: ["guardian", "arcane"], exp: "17.120", appearance: { hair: "dapper", shirt: "short", headwear: "none" } },
+    { position: 1, name: "RafaelDev", title: "Arquiteto da Guilda", level: 58, badges: ["champion", "guardian", "streak"], exp: "18.560", appearance: { hair: "dapper", shirt: "short", headwear: "none" } },
+    { position: 2, name: "CamilaCode", title: "Tecelã de Interfaces", level: 54, badges: ["arcane", "streak"], exp: "17.940", appearance: { hair: "bob", shirt: "shortBoobs", headwear: "none" } },
+    { position: 3, name: "LucasByte", title: "Ranger Full-Stack", level: 51, badges: ["guardian", "arcane"], exp: "17.120", appearance: { hair: "dapper", shirt: "short", headwear: "none" } },
 ];
 
 export const RANKING_ENTRIES: RankingEntry[] = [
