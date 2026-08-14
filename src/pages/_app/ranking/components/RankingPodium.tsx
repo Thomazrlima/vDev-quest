@@ -17,9 +17,9 @@ const leaderPlacement = {
 } as const;
 
 const rankPlacement = {
-    1: "left-[49.6%] top-[62%] -translate-x-1/2 max-[760px]:top-[78%]",
-    2: "left-[19%] top-[65%] -translate-x-1/2 max-[760px]:top-[78%]",
-    3: "left-[81.5%] top-[67%] -translate-x-1/2 max-[760px]:top-[78%]",
+    1: "left-[49.6%] top-[62%] -translate-x-1/2 max-[760px]:top-[59%]",
+    2: "left-[19%] top-[65%] -translate-x-1/2 max-[760px]:top-[62%]",
+    3: "left-[81.5%] top-[67%] -translate-x-1/2 max-[760px]:top-[64%]",
 } as const;
 
 const rankColor = {
@@ -34,12 +34,18 @@ const cardBorderColor = {
     3: "border-[#cd7f32] !shadow-[0_0_0_2px_#7a351c,5px_5px_0_var(--color-black-overlay),inset_0_0_0_2px_#7a351c]",
 } as const;
 
+const avatarMobilePlacement = {
+    1: "max-[760px]:translate-y-[clamp(14px,calc(107px_-_24vw),25px)]",
+    2: "max-[760px]:translate-y-[clamp(3px,calc(198px_-_50vw),26px)]",
+    3: "max-[760px]:translate-y-[clamp(-1px,calc(50px_-_13vw),5px)]",
+} as const;
+
 export function RankingPodium({ leaders }: { leaders: RankingLeader[] }) {
     const orderedLeaders = podiumOrder.map((position) => leaders.find((leader) => leader.position === position)).filter((leader): leader is RankingLeader => Boolean(leader));
 
     return (
-        <div className="relative z-4 mx-auto mt-2.5 h-[clamp(300px,52vw,530px)] w-full max-w-255" role="list" aria-label="Pódio dos três melhores aventureiros">
-            <img src="/images/assets/podio.png" alt="" aria-hidden="true" className="pointer-events-none absolute bottom-[-13.2%] left-0 z-0 w-full select-none [filter:drop-shadow(0_12px_0_var(--color-black-overlay))] [image-rendering:pixelated]" />
+        <div className="relative z-4 mx-auto mt-2.5 h-[clamp(300px,52vw,530px)] w-full max-w-255 max-[760px]:left-1/2 max-[760px]:w-[108%] max-[760px]:-translate-x-1/2 max-[760px]:mt-20" role="list" aria-label="Pódio dos três melhores aventureiros">
+            <img src="/images/assets/podio.png" alt="" aria-hidden="true" className="pointer-events-none absolute bottom-[-13.2%] left-0 z-0 w-full select-none [filter:drop-shadow(0_12px_0_var(--color-black-overlay))] [image-rendering:pixelated] max-[760px]:bottom-0" />
             {orderedLeaders.map((leader) => {
                 return (
                     <Fragment key={leader.position}>
@@ -60,7 +66,7 @@ export function RankingPodium({ leaders }: { leaders: RankingLeader[] }) {
                                     ))}
                                 </div>
                             </Card>
-                            <div className="relative z-1 -mt-1 -translate-y-2.5 h-[clamp(160px,28vw,295px)] w-[clamp(160px,28vw,295px)] filter-[drop-shadow(7px_8px_0_var(--color-black-overlay))] max-[760px]:h-[clamp(125px,38vw,170px)] max-[760px]:w-[clamp(125px,38vw,170px)]">
+                            <div className={cn("relative z-1 -mt-1 -translate-y-2.5 h-[clamp(160px,28vw,295px)] w-[clamp(160px,28vw,295px)] filter-[drop-shadow(7px_8px_0_var(--color-black-overlay))] max-[760px]:h-[clamp(148px,45vw,195px)] max-[760px]:w-[clamp(148px,45vw,195px)]", avatarMobilePlacement[leader.position])}>
                                 <ManaSeedSpriteLayers frame={MANA_SEED_FREE.staticAvatarFrame} layers={getManaSeedLayers(leader.appearance)} />
                             </div>
                         </article>

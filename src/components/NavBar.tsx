@@ -17,10 +17,7 @@ export function NavBar() {
 
     return (
         <>
-            <header className="fixed inset-x-0 top-0 z-50 bg-(--color-black) backdrop-blur-md">
-                <div className="flex h-28 items-center justify-center px-4 md:hidden">
-                    <Logo href="/ranking" priority className="flex h-26 w-40 items-center justify-center" imageClassName="h-26 w-40" />
-                </div>
+            <header className="fixed inset-x-0 top-0 z-50 hidden bg-(--color-black) backdrop-blur-md md:block">
                 <div className="mx-auto hidden h-22 max-w-7xl grid-cols-[128px_minmax(0,1fr)] items-center gap-4 px-6 md:grid">
                     <Logo href="/ranking" priority className="flex h-20 w-32 shrink-0 items-center justify-center" imageClassName="h-20 w-32" />
                     <nav aria-label="Navegação principal">
@@ -40,14 +37,14 @@ export function NavBar() {
                 </div>
             </header>
 
-            <nav aria-label="Navegação principal" className="fixed inset-x-0 bottom-0 z-50 border-t-2 border-primary-dark bg-black-soft/95 px-2 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
-                <Slider className="mx-auto flex h-22 max-w-md items-stretch justify-around" indicatorClassName="border-x-2 border-primary bg-primary-overlay" items={items} value={activeItem?.href ?? "/ranking"} getValue={(item) => item.href} onValueChange={(href) => navigate({ to: href })}>
+            <nav aria-label="Navegação principal" className="fixed inset-x-0 bottom-0 z-50 border-t-2 border-black-muted bg-black-soft px-4 pb-[env(safe-area-inset-bottom)] md:hidden">
+                <Slider className="mx-auto flex h-14 max-w-xs items-stretch justify-around" indicatorClassName="border-x-2 border-primary bg-primary-overlay" items={items} value={activeItem?.href ?? "/ranking"} getValue={(item) => item.href} onValueChange={(href) => navigate({ to: href })}>
                     {(item, { active, indicator, select }) => {
                         const Icon = item.icon;
                         return (
-                            <Button key={item.href} type="button" onClick={select} variant="ghost" className={`h-full min-w-0 flex-1 flex-col gap-1 border-x-2 border-y-0 px-2 py-2 text-[10px] tracking-wide ${active ? "text-primary-light" : "text-(--color-white-muted) hover:text-primary-light"}`} aria-current={active ? "page" : undefined}>
+                            <Button key={item.href} type="button" onClick={select} variant="ghost" className={`h-full min-w-0 flex-1 flex-col gap-1.5 border-x-2 border-y-0 px-1 py-1 text-[10px] tracking-wide ${active ? "text-primary-light" : "text-(--color-white-muted) hover:text-primary-light"}`} aria-current={active ? "page" : undefined}>
                                 {indicator}
-                                <Icon className="relative z-10 h-6 w-6" />
+                                <Icon className="relative z-10 h-4 w-4" />
                                 <span className="relative z-10 leading-none">{item.label}</span>
                             </Button>
                         );
