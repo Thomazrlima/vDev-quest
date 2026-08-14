@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './pages/__root'
+import { Route as IndexRouteImport } from './pages/index'
 import { Route as AppLayoutRouteImport } from './pages/_app/layout'
-import { Route as AppIndexRouteImport } from './pages/_app/index'
 import { Route as AppCharactersIndexRouteImport } from './pages/_app/characters/index'
 import { Route as AppMissionsIndexRouteImport } from './pages/_app/missions/index'
 import { Route as AppModerationIndexRouteImport } from './pages/_app/moderation/index'
@@ -20,14 +20,14 @@ import { Route as AppMissionsNewIndexRouteImport } from './pages/_app/missions/n
 import { Route as AppModerationIdIndexRouteImport } from './pages/_app/moderation/$id/index'
 import { Route as AppMissionsIdEditIndexRouteImport } from './pages/_app/missions/$id/edit/index'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppLayoutRoute = AppLayoutRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AppIndexRoute = AppIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppLayoutRoute,
 } as any)
 const AppCharactersIndexRoute = AppCharactersIndexRouteImport.update({
   id: '/characters/',
@@ -71,7 +71,7 @@ const AppMissionsIdEditIndexRoute = AppMissionsIdEditIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AppIndexRoute
+  '/': typeof IndexRoute
   '/characters/': typeof AppCharactersIndexRoute
   '/missions/': typeof AppMissionsIndexRoute
   '/moderation/': typeof AppModerationIndexRoute
@@ -82,7 +82,7 @@ export interface FileRoutesByFullPath {
   '/missions/$id/edit/': typeof AppMissionsIdEditIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof AppIndexRoute
+  '/': typeof IndexRoute
   '/characters': typeof AppCharactersIndexRoute
   '/missions': typeof AppMissionsIndexRoute
   '/moderation': typeof AppModerationIndexRoute
@@ -94,8 +94,8 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_app': typeof AppLayoutRouteWithChildren
-  '/_app/': typeof AppIndexRoute
   '/_app/characters/': typeof AppCharactersIndexRoute
   '/_app/missions/': typeof AppMissionsIndexRoute
   '/_app/moderation/': typeof AppModerationIndexRoute
@@ -130,8 +130,8 @@ export interface FileRouteTypes {
     | '/missions/$id/edit'
   id:
     | '__root__'
+    | '/'
     | '/_app'
-    | '/_app/'
     | '/_app/characters/'
     | '/_app/missions/'
     | '/_app/moderation/'
@@ -143,24 +143,25 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AppLayoutRoute: typeof AppLayoutRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app': {
       id: '/_app'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppLayoutRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_app/': {
-      id: '/_app/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppLayoutRoute
     }
     '/_app/characters/': {
       id: '/_app/characters/'
@@ -222,7 +223,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppLayoutRouteChildren {
-  AppIndexRoute: typeof AppIndexRoute
   AppCharactersIndexRoute: typeof AppCharactersIndexRoute
   AppMissionsIndexRoute: typeof AppMissionsIndexRoute
   AppModerationIndexRoute: typeof AppModerationIndexRoute
@@ -234,7 +234,6 @@ interface AppLayoutRouteChildren {
 }
 
 const AppLayoutRouteChildren: AppLayoutRouteChildren = {
-  AppIndexRoute: AppIndexRoute,
   AppCharactersIndexRoute: AppCharactersIndexRoute,
   AppMissionsIndexRoute: AppMissionsIndexRoute,
   AppModerationIndexRoute: AppModerationIndexRoute,
@@ -250,6 +249,7 @@ const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AppLayoutRoute: AppLayoutRouteWithChildren,
 }
 export const routeTree = rootRouteImport
