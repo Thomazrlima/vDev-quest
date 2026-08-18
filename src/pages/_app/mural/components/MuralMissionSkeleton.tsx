@@ -1,25 +1,30 @@
-import { Card } from "@/components/ui/Card";
-import { HALL_PANEL } from "@/components/ui/StoneWall";
+import { PaperSheet, PAPER_TILTS } from "@/components/ui/PaperSheet";
 import { cn } from "@/lib/tailwind";
 
-/** Um card fantasma com a mesma altura do real, para o grid não saltar ao carregar. */
-export function MuralMissionSkeleton() {
+/**
+ * Uma folha em branco com a proporção, o esqueleto e a inclinação da real: quando a missão chega,
+ * ela troca de conteúdo sem mudar de lugar nem se endireitar.
+ */
+export function MuralMissionSkeleton({ index = 0 }: { index?: number }) {
     return (
-        <Card as="div" aria-hidden="true" className={cn("flex h-full animate-pulse flex-col gap-4 p-5", HALL_PANEL)}>
-            <div className="flex items-start justify-between gap-3">
-                <span className="h-4 w-40 bg-primary-dark/50" />
-                <span className="h-5 w-20 shrink-0 bg-primary-dark/40" />
+        <PaperSheet aria-hidden="true" className={cn(PAPER_TILTS[index % PAPER_TILTS.length])} contentClassName="animate-pulse">
+            <div className="flex items-start justify-between gap-[.6em]">
+                <span className="block h-[1.4em] w-3/5 bg-ink/25" />
+                <span className="block h-[1.2em] w-[28%] shrink-0 bg-ink/20" />
             </div>
-            <div className="grid gap-2">
-                <span className="block h-2.5 w-full bg-black-muted" />
-                <span className="block h-2.5 w-11/12 bg-black-muted" />
-                <span className="block h-2.5 w-2/3 bg-black-muted" />
+            <div className="mt-[1.2em] grid gap-[.6em]">
+                <span className="block h-[.7em] w-full bg-ink/15" />
+                <span className="block h-[.7em] w-11/12 bg-ink/15" />
+                <span className="block h-[.7em] w-2/3 bg-ink/15" />
             </div>
-            <div className="mt-auto grid gap-3 border-t-2 border-primary-dark pt-4">
-                <span className="block h-2.5 w-full bg-black-muted" />
-                <span className="block h-2.5 w-5/6 bg-black-muted" />
-                <span className="block h-2.5 w-3/4 bg-black-muted" />
+            <div className="my-auto grid justify-items-center gap-[.5em] py-[.7em]">
+                <span className="block h-[.7em] w-1/3 bg-ink/15" />
+                <span className="block h-[1.8em] w-1/2 bg-ink/25" />
             </div>
-        </Card>
+            <div className="grid gap-[.7em] border-t-2 border-ink-light/60 pt-[1em]">
+                <span className="block h-[.7em] w-5/6 bg-ink/15" />
+                <span className="block h-[.7em] w-3/4 bg-ink/15" />
+            </div>
+        </PaperSheet>
     );
 }

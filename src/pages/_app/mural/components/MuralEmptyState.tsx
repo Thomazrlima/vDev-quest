@@ -1,7 +1,5 @@
-import { Card } from "@/components/ui/Card";
 import { DoneIcon, PendingIcon, ScrollIcon } from "@/components/icons";
-import { HALL_PANEL } from "@/components/ui/StoneWall";
-import { cn } from "@/lib/tailwind";
+import { PaperSheet } from "@/components/ui/PaperSheet";
 import type { MuralFilter } from "@/types/mission";
 
 /** Cada aba vazia fala do próprio estado — um texto genérico não diria o que fazer a seguir. */
@@ -11,16 +9,17 @@ const emptyByFilter = {
     concluidas: { Icon: DoneIcon, title: "Você ainda não concluiu missões nesta temporada", hint: "Complete um desafio disponível para conquistar sua primeira EXP da temporada." },
 } as const;
 
+/** Um mural vazio é uma folha sozinha no prego, não um painel do tamanho da tábua. */
 export function MuralEmptyState({ filter }: { filter: MuralFilter }) {
     const { Icon, title, hint } = emptyByFilter[filter];
 
     return (
-        <Card as="section" className={cn("px-6 py-14 text-center", HALL_PANEL)}>
-            <span aria-hidden="true" className="mx-auto grid h-16 w-16 place-items-center border-2 border-primary-dark bg-black text-primary">
-                <Icon className="h-8 w-8" />
+        <PaperSheet as="section" className="mx-auto w-[min(21rem,100%)] -rotate-[.8deg]" contentClassName="items-center justify-center text-center">
+            <span aria-hidden="true" className="grid size-[clamp(2.75rem,17cqw,4rem)] place-items-center border-2 border-ink text-ink">
+                <Icon className="size-[60%]" />
             </span>
-            <strong className="mt-5 block text-base font-black uppercase tracking-[.08em] text-primary-light">{title}</strong>
-            <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-white-muted">{hint}</p>
-        </Card>
+            <strong className="mt-[1em] block text-[clamp(.9rem,4.4cqw,1.3rem)] font-black uppercase leading-tight tracking-[.06em] text-ink-dark">{title}</strong>
+            <p className="mt-[.9em] text-[clamp(.75rem,3.4cqw,1rem)] leading-relaxed text-ink">{hint}</p>
+        </PaperSheet>
     );
 }

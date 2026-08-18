@@ -88,6 +88,17 @@
     --color-surface-deep: var(--color-black);
     --color-border-subtle: var(--color-black-muted);
 
+    /* Tinta sobre pergaminho: o dourado da interface some no papel, então as folhas do mural
+       escrevem com estes três tons. */
+    --color-ink-light: #6b5735;
+    --color-ink: #4b3721;
+    --color-ink-dark: #2e2011;
+
+    /* A tinta do carimbo da guilda. O valor é mais claro do que o verde que aparece na tela: o
+       carimbo é multiplicado sobre o pergaminho, e o papel — pobre de azul — puxa qualquer verde
+       para o oliva. Este tom nasce alto o bastante para cair em #385d35 depois da mistura. */
+    --color-stamp: #1e5f3b;
+
     --color-white-soft: #d9d5cd;
     --color-white: #f4f4f4;
     --color-white-muted: #aaa59d;

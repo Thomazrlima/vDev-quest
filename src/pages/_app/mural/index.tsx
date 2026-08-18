@@ -12,6 +12,9 @@ import { MURAL_FILTERS, type MuralFilter, type MuralMission } from "@/types/miss
 
 const SKELETON_COUNT = 4;
 
+/** Folhas tortas precisam de mais folga entre si do que painéis retos. */
+const MURAL_GRID = "grid gap-x-6 gap-y-9 sm:grid-cols-2 xl:grid-cols-3";
+
 export type MuralSearch = {
     status?: MuralFilter;
 };
@@ -52,7 +55,7 @@ function MuralPage() {
     return (
         <main className={`flex min-h-screen flex-col overflow-x-hidden bg-(--color-black) ${BLEED_UNDER_RETURN_LINK}`}>
             {/* O mural tem tábua própria em vez da parede de pedra do Hall da Fama. */}
-            <section className={cn("flex-1 bg-[linear-gradient(rgb(15_14_14/58%),rgb(15_14_14/58%)),url('/images/backgrounds/mural.png')] bg-cover bg-fixed bg-center px-4 pb-9 sm:px-6 sm:pb-13", CLEAR_RETURN_LINK)}>
+            <section className={cn("flex-1 bg-[linear-gradient(rgb(15_14_14/58%),rgb(15_14_14/58%)),url('/images/backgrounds/mural3.png')] bg-cover bg-fixed bg-center px-4 pb-9 sm:px-6 sm:pb-13", CLEAR_RETURN_LINK)}>
                 <div className="mx-auto w-[min(1180px,100%)]">
                     <PageHeader eyebrow="Mural de missões · FE-05" title="Mural da temporada" description="Escolha seus desafios, acompanhe o que está em moderação e revise o que já conquistou." />
                     <div className="mt-7">
@@ -60,13 +63,13 @@ function MuralPage() {
                     </div>
 
                     {loading ? (
-                        <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-3" role="status" aria-label="Carregando missões do mural">
+                        <div className={cn(MURAL_GRID, "mt-7")} role="status" aria-label="Carregando missões do mural">
                             {Array.from({ length: SKELETON_COUNT }, (_, index) => (
-                                <MuralMissionSkeleton key={index} />
+                                <MuralMissionSkeleton key={index} index={index} />
                             ))}
                         </div>
                     ) : missions.length ? (
-                        <div className="mt-7 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                        <div className={cn(MURAL_GRID, "mt-7")}>
                             {missions.map((mission, index) => (
                                 <MuralMissionCard key={mission.id} mission={mission} index={index} />
                             ))}
