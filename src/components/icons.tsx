@@ -1,5 +1,6 @@
-import { ArrowDown, Calendar, Camera, Check, Clock, FileText, ArrowRight, ArrowUp, Backpack, Briefcase, ChevronRight, ClipboardNote, Crown, DiamondGem, Eye, Grid3x3, Hand, Handbag, Lock, Mail, Shirt, ScrollVertical, Shield, Smile, Sparkle, Sunglasses, Trophy, User } from "pixelarticons/react";
-import type { SVGProps } from "react";
+import { ArrowDown, Calendar, Camera, Check, Clock, Close, FileText, ArrowRight, ArrowUp, Backpack, Briefcase, ChevronRight, ClipboardNote, Crown, DiamondGem, Eye, Grid3x3, Hand, Handbag, Link, Lock, Mail, Notes, Shirt, ScrollVertical, Shield, Smile, Sparkle, SquareAlert, Sunglasses, Trophy, Upload, User } from "pixelarticons/react";
+import type { ComponentType, SVGProps } from "react";
+import type { EvidenceType } from "@/types/mission";
 
 export type IconProps = SVGProps<SVGSVGElement>;
 
@@ -32,6 +33,25 @@ export const ProfileNavIcon = User;
 export const ChevronIcon = ChevronRight;
 export const PhotoEvidenceIcon = Camera;
 export const PdfEvidenceIcon = FileText;
+export const LinkEvidenceIcon = Link;
+export const TextEvidenceIcon = Notes;
 export const DeadlineIcon = Calendar;
 export const PendingIcon = Clock;
 export const DoneIcon = Check;
+export const UploadIcon = Upload;
+export const AlertIcon = SquareAlert;
+export const CloseIcon = Close;
+export const TrophyIcon = Trophy;
+
+const evidenceIcons: Record<EvidenceType, ComponentType<IconProps>> = {
+    "Foto (PNG, JPEG)": PhotoEvidenceIcon,
+    PDF: PdfEvidenceIcon,
+    Link: LinkEvidenceIcon,
+    Texto: TextEvidenceIcon,
+};
+
+/** Cada tipo de evidência tem seu símbolo: o card do mural e a tela de envio falam a mesma língua. */
+export function EvidenceIcon({ type, ...props }: IconProps & { type: EvidenceType }) {
+    const Icon = evidenceIcons[type];
+    return <Icon {...props} />;
+}

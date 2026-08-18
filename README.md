@@ -43,6 +43,8 @@ Dependências devem apontar para baixo na hierarquia: páginas consomem template
 - `/ranking` — ranking e pódio.
 - `/perfil` — perfil, indicadores e acesso ao criador.
 - `/characters` — criador de personagem por camadas.
+- `/mural` — mural do colaborador, com as abas de disponíveis, aguardando e concluídas.
+- `/mural/:id` — detalhes da missão, envio de evidência e histórico de submissões.
 - `/missions` — gestão de missões e acesso à moderação.
 - `/missions/new` e `/missions/:id/edit` — formulário de missão.
 - `/moderation` e `/moderation/:id` — fila e detalhe de evidências.
