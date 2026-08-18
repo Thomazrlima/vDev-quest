@@ -1,28 +1,4 @@
-import {
-    ArrowDown,
-    ArrowRight,
-    ArrowUp,
-    Backpack,
-    Briefcase,
-    ChevronRight,
-    ClipboardNote,
-    Crown,
-    DiamondGem,
-    Eye,
-    Grid3x3,
-    Hand,
-    Handbag,
-    Lock,
-    Mail,
-    Shirt,
-    ScrollVertical,
-    Shield,
-    Smile,
-    Sparkle,
-    Sunglasses,
-    Trophy,
-    User,
-} from "pixelarticons/react";
+import { ArrowDown, Calendar, Camera, Check, Clock, FileText, ArrowRight, ArrowUp, Backpack, Briefcase, ChevronRight, ClipboardNote, Crown, DiamondGem, Eye, Grid3x3, Hand, Handbag, Lock, Mail, Shirt, ScrollVertical, Shield, Smile, Sparkle, Sunglasses, Trophy, User } from "pixelarticons/react";
 import type { SVGProps } from "react";
 
 export type IconProps = SVGProps<SVGSVGElement>;
@@ -54,3 +30,8 @@ export const MissionsNavIcon = ClipboardNote;
 export const RankingNavIcon = Trophy;
 export const ProfileNavIcon = User;
 export const ChevronIcon = ChevronRight;
+export const PhotoEvidenceIcon = Camera;
+export const PdfEvidenceIcon = FileText;
+export const DeadlineIcon = Calendar;
+export const PendingIcon = Clock;
+export const DoneIcon = Check;

@@ -14,6 +14,7 @@ import { Route as AppLayoutRouteImport } from './pages/_app/layout'
 import { Route as AppCharactersIndexRouteImport } from './pages/_app/characters/index'
 import { Route as AppMissionsIndexRouteImport } from './pages/_app/missions/index'
 import { Route as AppModerationIndexRouteImport } from './pages/_app/moderation/index'
+import { Route as AppMuralIndexRouteImport } from './pages/_app/mural/index'
 import { Route as AppPerfilIndexRouteImport } from './pages/_app/perfil/index'
 import { Route as AppRankingIndexRouteImport } from './pages/_app/ranking/index'
 import { Route as AppMissionsNewIndexRouteImport } from './pages/_app/missions/new/index'
@@ -42,6 +43,11 @@ const AppMissionsIndexRoute = AppMissionsIndexRouteImport.update({
 const AppModerationIndexRoute = AppModerationIndexRouteImport.update({
   id: '/moderation/',
   path: '/moderation/',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppMuralIndexRoute = AppMuralIndexRouteImport.update({
+  id: '/mural/',
+  path: '/mural/',
   getParentRoute: () => AppLayoutRoute,
 } as any)
 const AppPerfilIndexRoute = AppPerfilIndexRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/characters/': typeof AppCharactersIndexRoute
   '/missions/': typeof AppMissionsIndexRoute
   '/moderation/': typeof AppModerationIndexRoute
+  '/mural/': typeof AppMuralIndexRoute
   '/perfil/': typeof AppPerfilIndexRoute
   '/ranking/': typeof AppRankingIndexRoute
   '/missions/new/': typeof AppMissionsNewIndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/characters': typeof AppCharactersIndexRoute
   '/missions': typeof AppMissionsIndexRoute
   '/moderation': typeof AppModerationIndexRoute
+  '/mural': typeof AppMuralIndexRoute
   '/perfil': typeof AppPerfilIndexRoute
   '/ranking': typeof AppRankingIndexRoute
   '/missions/new': typeof AppMissionsNewIndexRoute
@@ -99,6 +107,7 @@ export interface FileRoutesById {
   '/_app/characters/': typeof AppCharactersIndexRoute
   '/_app/missions/': typeof AppMissionsIndexRoute
   '/_app/moderation/': typeof AppModerationIndexRoute
+  '/_app/mural/': typeof AppMuralIndexRoute
   '/_app/perfil/': typeof AppPerfilIndexRoute
   '/_app/ranking/': typeof AppRankingIndexRoute
   '/_app/missions/new/': typeof AppMissionsNewIndexRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
     | '/characters/'
     | '/missions/'
     | '/moderation/'
+    | '/mural/'
     | '/perfil/'
     | '/ranking/'
     | '/missions/new/'
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
     | '/characters'
     | '/missions'
     | '/moderation'
+    | '/mural'
     | '/perfil'
     | '/ranking'
     | '/missions/new'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '/_app/characters/'
     | '/_app/missions/'
     | '/_app/moderation/'
+    | '/_app/mural/'
     | '/_app/perfil/'
     | '/_app/ranking/'
     | '/_app/missions/new/'
@@ -184,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppModerationIndexRouteImport
       parentRoute: typeof AppLayoutRoute
     }
+    '/_app/mural/': {
+      id: '/_app/mural/'
+      path: '/mural'
+      fullPath: '/mural/'
+      preLoaderRoute: typeof AppMuralIndexRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
     '/_app/perfil/': {
       id: '/_app/perfil/'
       path: '/perfil'
@@ -226,6 +245,7 @@ interface AppLayoutRouteChildren {
   AppCharactersIndexRoute: typeof AppCharactersIndexRoute
   AppMissionsIndexRoute: typeof AppMissionsIndexRoute
   AppModerationIndexRoute: typeof AppModerationIndexRoute
+  AppMuralIndexRoute: typeof AppMuralIndexRoute
   AppPerfilIndexRoute: typeof AppPerfilIndexRoute
   AppRankingIndexRoute: typeof AppRankingIndexRoute
   AppMissionsNewIndexRoute: typeof AppMissionsNewIndexRoute
@@ -237,6 +257,7 @@ const AppLayoutRouteChildren: AppLayoutRouteChildren = {
   AppCharactersIndexRoute: AppCharactersIndexRoute,
   AppMissionsIndexRoute: AppMissionsIndexRoute,
   AppModerationIndexRoute: AppModerationIndexRoute,
+  AppMuralIndexRoute: AppMuralIndexRoute,
   AppPerfilIndexRoute: AppPerfilIndexRoute,
   AppRankingIndexRoute: AppRankingIndexRoute,
   AppMissionsNewIndexRoute: AppMissionsNewIndexRoute,

@@ -17,7 +17,7 @@ export function Card<T extends ElementType = "section">({ as, children, classNam
             {children ?? (
                 <>
                     <strong className="block text-2xl font-black text-primary-light">{renderTextWithNumericFont(value)}</strong>
-                    <span className="mt-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-wider text-black-muted">
+                    <span className="mt-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-wider text-primary">
                         {icon}
                         {label}
                     </span>

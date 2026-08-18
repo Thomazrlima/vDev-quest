@@ -3,8 +3,10 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { GridIcon } from "@/components/icons";
 import { Card } from "@/components/ui/Card";
+import { BLEED_UNDER_RETURN_LINK, HALL_PANEL, StoneWall } from "@/components/ui/StoneWall";
 import { EvidenceQueue } from "./components/EvidenceQueue";
 import { ModerationFilters } from "./components/ModerationFilters";
+import { cn } from "@/lib/tailwind";
 import { moderationService } from "@/mocks/services/moderation";
 import type { EvidenceSubmission } from "@/types/moderation";
 import { renderTextWithNumericFont } from "@/lib/typography";
@@ -54,31 +56,35 @@ function ModerationPage() {
     }, [collaboratorQuery, missionId, selectedCollaborator, navigate]);
 
     const count = (
-        <div className="flex items-center gap-2 border-2 border-[var(--color-orange-dark)] bg-[var(--color-primary-dark)] px-4 py-3 text-[10px] font-black uppercase tracking-wider text-primary-light shadow-[4px_4px_0_var(--color-orange-dark)]">
+        <div className="flex items-center gap-2 border-2 border-primary bg-black px-4 py-3 text-[10px] font-black uppercase tracking-wider text-primary-light shadow-[4px_4px_0_var(--color-primary-dark)]">
             <GridIcon className="h-4 w-4" />
             {renderTextWithNumericFont(loading ? "Atualizando fila" : evidences.length + " pendência" + (evidences.length === 1 ? "" : "s"))}
         </div>
     );
 
     return (
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-            <PageHeader eyebrow="Moderação · OS-1" title="Fila de evidências" description="Analise as entregas pendentes da guilda e avance para os detalhes de cada registro." action={count} />
-            <Card className="mt-8 overflow-hidden">
-                <ModerationFilters
-                    collaborators={collaborators}
-                    missions={missions}
-                    collaboratorQuery={collaboratorQuery}
-                    missionId={missionId}
-                    onCollaboratorChange={setCollaboratorQuery}
-                    onMissionChange={setMissionId}
-                    onClear={() => {
-                        setCollaboratorQuery("");
-                        setMissionId("");
-                    }}
-                />
-                <EvidenceQueue evidences={evidences} loading={loading} onOpen={(id) => navigate({ to: "/moderation/$id", params: { id } })} />
-            </Card>
-            <p className="mt-4 text-[10px] text-[var(--color-black-muted)]">{renderTextWithNumericFont("A fila é ordenada da evidência mais antiga para a mais recente. A busca utiliza debounce de 350 ms.")}</p>
+        <main className={`flex min-h-screen flex-col overflow-x-hidden bg-(--color-black) ${BLEED_UNDER_RETURN_LINK}`}>
+            <StoneWall>
+                <div className="mx-auto w-[min(1180px,100%)]">
+                    <PageHeader eyebrow="Moderação · OS-1" title="Fila de evidências" description="Analise as entregas pendentes da guilda e avance para os detalhes de cada registro." action={count} />
+                    <Card className={cn("mt-8", HALL_PANEL)}>
+                        <ModerationFilters
+                            collaborators={collaborators}
+                            missions={missions}
+                            collaboratorQuery={collaboratorQuery}
+                            missionId={missionId}
+                            onCollaboratorChange={setCollaboratorQuery}
+                            onMissionChange={setMissionId}
+                            onClear={() => {
+                                setCollaboratorQuery("");
+                                setMissionId("");
+                            }}
+                        />
+                        <EvidenceQueue evidences={evidences} loading={loading} onOpen={(id) => navigate({ to: "/moderation/$id", params: { id } })} />
+                    </Card>
+                    <p className="mt-7 text-center text-[.58rem] font-black uppercase tracking-[.16em] text-primary-light">{renderTextWithNumericFont("A fila é ordenada da evidência mais antiga para a mais recente. A busca utiliza debounce de 350 ms.")}</p>
+                </div>
+            </StoneWall>
         </main>
     );
 }

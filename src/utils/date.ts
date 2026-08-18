@@ -1,4 +1,4 @@
-import { format, parseISO } from "date-fns";
+import { differenceInCalendarDays, format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export const DATE_FORMATS = {
@@ -17,4 +17,9 @@ export function formatDate(value: DateInput, formatOrVariant: DateFormatVariant 
     const dateFormat = Object.hasOwn(DATE_FORMATS, formatOrVariant) ? DATE_FORMATS[formatOrVariant as DateFormatVariant] : formatOrVariant;
 
     return format(toDate(value), dateFormat, { locale: ptBR });
+}
+
+/** Dias inteiros até o prazo: negativo quando já passou, zero quando encerra hoje. */
+export function daysUntil(value: DateInput, reference: DateInput = new Date()) {
+    return differenceInCalendarDays(toDate(value), toDate(reference));
 }

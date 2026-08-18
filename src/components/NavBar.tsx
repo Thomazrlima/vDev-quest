@@ -1,11 +1,12 @@
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
-import { MissionsNavIcon, ProfileNavIcon, RankingNavIcon } from "@/components/icons";
+import { GridIcon, MissionsNavIcon, ProfileNavIcon, RankingNavIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { Slider } from "@/components/ui/Slider";
 
 const items = [
     { href: "/ranking", label: "Ranking", icon: RankingNavIcon },
+    { href: "/mural", label: "Mural", icon: GridIcon },
     { href: "/missions", label: "Missões", icon: MissionsNavIcon },
     { href: "/perfil", label: "Perfil", icon: ProfileNavIcon },
 ];

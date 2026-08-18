@@ -5,6 +5,7 @@ import { RankingPodium } from "./components/RankingPodium";
 import { RankingTable } from "./components/RankingTable";
 import { getManaSeedTexture, getManaSeedVisibleTexture, loadManaSeedTexture } from "@/components/ManaSeed/textures";
 import { Loading } from "@/components/ui/Loading";
+import { BLEED_UNDER_RETURN_LINK } from "@/components/ui/StoneWall";
 import { renderTextWithNumericFont } from "@/lib/typography";
 import { RANKING_ENTRIES, RANKING_LEADERS, RANKING_UPDATED_AT } from "@/mocks/data/ranking";
 import { formatDate } from "@/utils/date";
@@ -44,13 +45,6 @@ function loadRankingAssets(layers: ReturnType<typeof getManaSeedLayers>) {
 
     return rankingAssetsPromise;
 }
-
-/**
- * O hall e a parede vão de ponta a ponta, então a folga que o layout reserva para o atalho
- * flutuante de volta ao vilarejo apareceria aqui como uma faixa da paisagem por cima da arte.
- * Com a barra de navegação ligada a medida é zero e isto não muda nada.
- */
-const BLEED_UNDER_RETURN_LINK = "mt-[calc(var(--lobby-return-allowance,0px)*-1)]";
 
 export const Route = createFileRoute("/_app/ranking/")({
     component: RankingPage,

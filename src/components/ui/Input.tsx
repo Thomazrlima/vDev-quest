@@ -27,18 +27,12 @@ export function Input({ id, label, error, description, containerClassName, class
                 <input
                     id={inputId}
                     required={required}
-                    className={cn(
-                        "w-full border-2 bg-[var(--color-black)] px-4 py-3 text-sm text-white outline-none shadow-[inset_3px_3px_0_var(--color-green-dark)] transition placeholder:text-[var(--color-black-muted)] focus:border-primary disabled:cursor-not-allowed disabled:border-[var(--color-black-soft)] disabled:bg-[var(--color-black)] disabled:text-[var(--color-black-muted)]",
-                        error ? "border-[var(--color-orange)]" : "border-[var(--color-orange-dark)]",
-                        endAdornment && "pr-16",
-                        props.type === "number" && "font-numeric",
-                        className,
-                    )}
+                    className={cn("w-full border-2 bg-[var(--color-black)] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[var(--color-white-muted)] focus:border-primary disabled:cursor-not-allowed disabled:border-[var(--color-black-soft)] disabled:bg-[var(--color-black)] disabled:text-[var(--color-black-muted)]", error ? "border-[var(--color-orange)]" : "border-[var(--color-primary-dark)]", endAdornment && "pr-16", props.type === "number" && "font-numeric", className)}
                     {...props}
                 />
                 {endAdornment ? <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-primary">{typeof endAdornment === "string" || typeof endAdornment === "number" ? renderTextWithNumericFont(endAdornment) : endAdornment}</span> : null}
             </span>
-            {description ? <span className="mt-2 block text-[11px] text-[var(--color-black-muted)]">{renderTextWithNumericFont(description)}</span> : null}
+            {description ? <span className="mt-2 block text-[11px] text-[var(--color-white-muted)]">{renderTextWithNumericFont(description)}</span> : null}
             {error ? (
                 <span role="alert" className="mt-2 block text-[11px] font-bold text-[var(--color-orange)]">
                     {renderTextWithNumericFont(error)}
