@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/Card";
-import { DoneIcon, PendingIcon, ScrollIcon } from "@/components/icons";
+import { AlertIcon, DoneIcon, PendingIcon, ScrollIcon } from "@/components/icons";
 import { HALL_PANEL } from "@/components/ui/StoneWall";
 import { cn } from "@/lib/tailwind";
 import type { MuralFilter } from "@/types/mission";
@@ -8,6 +8,7 @@ import type { MuralFilter } from "@/types/mission";
 const emptyByFilter = {
     disponiveis: { Icon: ScrollIcon, title: "Nenhuma missão disponível para esta temporada ainda!", hint: "Assim que a guilda publicar novos desafios, eles aparecem aqui." },
     aguardando: { Icon: PendingIcon, title: "Nenhuma entrega aguardando aprovação", hint: "Envie a evidência de uma missão disponível para acompanhar a moderação por aqui." },
+    recusadas: { Icon: AlertIcon, title: "Nenhuma missão recusada", hint: "Quando uma entrega precisar de ajuste, ela aparecerá aqui para você reenviar." },
     concluidas: { Icon: DoneIcon, title: "Você ainda não concluiu missões nesta temporada", hint: "Complete um desafio disponível para conquistar sua primeira EXP da temporada." },
 } as const;
 

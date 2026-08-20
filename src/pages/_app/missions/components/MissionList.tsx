@@ -5,7 +5,7 @@ import { Loading } from "@/components/ui/Loading";
 import { HALL_PANEL } from "@/components/ui/StoneWall";
 import { cn } from "@/lib/tailwind";
 import { renderTextWithNumericFont } from "@/lib/typography";
-import type { Mission } from "@/types/mission";
+import { RECURRENCE_TYPE_LABELS, WEEKDAY_LABELS, type Mission } from "@/types/mission";
 
 export function MissionList({ missions, loading, onOpen }: { missions: Mission[]; loading: boolean; onOpen: (mission: Mission) => void }) {
     return (
@@ -28,6 +28,7 @@ export function MissionList({ missions, loading, onOpen }: { missions: Mission[]
                             <div className="min-w-0">
                                 <h2 className="truncate text-[.98rem] font-black text-primary-light">{renderTextWithNumericFont(mission.title)}</h2>
                                 <p className="mt-1 truncate text-[.65rem] font-black uppercase tracking-[.08em] text-primary">{renderTextWithNumericFont(mission.hasProgress ? "Em andamento · edição bloqueada" : `${mission.status} · ${mission.updatedAt}`)}</p>
+                                {mission.recurrenceType !== "none" ? <p className="mt-1 truncate text-[.62rem] font-bold text-white-muted">{renderTextWithNumericFont(recurrenceSummary(mission))}</p> : null}
                             </div>
                         </div>
                         <span className="hidden text-xs text-white-muted sm:block">{renderTextWithNumericFont(mission.evidenceType)}</span>
@@ -40,4 +41,11 @@ export function MissionList({ missions, loading, onOpen }: { missions: Mission[]
             )}
         </Card>
     );
+}
+
+function recurrenceSummary(mission: Mission) {
+    const type = RECURRENCE_TYPE_LABELS[mission.recurrenceType];
+    if (mission.recurrenceType !== "weekly") return type;
+    const days = mission.recurrenceDays.map((day) => WEEKDAY_LABELS[day].slice(0, 3)).join(", ");
+    return days ? `${type}: ${days}` : type;
 }

@@ -14,7 +14,13 @@ const items = [
 export function NavBar() {
     const pathname = useRouterState({ select: (state) => state.location.pathname });
     const navigate = useNavigate();
-    const activeItem = items.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`) || (item.href === "/perfil" && (pathname === "/characters" || pathname.startsWith("/characters/"))));
+    const activeItem = items.find(
+        (item) =>
+            pathname === item.href ||
+            pathname.startsWith(`${item.href}/`) ||
+            (item.href === "/missions" && (pathname === "/moderation" || pathname.startsWith("/moderation/"))) ||
+            (item.href === "/perfil" && (pathname === "/characters" || pathname.startsWith("/characters/"))),
+    );
 
     return (
         <>

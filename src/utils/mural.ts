@@ -30,17 +30,19 @@ export function openRefusal(mission: MuralMission) {
 
 /**
  * A aba do mural sai das submissões: aprovada encerra a missão, pendente a deixa em análise e
- * o resto — sem entrega ou só com recusas — a devolve para as disponíveis.
+ * uma recusa aberta ganha sua própria seção para deixar claro que ela pede reenvio.
  */
 export function muralStateOf(mission: MuralMission): MuralFilter {
     if (approvedSubmission(mission)) return "concluidas";
     if (pendingSubmission(mission)) return "aguardando";
+    if (openRefusal(mission)) return "recusadas";
     return "disponiveis";
 }
 
 /** Uma entrega por vez: enquanto o gestor não responde, ou depois que aprovou, o formulário sai. */
 export function acceptsEvidence(mission: MuralMission) {
-    return muralStateOf(mission) === "disponiveis";
+    const state = muralStateOf(mission);
+    return state === "disponiveis" || state === "recusadas";
 }
 
 export function deadlineLabel(remainingDays: number) {
@@ -52,7 +54,7 @@ export function deadlineLabel(remainingDays: number) {
 
 /** Com a entrega em análise ou aprovada o prazo é só histórico: não há o que correr atrás. */
 export function isDeadlineUrgent(state: MuralFilter, remainingDays: number) {
-    return state === "disponiveis" && remainingDays <= URGENT_THRESHOLD_IN_DAYS;
+    return (state === "disponiveis" || state === "recusadas") && remainingDays <= URGENT_THRESHOLD_IN_DAYS;
 }
 
 /** [".png", ".jpg"] vira "PNG ou JPG" — o formato como o colaborador lê no campo. */

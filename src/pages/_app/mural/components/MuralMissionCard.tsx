@@ -19,6 +19,7 @@ const tilts = ["-rotate-[1.4deg]", "rotate-[.9deg]", "-rotate-[.6deg]", "rotate-
 const callToAction = {
     disponiveis: "Enviar evidência",
     aguardando: "Ver minhas submissões",
+    recusadas: "Reenviar evidência",
     concluidas: "Ver conquista",
 } as const;
 

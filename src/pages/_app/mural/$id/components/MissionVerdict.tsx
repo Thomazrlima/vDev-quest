@@ -1,27 +1,12 @@
-import { AlertIcon, PendingIcon, TrophyIcon } from "@/components/icons";
+import { AlertIcon, PendingIcon } from "@/components/icons";
 import { Alert } from "@/components/ui/Alert";
-import { Card } from "@/components/ui/Card";
 import { renderTextWithNumericFont } from "@/lib/typography";
 import type { MuralMission } from "@/types/mission";
 import { formatDate } from "@/utils/date";
-import { approvedSubmission, openRefusal, pendingSubmission } from "@/utils/mural";
+import { openRefusal, pendingSubmission } from "@/utils/mural";
 
 /** O que o gestor respondeu por último: a conquista, a espera ou a recusa que pede reenvio. */
 export function MissionVerdict({ mission }: { mission: MuralMission }) {
-    const approved = approvedSubmission(mission);
-    if (approved) {
-        return (
-            <Card as="section" className="border-4 border-green bg-green-overlay px-6 py-8 text-center shadow-[5px_6px_0_rgb(15_14_14/55%)]">
-                <span aria-hidden="true" className="mx-auto grid h-16 w-16 place-items-center border-2 border-green bg-black text-green-light">
-                    <TrophyIcon className="h-8 w-8" />
-                </span>
-                <strong className="mt-4 block text-base font-black uppercase tracking-[.1em] text-green-light">Missão concluída</strong>
-                <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-white-muted">{renderTextWithNumericFont(approved.reviewedAt ? `O gestor aprovou sua entrega em ${formatDate(approved.reviewedAt, "short")}.` : "O gestor aprovou sua entrega.")}</p>
-                <p className="mt-4 text-2xl font-black text-green-light">{renderTextWithNumericFont(`+${mission.xp} EXP`)}</p>
-            </Card>
-        );
-    }
-
     const pending = pendingSubmission(mission);
     if (pending) {
         return (

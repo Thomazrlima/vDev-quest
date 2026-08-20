@@ -5,14 +5,14 @@ import type { EvidenceSubmission } from "@/types/moderation";
 import { formatDate } from "@/utils/date";
 import { renderTextWithNumericFont } from "@/lib/typography";
 
-export function EvidenceQueue({ evidences, loading, onOpen }: { evidences: EvidenceSubmission[]; loading: boolean; onOpen: (id: string) => void }) {
+export function EvidenceQueue({ evidences, loading, onOpen, emptyTitle = "Nenhuma pendência encontrada", emptyDescription = "Ajuste ou limpe os filtros para consultar a fila completa." }: { evidences: EvidenceSubmission[]; loading: boolean; onOpen: (id: string) => void; emptyTitle?: string; emptyDescription?: string }) {
     if (loading) return <Loading message="Buscando evidências pendentes..." />;
     if (!evidences.length)
         return (
             <div className="p-10 text-center">
                 <ScrollIcon className="mx-auto mb-3 h-8 w-8 text-primary-dark" />
-                <strong className="block text-sm font-black text-primary-light">Nenhuma pendência encontrada</strong>
-                <span className="mt-1 block text-xs text-white-muted">Ajuste ou limpe os filtros para consultar a fila completa.</span>
+                <strong className="block text-sm font-black text-primary-light">{emptyTitle}</strong>
+                <span className="mt-1 block text-xs text-white-muted">{emptyDescription}</span>
             </div>
         );
     return (
@@ -37,7 +37,7 @@ export function EvidenceQueue({ evidences, loading, onOpen }: { evidences: Evide
                     <span className="text-xs text-white-muted">{renderTextWithNumericFont(evidence.evidenceType)}</span>
                     <time className="text-xs text-white-muted">{renderTextWithNumericFont(formatDate(evidence.submittedAt))}</time>
                     <span className="flex items-center justify-between gap-3">
-                        <strong className="border-2 border-primary-dark bg-black px-2 py-1 text-[9px] uppercase tracking-wider text-primary-light">{evidence.status}</strong>
+                        <strong className={evidence.status === "Aprovada" ? "border-2 border-green bg-green-overlay px-2 py-1 text-[9px] uppercase tracking-wider text-green-light" : evidence.status === "Recusada" ? "border-2 border-red bg-red-overlay px-2 py-1 text-[9px] uppercase tracking-wider text-red-light" : "border-2 border-primary-dark bg-black px-2 py-1 text-[9px] uppercase tracking-wider text-primary-light"}>{evidence.status}</strong>
                         <ChevronIcon className="h-4 w-4 text-primary transition group-hover:text-primary-light" />
                     </span>
                 </Button>

@@ -8,7 +8,12 @@ function read(): Mission[] {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (!stored) return INITIAL_MISSIONS;
     try {
-        return JSON.parse(stored) as Mission[];
+        return (JSON.parse(stored) as Mission[]).map((mission) => ({
+            ...mission,
+            // Dados salvos antes do agendamento recorrente continuam editáveis.
+            recurrenceType: mission.recurrenceType ?? "none",
+            recurrenceDays: mission.recurrenceDays ?? [],
+        }));
     } catch {
         return INITIAL_MISSIONS;
     }

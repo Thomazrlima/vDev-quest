@@ -3,6 +3,29 @@ export const EVIDENCE_TYPES = ["Foto (PNG, JPEG)", "PDF", "Link", "Texto"] as co
 export type EvidenceType = (typeof EVIDENCE_TYPES)[number];
 export type MissionStatus = "Rascunho" | "Publicada";
 
+export const RECURRENCE_TYPES = ["none", "daily", "weekly", "monthly"] as const;
+export type RecurrenceType = (typeof RECURRENCE_TYPES)[number];
+
+export const RECURRENCE_TYPE_LABELS: Record<RecurrenceType, string> = {
+    none: "Não se repete",
+    daily: "Diariamente",
+    weekly: "Semanalmente",
+    monthly: "Mensalmente",
+};
+
+export const WEEKDAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"] as const;
+export type Weekday = (typeof WEEKDAYS)[number];
+
+export const WEEKDAY_LABELS: Record<Weekday, string> = {
+    monday: "Segunda",
+    tuesday: "Terça",
+    wednesday: "Quarta",
+    thursday: "Quinta",
+    friday: "Sexta",
+    saturday: "Sábado",
+    sunday: "Domingo",
+};
+
 /** Como a evidência é preenchida na tela de envio: anexo, endereço ou relato escrito. */
 export type EvidenceInputKind = "file" | "link" | "text";
 
@@ -23,6 +46,8 @@ export type MissionFormData = {
     xp: string;
     startDate: string;
     endDate: string;
+    recurrenceType: RecurrenceType;
+    recurrenceDays: Weekday[];
 };
 
 export type Mission = MissionFormData & {
@@ -36,6 +61,7 @@ export type Mission = MissionFormData & {
 export const MURAL_FILTERS = [
     { value: "disponiveis", label: "Disponíveis" },
     { value: "aguardando", label: "Aguardando Aprovação" },
+    { value: "recusadas", label: "Recusadas" },
     { value: "concluidas", label: "Concluídas" },
 ] as const;
 

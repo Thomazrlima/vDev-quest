@@ -1,4 +1,4 @@
-import { DeadlineIcon, EvidenceIcon, SparkIcon } from "@/components/icons";
+import { DeadlineIcon, EvidenceIcon, SparkIcon, TrophyIcon } from "@/components/icons";
 import { Card } from "@/components/ui/Card";
 import { DetailCard } from "@/components/ui/DetailCard";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -22,7 +22,10 @@ export function MissionBriefing({ mission }: { mission: MuralMission }) {
             <header className="border-b-2 border-primary-dark bg-black p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <Eyebrow>Mural de missões · FE-06</Eyebrow>
-                    <MuralStateBadge state={state} />
+                    <div className="flex items-center gap-2">
+                        {state === "concluidas" ? <TrophyIcon aria-label="Troféu da missão concluída" className="h-5 w-5 text-green-light" /> : null}
+                        <MuralStateBadge state={state} />
+                    </div>
                 </div>
                 <Heading className="mt-2" size="sm">
                     {mission.title}
@@ -31,7 +34,7 @@ export function MissionBriefing({ mission }: { mission: MuralMission }) {
             </header>
 
             <div className="grid gap-5 bg-black-overlay p-6 sm:grid-cols-3">
-                <DetailCard icon={<SparkIcon className="h-3.5 w-3.5" />} label="Recompensa" value={`${mission.xp} EXP`} />
+                <DetailCard icon={<SparkIcon className="h-3.5 w-3.5" />} label="Recompensa" value={`+${mission.xp} EXP`} valueClassName="text-green-light" />
                 <DetailCard icon={<DeadlineIcon className="h-3.5 w-3.5" />} label="Prazo" value={formatDate(mission.deadline, "dd/MM/yyyy")} hint={deadlineLabel(remainingDays)} highlight={urgent} />
                 <DetailCard icon={<EvidenceIcon type={mission.evidenceType} className="h-3.5 w-3.5" />} label="Evidência exigida" value={mission.evidenceType} />
             </div>

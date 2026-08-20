@@ -1,4 +1,4 @@
-import { DoneIcon, PendingIcon, SparkIcon } from "@/components/icons";
+import { AlertIcon, DoneIcon, PendingIcon, SparkIcon } from "@/components/icons";
 import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import type { MuralFilter } from "@/types/mission";
 
@@ -6,6 +6,7 @@ import type { MuralFilter } from "@/types/mission";
 const states = {
     disponiveis: { label: "Disponível", Icon: SparkIcon, tone: "primary" },
     aguardando: { label: "Em análise", Icon: PendingIcon, tone: "muted" },
+    recusadas: { label: "Recusada", Icon: AlertIcon, tone: "danger" },
     concluidas: { label: "Concluída", Icon: DoneIcon, tone: "success" },
 } as const satisfies Record<MuralFilter, { label: string; Icon: typeof SparkIcon; tone: BadgeTone }>;
 

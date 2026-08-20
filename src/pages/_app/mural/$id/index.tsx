@@ -10,7 +10,6 @@ import { BLEED_UNDER_RETURN_LINK, CLEAR_RETURN_LINK, HALL_PANEL } from "@/compon
 import { cn } from "@/lib/tailwind";
 import { MissionBriefing } from "./components/MissionBriefing";
 import { MissionEvidenceForm } from "./components/MissionEvidenceForm";
-import { MissionVerdict } from "./components/MissionVerdict";
 import { SubmissionsTable } from "./components/SubmissionsTable";
 import { muralService } from "@/mocks/services/mural";
 import type { MuralMission } from "@/types/mission";
@@ -105,9 +104,7 @@ function MuralMissionPage() {
                                     <Alert tone="success" title="Evidência enviada!" icon={<DoneIcon className="h-4 w-4" />}>
                                         Sua entrega foi registrada e agora aguarda a aprovação do gestor.
                                     </Alert>
-                                ) : (
-                                    <MissionVerdict mission={mission} />
-                                )}
+                                ) : null}
 
                                 {/* O botão sai do cabeçalho enquanto a entrega está em análise ou já foi aprovada. */}
                                 <SubmissionsTable
