@@ -1,6 +1,6 @@
 import { MURAL_MISSIONS } from "@/mocks/data/mural";
-import type { EvidenceInputKind, MuralFilter, MuralMission, MuralSubmission } from "@/types/mission";
-import { acceptsEvidence, byNewest, muralStateOf } from "@/utils/mural";
+import type { EvidenceInputKind, FeedEntry, MuralFilter, MuralMission, MuralSubmission } from "@/types/mission";
+import { acceptsEvidence, byNewest, createEvidencePreview, muralStateOf, submissionFeed } from "@/utils/mural";
 
 const STORAGE_KEY = "vdev-quest-mural";
 
@@ -23,8 +23,22 @@ function readStored(): StoredSubmissions {
     }
 }
 
+/** Sem a miniatura, para quando a foto guardada não couber mais na cota do navegador. */
+function withoutPreviews(submissions: StoredSubmissions): StoredSubmissions {
+    return Object.fromEntries(Object.entries(submissions).map(([id, list]) => [id, list.map(({ preview: _preview, ...submission }) => submission)]));
+}
+
 function saveStored(submissions: StoredSubmissions) {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
+    try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
+    } catch {
+        // O que pesa é a miniatura: descartá-la é melhor do que perder o histórico inteiro.
+        try {
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(withoutPreviews(submissions)));
+        } catch {
+            // Cota esgotada mesmo sem as fotos: a entrega vale para esta sessão e não é guardada.
+        }
+    }
 }
 
 function read(): MuralMission[] {
@@ -33,10 +47,11 @@ function read(): MuralMission[] {
 }
 
 /** O corpo que a BE-06 receberá: arquivo em multipart, endereço e relato como texto. */
-function toSubmission(evidence: FormData): MuralSubmission {
+async function toSubmission(evidence: FormData): Promise<MuralSubmission> {
     const file = evidence.get("file");
     const entry = { id: `sub-${Date.now()}`, submittedAt: new Date().toISOString(), status: "pendente" } as const;
-    if (file instanceof File) return { ...entry, kind: "file", value: file.name };
+    // A API devolverá o endereço do anexo; aqui a miniatura da foto faz esse papel no feed do perfil.
+    if (file instanceof File) return { ...entry, kind: "file", value: file.name, preview: (await createEvidencePreview(file)) ?? undefined };
 
     return { ...entry, kind: (evidence.get("kind") as EvidenceInputKind) ?? "text", value: String(evidence.get("value") ?? "").trim() };
 }
@@ -46,6 +61,9 @@ export const muralService = {
     list: (state: MuralFilter): Promise<MuralMission[]> => mockResponse(read().filter((mission) => muralStateOf(mission) === state)),
 
     getById: (id: string): Promise<MuralMission | null> => mockResponse(read().find((mission) => mission.id === id) ?? null),
+
+    /** O feed do perfil: toda entrega já feita pelo colaborador, sem separar por aba. */
+    feed: (): Promise<FeedEntry[]> => mockResponse(submissionFeed(read())),
 
     /**
      * BE-06: cada envio cria uma submissão nova na missão — a primeira por POST, as seguintes
@@ -57,7 +75,7 @@ export const muralService = {
         if (!mission) throw new Error("Missão não encontrada.");
         if (!acceptsEvidence(mission)) throw new Error("Esta missão já tem uma entrega em análise ou aprovada.");
 
-        const submission = toSubmission(evidence);
+        const submission = await toSubmission(evidence);
         if (!submission.value) throw new Error("Anexe ou preencha a evidência pedida antes de enviar.");
 
         const stored = readStored();

@@ -72,6 +72,13 @@ export const SUBMISSION_STATUSES = ["pendente", "aprovada", "recusada"] as const
 
 export type SubmissionStatus = (typeof SUBMISSION_STATUSES)[number];
 
+/** O nome de cada veredito, o mesmo no selo da submissão e no filtro do feed. */
+export const SUBMISSION_STATUS_LABELS: Record<SubmissionStatus, string> = {
+    pendente: "Em análise",
+    aprovada: "Aprovada",
+    recusada: "Recusada",
+};
+
 /** Uma entrega do colaborador: o nome do arquivo anexado, o endereço colado ou o relato escrito. */
 export type MuralSubmission = {
     id: string;
@@ -79,6 +86,8 @@ export type MuralSubmission = {
     value: string;
     submittedAt: string;
     status: SubmissionStatus;
+    /** A miniatura da foto entregue, quando a evidência é uma imagem; é ela que o feed do perfil mostra. */
+    preview?: string;
     /** O que o gestor escreveu ao recusar esta entrega; só existe nas recusadas. */
     justification?: string;
     /** Quando o veredito saiu, para o histórico contar a ordem dos acontecimentos. */
@@ -95,4 +104,16 @@ export type MuralMission = {
     deadline: string;
     /** O histórico do colaborador nesta missão, da entrega mais recente para a mais antiga. */
     submissions: MuralSubmission[];
+};
+
+/** Uma entrega no feed do perfil: a submissão junto da missão de onde ela saiu. */
+export type FeedEntry = {
+    mission: MuralMission;
+    submission: MuralSubmission;
+};
+
+/** O recorte do feed. Campo vazio é "todas": é assim que o filtro dá meia-volta. */
+export type FeedFilters = {
+    missionId: string;
+    status: SubmissionStatus | "";
 };

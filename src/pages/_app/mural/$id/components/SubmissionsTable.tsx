@@ -4,8 +4,8 @@ import { Card } from "@/components/ui/Card";
 import { HALL_PANEL } from "@/components/ui/StoneWall";
 import { cn } from "@/lib/tailwind";
 import { renderTextWithNumericFont } from "@/lib/typography";
-import { EvidenceValue } from "./EvidenceValue";
-import { SubmissionStatusBadge } from "../../components/SubmissionStatusBadge";
+import { EvidenceValue } from "@/components/Mission/EvidenceValue";
+import { SubmissionStatusBadge } from "@/components/Mission/SubmissionStatusBadge";
 import type { MuralMission } from "@/types/mission";
 import { formatDate } from "@/utils/date";
 

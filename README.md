@@ -41,7 +41,7 @@ Dependências devem apontar para baixo na hierarquia: páginas consomem template
 ## Rotas
 
 - `/ranking` — ranking e pódio.
-- `/perfil` — perfil, indicadores e acesso ao criador.
+- `/perfil` — perfil, indicadores, feed das evidências enviadas e acesso ao criador.
 - `/characters` — criador de personagem por camadas.
 - `/mural` — mural do colaborador, com as abas de disponíveis, aguardando e concluídas.
 - `/mural/:id` — detalhes da missão, envio de evidência e histórico de submissões.

@@ -4,7 +4,9 @@ import type { MuralMission } from "@/types/mission";
  * O mural da temporada como o colaborador o vê. Os prazos são relativos a agosto de 2026, a
  * mesma temporada das outras fichas de exemplo, para o destaque de prazo próximo aparecer.
  * O estado de cada missão vem das submissões, então há exemplos sem entrega, com recusa em
- * aberto, com histórico de várias tentativas, em análise e já aprovada.
+ * aberto, com histórico de várias tentativas, em análise e já aprovada. As entregas de foto
+ * trazem a miniatura que o feed do perfil mostra; as enviadas pelo colaborador ganham a sua
+ * no momento do envio.
  */
 export const MURAL_MISSIONS: MuralMission[] = [
     {
@@ -32,7 +34,7 @@ export const MURAL_MISSIONS: MuralMission[] = [
         evidenceType: "Foto (PNG, JPEG)",
         xp: "400",
         deadline: "2026-09-02",
-        submissions: [{ id: "sub-001", kind: "file", value: "cacada-aos-bugs.png", submittedAt: "2026-08-10T13:24:00.000Z", status: "recusada", justification: "A captura mostra apenas um dos três defeitos corrigidos. Reenvie um registro em que os três chamados apareçam fechados, com o número de cada um visível.", reviewedAt: "2026-08-12T09:05:00.000Z" }],
+        submissions: [{ id: "sub-001", kind: "file", value: "cacada-aos-bugs.png", preview: "/images/backgrounds/quest-landscape.png", submittedAt: "2026-08-10T13:24:00.000Z", status: "recusada", justification: "A captura mostra apenas um dos três defeitos corrigidos. Reenvie um registro em que os três chamados apareçam fechados, com o número de cada um visível.", reviewedAt: "2026-08-12T09:05:00.000Z" }],
     },
     {
         id: "forja-de-componentes",
@@ -62,7 +64,7 @@ export const MURAL_MISSIONS: MuralMission[] = [
         evidenceType: "Foto (PNG, JPEG)",
         xp: "800",
         deadline: "2026-08-12",
-        submissions: [{ id: "sub-004", kind: "file", value: "sprint-entrega.png", submittedAt: "2026-08-11T18:40:00.000Z", status: "pendente" }],
+        submissions: [{ id: "sub-004", kind: "file", value: "sprint-entrega.png", preview: "/images/backgrounds/hall.png", submittedAt: "2026-08-11T18:40:00.000Z", status: "pendente" }],
     },
     {
         id: "ritual-da-revisao",
@@ -95,6 +97,6 @@ export const MURAL_MISSIONS: MuralMission[] = [
         evidenceType: "Foto (PNG, JPEG)",
         xp: "550",
         deadline: "2026-07-22",
-        submissions: [{ id: "sub-009", kind: "file", value: "checklist-do-deploy.jpeg", submittedAt: "2026-07-21T20:47:00.000Z", status: "aprovada", reviewedAt: "2026-07-22T08:15:00.000Z" }],
+        submissions: [{ id: "sub-009", kind: "file", value: "checklist-do-deploy.jpeg", preview: "/images/backgrounds/ranking-castle-hall-v2.png", submittedAt: "2026-07-21T20:47:00.000Z", status: "aprovada", reviewedAt: "2026-07-22T08:15:00.000Z" }],
     },
 ];

@@ -1,10 +1,13 @@
-import type { EvidenceInput, MuralFilter, MuralMission, MuralSubmission } from "@/types/mission";
+import type { EvidenceInput, FeedEntry, FeedFilters, MuralFilter, MuralMission, MuralSubmission } from "@/types/mission";
 
 /** O prazo só vira alerta enquanto a entrega ainda depende do colaborador. */
 export const URGENT_THRESHOLD_IN_DAYS = 3;
 
 /** Teto do anexo, o mesmo que a BE-06 aceitará no multipart. */
 export const MAX_EVIDENCE_SIZE_IN_MB = 10;
+
+/** A largura da miniatura guardada: o bastante para o feed e leve o suficiente para o localStorage. */
+const PREVIEW_SIZE_IN_PX = 480;
 
 /** Da entrega mais recente para a mais antiga: é assim que o histórico é lido na tela. */
 export function byNewest(submissions: MuralSubmission[]) {
@@ -43,6 +46,31 @@ export function muralStateOf(mission: MuralMission): MuralFilter {
 export function acceptsEvidence(mission: MuralMission) {
     const state = muralStateOf(mission);
     return state === "disponiveis" || state === "recusadas";
+}
+
+/** O feed do perfil é o histórico inteiro do colaborador: toda entrega, da mais nova para a mais antiga. */
+export function submissionFeed(missions: MuralMission[]): FeedEntry[] {
+    const entries = missions.flatMap((mission) => mission.submissions.map((submission) => ({ mission, submission })));
+    return entries.sort((a, b) => new Date(b.submission.submittedAt).getTime() - new Date(a.submission.submittedAt).getTime());
+}
+
+/**
+ * O recorte do feed. Quando a BE-05 existir, missão e status virarão parâmetros da consulta;
+ * aqui o histórico já está em mãos, então filtrar é imediato e o mosaico não pisca.
+ */
+export function filterFeed(entries: FeedEntry[], { missionId, status }: FeedFilters) {
+    return entries.filter((entry) => (!missionId || entry.mission.id === missionId) && (!status || entry.submission.status === status));
+}
+
+/** O filtro só oferece missões que o colaborador já entregou — as outras não têm o que mostrar. */
+export function feedMissions(entries: FeedEntry[]) {
+    const missions = new Map(entries.map(({ mission }) => [mission.id, mission]));
+    return [...missions.values()].sort((a, b) => a.title.localeCompare(b.title, "pt-BR"));
+}
+
+/** No feed a foto é o post; as outras evidências viram um cartão com o que foi escrito ou anexado. */
+export function isPhotoSubmission(submission: MuralSubmission) {
+    return submission.kind === "file" && Boolean(submission.preview);
 }
 
 export function deadlineLabel(remainingDays: number) {
@@ -89,5 +117,32 @@ export function isEvidenceLink(value: string) {
         return protocol === "http:" || protocol === "https:";
     } catch {
         return false;
+    }
+}
+
+/**
+ * A foto entregue só existe no navegador de quem enviou, e o arquivo inteiro não cabe no
+ * localStorage. Guardar uma miniatura reduzida deixa a entrega aparecer no feed do perfil
+ * depois de recarregar a página, sem estourar a cota.
+ */
+export async function createEvidencePreview(file: File): Promise<string | null> {
+    if (!file.type.startsWith("image/")) return null;
+
+    try {
+        const bitmap = await createImageBitmap(file);
+        const scale = Math.min(1, PREVIEW_SIZE_IN_PX / Math.max(bitmap.width, bitmap.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(bitmap.width * scale);
+        canvas.height = Math.round(bitmap.height * scale);
+
+        const context = canvas.getContext("2d");
+        if (!context) return null;
+
+        context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        bitmap.close();
+        return canvas.toDataURL("image/jpeg", 0.72);
+    } catch {
+        // Sem miniatura a entrega continua valendo: o feed mostra o cartão do anexo no lugar da foto.
+        return null;
     }
 }

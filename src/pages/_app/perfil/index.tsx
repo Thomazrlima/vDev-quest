@@ -3,6 +3,7 @@ import { Trophy, Zap } from "pixelarticons/react";
 import { Card } from "@/components/ui/Card";
 import { BLEED_UNDER_RETURN_LINK, CLEAR_RETURN_LINK, HALL_PANEL } from "@/components/ui/StoneWall";
 import { cn } from "@/lib/tailwind";
+import { ProfileFeed } from "./components/ProfileFeed";
 import { ProfileSettings } from "./components/ProfileSettings";
 import { ProfileSummary } from "./components/ProfileSummary";
 
@@ -28,6 +29,9 @@ function ProfilePage() {
                             return <Card key={label} value={value} label={label} icon={<Icon className="h-3 w-3 text-primary" />} className={cn("p-5 text-center", HALL_PANEL)} />;
                         })}
                     </section>
+                    <div className="mt-10">
+                        <ProfileFeed />
+                    </div>
                     <div className="mt-10">
                         <ProfileSettings />
                     </div>
