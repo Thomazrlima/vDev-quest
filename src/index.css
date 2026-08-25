@@ -9,7 +9,7 @@
     }
 
     body {
-        font-family: var(--font-pixel);
+        font-family: var(--font-sans);
     }
 
     * {
@@ -46,8 +46,8 @@
 }
 
 @theme {
-    --font-pixel: "Pixelify Sans", "Courier New", Courier, monospace;
-    --font-numeric: "VT323", "Courier New", Courier, monospace;
+    --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-numeric: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
 
     --color-alpha-zero: transparent;
 
