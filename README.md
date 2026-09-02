@@ -55,6 +55,10 @@ Como a aplicação é uma SPA estática, o hosting deve redirecionar URLs que n�
 
 `src/services/mission-service.ts` simula a BE-01 e persiste missões no `localStorage`. `src/services/moderation-service.ts` simula a BE-02 com filtros e ordenação. Os registros iniciais ficam em `src/data/` e os contratos em `src/types/`.
 
+## Banco de dados
+
+O modelo do futuro PostgreSQL, o diagrama DBML e as instruções de publicação no dbdiagram/dbdocs estão em [`docs/database/`](docs/database/README.md).
+
 ## Sprites
 
 Os personagens usam as folhas do **Mana Seed Farmer Sprite – Free Sample** presentes em `public/images/sprites/mana-seed-free/`. A configuração da folha fica em `src/data/mana-seed.ts`; cálculo de frames e composição de camadas ficam em `src/utils/mana-seed.ts`.
