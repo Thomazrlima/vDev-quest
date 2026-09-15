@@ -293,7 +293,7 @@ Estrutura alvo:
 | `attachment_object_key` | `text` | Chave privada do objeto; nulo para texto/link. |
 | `original_file_name` | `text` | Obrigatório para arquivo. |
 | `mime_type` | `text` | Obrigatório para arquivo. |
-| `file_size_bytes` | `bigint` | Obrigatório para arquivo; máximo de 10 MiB. |
+| `file_size_bytes` | `bigint` | Obrigatório para arquivo; máximo de 3 MiB. |
 | `submitted_at` | `timestamptz` | Momento do envio da evidência. |
 
 Chave e relações:

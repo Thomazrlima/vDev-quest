@@ -4,9 +4,11 @@
 **Status:** pronto para validação  
 **Idioma:** Português do Brasil  
 **Última atualização:** 03/09/2026  
-**Fonte das decisões:** [`decisoes-gamificacao.md`](./decisoes-gamificacao.md)  
+**Fonte das decisões:** [`decisoes-de-produto.md`](./decisoes-de-produto.md)  
 **Modelo atual:** [`database/vdev-quest.dbml`](./database/vdev-quest.dbml)  
-**Alterações futuras do banco:** [`database/alteracoes-modelagem-vdev-quest.md`](./database/alteracoes-modelagem-vdev-quest.md)
+**Alterações futuras do banco:** [`database/alteracoes-modelagem-vdev-quest.md`](./database/alteracoes-modelagem-vdev-quest.md)  
+**Specs de desenvolvimento:** [`specs/`](./specs/)  
+**User stories:** [`stories/user-stories-vdev-quest.md`](./stories/user-stories-vdev-quest.md)
 
 ## 1. Resumo
 
@@ -109,7 +111,8 @@ Requisitos:
 - O primeiro acesso cria o usuário, se ele ainda não existir.
 - A identificação canônica é o e-mail corporativo normalizado em minúsculas e
   sem espaços nas pontas.
-- O nome pode ser atualizado a partir do provedor corporativo.
+- O nome da entidade usuário pode ser alterado no sistema; essa alteração é
+  independente do SSO pelo qual a pessoa autentica.
 - Todo novo usuário recebe o papel `collaborator`.
 - O papel administrativo é `manager` no banco e **Administrador** na interface.
 - A concessão ou remoção do papel administrativo é feita diretamente no banco
@@ -371,7 +374,7 @@ Evidências:
 - PDF: somente `application/pdf`.
 - Link: somente URL HTTP ou HTTPS válida.
 - Texto: conteúdo não vazio após remoção de espaços nas pontas.
-- Arquivos têm limite máximo de 10 MiB.
+- Arquivos têm limite máximo de 3 MiB.
 - O banco guarda a chave privada e estável do objeto; URLs temporárias são
   geradas somente para visualização autorizada.
 - Cada fase com envio pelo mural cria uma linha em
