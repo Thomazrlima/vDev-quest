@@ -1,0 +1,40 @@
+{
+  "realm": "vdev-quest",
+  "enabled": true,
+  "displayName": "v(dev) Quest",
+  "registrationAllowed": false,
+  "clients": [
+    {
+      "clientId": "vdev-quest-web",
+      "name": "v(dev) Quest Web",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["http://localhost:3000/*", "http://localhost:5173/*"],
+      "webOrigins": ["http://localhost:3000", "http://localhost:5173"],
+      "attributes": { "pkce.code.challenge.method": "S256" }
+    }
+  ],
+  "users": [
+    {
+      "username": "admin@vdev.local",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "admin@vdev.local",
+      "firstName": "Administradora",
+      "lastName": "Local",
+      "credentials": [{ "type": "password", "value": "vdev-local", "temporary": false }]
+    },
+    {
+      "username": "colaborador@vdev.local",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "colaborador@vdev.local",
+      "firstName": "Aventureiro",
+      "lastName": "Local",
+      "credentials": [{ "type": "password", "value": "vdev-local", "temporary": false }]
+    }
+  ]
+}

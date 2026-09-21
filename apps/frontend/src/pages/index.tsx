@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, createFileRoute, redirect } from "@tanstack/react-router";
+import { Link, Navigate, createFileRoute, redirect } from "@tanstack/react-router";
+import { useAuth } from "@/auth/useAuth";
+import { isOidcCallback } from "@/auth/oidc";
+import { LoginScreen } from "@/auth/LoginScreen";
 import { Logo } from "@/components/Logo";
 import { LobbyMap } from "@/components/Lobby/LobbyMap";
 import { QuestLoader } from "@/components/ui/QuestLoader";
@@ -16,11 +19,20 @@ const BOOT_TIMEOUT_MS = 6000;
 export const Route = createFileRoute("/")({
     // Quem escolheu a barra de navegação não passa pelo vilarejo para chegar a lugar nenhum.
     // Decidido antes de montar a rota: pela tela, seria o mapa aparecendo por um quadro.
-    beforeLoad: () => {
+    beforeLoad: ({ location }) => {
+        if (isOidcCallback(location.searchStr)) return;
         if (readNavigationMode() === "navbar") throw redirect({ to: "/ranking" });
     },
-    component: LobbyPage,
+    component: RootPage,
 });
+
+function RootPage() {
+    const { ready, accessToken } = useAuth();
+    if (!ready) return <QuestLoader fullscreen hint="Concluindo o login" label="Abrindo sua jornada..." />;
+    if (!accessToken) return <LoginScreen />;
+    if (readNavigationMode() === "navbar") return <Navigate to="/ranking" replace />;
+    return <LobbyPage />;
+}
 
 function LobbyPage() {
     const { name } = useStoredCharacter();

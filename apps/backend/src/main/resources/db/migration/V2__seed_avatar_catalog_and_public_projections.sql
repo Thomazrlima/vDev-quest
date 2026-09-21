@@ -1,0 +1,98 @@
+insert into avatar.slot_definitions(slot, label, asset_directory, draw_order, icon_code) values
+  ('socks','Meias','02sock-legwear',2,'sock'), ('shoes','Calçados','03fot1-shoes-under-pants',3,'shoe'),
+  ('pants','Calças','04lwr1-pants-shorts',4,'pants'), ('shirt','Camisas','05shrt-shirts',5,'shirt'),
+  ('overalls','Macacões','06lwr2-overalls',6,'overalls'), ('boots','Botas','07fot2-boots-over-pants',7,'boot'),
+  ('skirt','Saias e vestidos','08lwr3-skirts-dresses',8,'dress'), ('hands','Luvas','09hand-handwear',9,'glove'),
+  ('outer','Sobreposições','10outr-outerwear',10,'vest'), ('neck','Capas e pescoço','11neck-neckwear',11,'cloak'),
+  ('face','Rosto','12face-facewear',12,'glasses'), ('hair','Cabelos','13hair-hair',13,'hair'),
+  ('headwear','Chapéus','14head-headwear',14,'hat');
+
+insert into avatar.items(id, slot, code, label, file_path, shaped_file_path, under_file_path, hides_hair, hidden_by_hats)
+select md5(slot || '/' || code)::uuid, slot::avatar.avatar_slot, code, label,
+  '/images/io/farmer-sprite-system/layers/' || directory || '/' || file,
+  case when shaped_file is null then null else '/images/io/farmer-sprite-system/layers/' || directory || '/' || shaped_file end,
+  case when under_file is null then null else '/images/io/farmer-sprite-system/layers/00undr-under-everything/' || under_file end,
+  hides_hair, hidden_by_hats
+from (values
+ ('socks','02sock-legwear','sockslow','Meias curtas','fbas_02sock_sockslow_00a.png',null,null,false,false),
+ ('socks','02sock-legwear','sockshigh','Meias altas','fbas_02sock_sockshigh_00a.png',null,null,false,false),
+ ('socks','02sock-legwear','stockings','Meia-calça','fbas_02sock_stockings_00a.png',null,null,false,false),
+ ('shoes','03fot1-shoes-under-pants','shoes','Sapatos','fbas_03fot1_shoes_00a.png',null,null,false,false),
+ ('shoes','03fot1-shoes-under-pants','boots','Botinas','fbas_03fot1_boots_00a.png',null,null,false,false),
+ ('shoes','03fot1-shoes-under-pants','sandals','Sandálias','fbas_03fot1_sandals_00a.png',null,null,false,false),
+ ('pants','04lwr1-pants-shorts','longpants','Calça longa','fbas_04lwr1_longpants_00a.png',null,null,false,false),
+ ('pants','04lwr1-pants-shorts','shorts','Bermuda','fbas_04lwr1_shorts_00a.png',null,null,false,false),
+ ('pants','04lwr1-pants-shorts','onepiece','Macaquinho','fbas_04lwr1_onepiece_00a.png','fbas_04lwr1_onepieceboobs_00a.png',null,false,false),
+ ('pants','04lwr1-pants-shorts','undies','Roupa de baixo','fbas_04lwr1_undies_00a.png',null,null,false,false),
+ ('shirt','05shrt-shirts','shortshirt','Camisa curta','fbas_05shrt_shortshirt_00a.png','fbas_05shrt_shortshirtboobs_00a.png',null,false,false),
+ ('shirt','05shrt-shirts','longshirt','Camisa longa','fbas_05shrt_longshirt_00a.png','fbas_05shrt_longshirtboobs_00a.png',null,false,false),
+ ('shirt','05shrt-shirts','tanktop','Regata','fbas_05shrt_tanktop_00a.png','fbas_05shrt_tanktopboobs_00a.png',null,false,false),
+ ('shirt','05shrt-shirts','bra','Top','fbas_05shrt_bra_00a.png',null,null,false,false),
+ ('overalls','06lwr2-overalls','overalls','Macacão longo','fbas_06lwr2_overalls_00a.png','fbas_06lwr2_overallsboobs_00a.png',null,false,false),
+ ('overalls','06lwr2-overalls','shortalls','Jardineira curta','fbas_06lwr2_shortalls_00a.png','fbas_06lwr2_shortallsboobs_00a.png',null,false,false),
+ ('boots','07fot2-boots-over-pants','cuffedboots','Botas de cano dobrado','fbas_07fot2_cuffedboots_00a.png',null,null,false,false),
+ ('boots','07fot2-boots-over-pants','curlytoeshoes','Sapatos de bico curvo','fbas_07fot2_curlytoeshoes_00a.png',null,null,false,false),
+ ('skirt','08lwr3-skirts-dresses','longskirt','Saia longa','fbas_08lwr3_longskirt_00a.png',null,null,false,false),
+ ('skirt','08lwr3-skirts-dresses','frillyskirt','Saia de babados','fbas_08lwr3_frillyskirt_00a.png',null,null,false,false),
+ ('skirt','08lwr3-skirts-dresses','longdress','Vestido longo','fbas_08lwr3_longdress_00a.png','fbas_08lwr3_longdressboobs_00a.png',null,false,false),
+ ('skirt','08lwr3-skirts-dresses','frillydress','Vestido de babados','fbas_08lwr3_frillydress_00a.png','fbas_08lwr3_frillydressboobs_00a.png',null,false,false),
+ ('hands','09hand-handwear','gloves','Luvas','fbas_09hand_gloves_00a.png',null,null,false,false),
+ ('outer','10outr-outerwear','vest','Colete','fbas_10outr_vest_00a.png',null,null,false,false),
+ ('outer','10outr-outerwear','suspenders','Suspensórios','fbas_10outr_suspenders_00a.png',null,null,false,false),
+ ('neck','11neck-neckwear','scarf','Cachecol','fbas_11neck_scarf_00b.png',null,null,false,false),
+ ('neck','11neck-neckwear','mantleplain','Manto','fbas_11neck_mantleplain_00b.png',null,null,false,false),
+ ('neck','11neck-neckwear','cloakplain','Capa','fbas_11neck_cloakplain_00d.png',null,'fbas_00undr_cloakplain_00d.png',false,false),
+ ('neck','11neck-neckwear','cloakwithmantleplain','Capa com manto','fbas_11neck_cloakwithmantleplain_00b.png',null,'fbas_00undr_cloakwithmantleplain_00b.png',false,false),
+ ('face','12face-facewear','glasses','Óculos','fbas_12face_glasses_00a.png',null,null,false,false),
+ ('face','12face-facewear','shades','Óculos escuros','fbas_12face_shades_00a.png',null,null,false,false),
+ ('hair','13hair-hair','dapper','Elegante','fbas_13hair_dapper_00.png',null,null,false,false),
+ ('hair','13hair-hair','bob1','Chanel I','fbas_13hair_bob1_00.png',null,null,false,false),
+ ('hair','13hair-hair','bob2','Chanel II','fbas_13hair_bob2_00.png',null,null,false,false),
+ ('hair','13hair-hair','afro','Afro','fbas_13hair_afro_00.png',null,null,false,false),
+ ('hair','13hair-hair','afropuffs','Puffs afro','fbas_13hair_afropuffs_00.png',null,null,false,false),
+ ('hair','13hair-hair','twists','Twists','fbas_13hair_twists_00.png',null,null,false,false),
+ ('hair','13hair-hair','bushy','Volumoso','fbas_13hair_bushy_00.png',null,null,false,false),
+ ('hair','13hair-hair','flattop','Topete reto','fbas_13hair_flattop_00.png',null,null,false,false),
+ ('hair','13hair-hair','spiky1','Espetado I','fbas_13hair_spiky1_00.png',null,null,false,false),
+ ('hair','13hair-hair','spiky2','Espetado II','fbas_13hair_spiky2_00.png',null,null,false,false),
+ ('hair','13hair-hair','mohawk','Moicano','fbas_13hair_mohawk_00_e.png',null,null,false,true),
+ ('hair','13hair-hair','ponytail1','Rabo de cavalo','fbas_13hair_ponytail1_00.png',null,null,false,false),
+ ('hair','13hair-hair','twintail','Maria-chiquinha','fbas_13hair_twintail_00.png',null,null,false,false),
+ ('hair','13hair-hair','topknot','Coque alto','fbas_13hair_topknot_00f.png',null,null,false,false),
+ ('hair','13hair-hair','longbound','Longo preso','fbas_13hair_longbound_00.png',null,null,false,false),
+ ('hair','13hair-hair','longboundclasped','Longo com presilha','fbas_13hair_longboundclasped_00f.png',null,null,false,false),
+ ('hair','13hair-hair','longwavy','Longo ondulado','fbas_13hair_longwavy_00.png',null,null,false,false),
+ ('headwear','14head-headwear','strawhat','Chapéu de palha','fbas_14head_strawhat_00d.png',null,null,false,false),
+ ('headwear','14head-headwear','strawhat01','Chapéu de palha II','fbas_14head_strawhat_01.png',null,null,false,false),
+ ('headwear','14head-headwear','cowboyhat','Chapéu de cowboy','fbas_14head_cowboyhat_00d.png',null,null,false,false),
+ ('headwear','14head-headwear','cowboyhat01','Chapéu de cowboy II','fbas_14head_cowboyhat_01.png',null,null,false,false),
+ ('headwear','14head-headwear','boaterhat','Chapéu palheta','fbas_14head_boaterhat_00d.png',null,null,false,false),
+ ('headwear','14head-headwear','boaterhat01','Chapéu palheta II','fbas_14head_boaterhat_01.png',null,null,false,false),
+ ('headwear','14head-headwear','floppyhat','Chapéu de abas largas','fbas_14head_floppyhat_00d.png',null,null,false,false),
+ ('headwear','14head-headwear','floppyhat01','Chapéu de abas largas II','fbas_14head_floppyhat_01.png',null,null,false,false),
+ ('headwear','14head-headwear','bandana','Bandana','fbas_14head_bandana_00b_e.png',null,null,true,false),
+ ('headwear','14head-headwear','headscarf','Lenço de cabeça','fbas_14head_headscarf_00b_e.png',null,null,true,false),
+ ('headwear','14head-headwear','mushroom1','Cogumelo I','fbas_14head_mushroom1_00d.png',null,null,false,false),
+ ('headwear','14head-headwear','mushroom101','Cogumelo II','fbas_14head_mushroom1_01.png',null,null,false,false),
+ ('headwear','14head-headwear','mushroom102','Cogumelo III','fbas_14head_mushroom1_02.png',null,null,false,false),
+ ('headwear','14head-headwear','mushroom103','Cogumelo IV','fbas_14head_mushroom1_03.png',null,null,false,false),
+ ('headwear','14head-headwear','mushroom104','Cogumelo V','fbas_14head_mushroom1_04.png',null,null,false,false),
+ ('headwear','14head-headwear','mushroom105','Cogumelo VI','fbas_14head_mushroom1_05.png',null,null,false,false)
+) as catalog(slot, directory, code, label, file, shaped_file, under_file, hides_hair, hidden_by_hats);
+
+create or replace function private.ranking_profiles()
+returns table(name text, xp bigint, active_submissions bigint)
+language sql security definer set search_path = '' as $$
+  select u.name, u.xp, count(s.id) filter (where s.status = 'active')
+  from core.users u left join quests.submissions s on s.collaborator_email = u.email
+  group by u.email, u.name, u.xp
+  order by u.xp desc, count(s.id) filter (where s.status = 'active') desc, u.name asc;
+$$;
+
+revoke all on function private.ranking_profiles() from public;
+do $$ begin
+  if exists (select 1 from pg_roles where rolname = 'vdev_app') then
+    grant execute on function private.ranking_profiles() to vdev_app;
+    grant insert on gamification.badges, gamification.titles to vdev_app;
+  end if;
+end $$;

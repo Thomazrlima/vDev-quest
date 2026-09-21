@@ -2,6 +2,9 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { LobbyReturnLink } from "@/components/Lobby/LobbyReturnLink";
 import { NavBar } from "@/components/NavBar";
 import { useNavigationMode } from "@/utils/use-navigation-mode";
+import { useAuth } from "@/auth/useAuth";
+import { LoginScreen } from "@/auth/LoginScreen";
+import { QuestLoader } from "@/components/ui/QuestLoader";
 
 export const Route = createFileRoute("/_app")({
     component: AppLayout,
@@ -10,6 +13,10 @@ export const Route = createFileRoute("/_app")({
 function AppLayout() {
     const [navigationMode] = useNavigationMode();
     const usingNavBar = navigationMode === "navbar";
+    const { ready, accessToken } = useAuth();
+
+    if (!ready) return <QuestLoader fullscreen hint="Abrindo o portal" label="Conferindo sua jornada..." />;
+    if (!accessToken) return <LoginScreen />;
 
     return (
         <div className="min-h-screen bg-[linear-gradient(var(--color-black-overlay),var(--color-black-overlay)),url('/images/backgrounds/quest-landscape.png')] bg-cover bg-fixed bg-center">
