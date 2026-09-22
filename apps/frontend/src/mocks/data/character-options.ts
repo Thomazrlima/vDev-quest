@@ -54,8 +54,8 @@ export const CHARACTER_PRESETS: CharacterPreset[] = [
 
 export const CHARACTER_AURAS: CharacterAura[] = [
     { name: "Druida", color: "var(--color-green)", image: "/images/sprites/classes/druida.png" },
-    { name: "Bardo", color: "var(--color-orange)", image: "/images/sprites/classes/bardo.png" },
-    { name: "Guerreiro", color: "var(--color-orange)", image: "/images/sprites/classes/guerreiro.png" },
+    { name: "Bardo", color: "var(--color-primary-dark)", image: "/images/sprites/classes/bardo.png" },
+    { name: "Guerreiro", color: "var(--color-red)", image: "/images/sprites/classes/guerreiro.png" },
     { name: "Clérigo", color: "var(--color-blue)", image: "/images/sprites/classes/clerigo.png" },
     { name: "Bruxo", color: "var(--color-purple)", image: "/images/sprites/classes/bruxo.png" },
     { name: "Necromante", color: "var(--color-black-muted)", image: "/images/sprites/classes/necromante.png" },

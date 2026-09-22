@@ -1,5 +1,9 @@
-import { FormEvent, useRef, useState } from "react";
+import { useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { missionService } from "@/api/missions";
+import { mutationKey } from "@/api/client";
+import { ChevronIcon, ScrollIcon, SparkIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -9,51 +13,86 @@ import { Loading } from "@/components/ui/Loading";
 import { Select } from "@/components/ui/Select";
 import { BLEED_UNDER_RETURN_LINK, HALL_PANEL, StoneWall } from "@/components/ui/StoneWall";
 import { TextArea } from "@/components/ui/TextArea";
-import { ChevronIcon, ScrollIcon, SparkIcon } from "@/components/icons";
 import { cn } from "@/lib/tailwind";
-import { missionService } from "@/api/missions";
-import { mutationKey } from "@/api/client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { EVIDENCE_TYPES, RECURRENCE_TYPE_LABELS, WEEKDAYS, WEEKDAY_LABELS, type Mission, type MissionFormData, type Weekday } from "@/types/mission";
+import { EVIDENCE_TYPES, RECURRENCE_TYPE_LABELS, WEEKDAYS, WEEKDAY_LABELS, type Mission, type MissionFormData, type RecurrenceType, type Weekday } from "@/types/mission";
 
-type FieldName = keyof MissionFormData;
-type FieldErrors = Partial<Record<FieldName, string>>;
-
-/** O react-select fala em {value,label}; os tipos de evidência viram opções uma vez só. */
 const EVIDENCE_OPTIONS = EVIDENCE_TYPES.map((type) => ({ value: type, label: type }));
 const RECURRENCE_OPTIONS = Object.entries(RECURRENCE_TYPE_LABELS).map(([value, label]) => ({ value, label }));
 
-const emptyForm: MissionFormData = {
-    title: "",
-    description: "",
-    evidenceType: "",
-    xp: "",
-    startDate: "",
-    endDate: "",
-    recurrenceType: "none",
-    recurrenceDays: [],
+type FormErrors = {
+    title?: string;
+    description?: string;
+    evidenceType?: string;
+    startDate?: string;
+    endDate?: string;
+    recurrenceDays?: string;
+    checkinMonth?: string;
+    phases?: string;
+    phaseDrafts: { title?: string; xp?: string }[];
 };
 
-function validate(form: MissionFormData): FieldErrors {
-    const errors: FieldErrors = {};
+function monthInSaoPaulo() {
+    const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit" }).formatToParts(new Date());
+    const part = (type: string) => parts.find((entry) => entry.type === type)?.value ?? "";
+    return `${part("year")}-${part("month")}`;
+}
+
+function emptyForm(): MissionFormData {
+    return { title: "", description: "", evidenceType: "", startDate: "", endDate: "", recurrenceType: "none", recurrenceDays: [], isCheckin: false, checkinMonth: monthInSaoPaulo(), allowsMultipleSubmissions: false, phaseDrafts: [{ title: "Conclusão", xp: "" }] };
+}
+
+function validate(form: MissionFormData): FormErrors {
+    const errors: FormErrors = { phaseDrafts: form.phaseDrafts.map(() => ({})) };
     if (!form.title.trim()) errors.title = "Informe o título da missão.";
     if (!form.description.trim()) errors.description = "Descreva o desafio da missão.";
     if (!form.evidenceType) errors.evidenceType = "Selecione o tipo de evidência.";
-    if (!form.xp || Number(form.xp) <= 0) errors.xp = "Informe uma recompensa de EXP válida.";
-    if (!form.startDate) errors.startDate = "Informe a data de início.";
-    if (!form.endDate) errors.endDate = "Informe a data de encerramento.";
-    if (form.startDate && form.endDate && form.endDate < form.startDate) errors.endDate = "A data final deve ser posterior à data inicial.";
-    if (form.recurrenceType === "weekly" && !form.recurrenceDays.length) errors.recurrenceDays = "Escolha pelo menos um dia da semana.";
+    if (form.isCheckin) {
+        if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(form.checkinMonth)) errors.checkinMonth = "Escolha o mês do check-in.";
+    } else {
+        if (!form.startDate) errors.startDate = "Informe a data de início.";
+        if (!form.endDate) errors.endDate = "Informe a data de encerramento.";
+        if (form.startDate && form.endDate && form.endDate < form.startDate) errors.endDate = "A data final deve ser posterior à inicial.";
+        if (form.recurrenceType === "weekly" && !form.recurrenceDays.length) errors.recurrenceDays = "Escolha pelo menos um dia da semana.";
+    }
+    if (!form.phaseDrafts.length) errors.phases = "Adicione pelo menos uma fase.";
+    if ((form.isCheckin || form.recurrenceType !== "none") && form.phaseDrafts.length > 1) errors.phases = "Missões recorrentes e check-ins têm uma única fase.";
+    form.phaseDrafts.forEach((phase, index) => {
+        if (!phase.title.trim()) errors.phaseDrafts[index].title = "Informe o nome da fase.";
+        const reward = Number(phase.xp);
+        if (!phase.xp || !Number.isSafeInteger(reward) || reward <= 0) errors.phaseDrafts[index].xp = "Informe uma recompensa inteira maior que zero.";
+    });
     return errors;
+}
+
+function hasErrors(errors: FormErrors) {
+    return Object.entries(errors).some(([key, value]) => (key === "phaseDrafts" ? errors.phaseDrafts.some((phase) => Boolean(phase.title || phase.xp)) : Boolean(value)));
 }
 
 export function MissionForm({ missionId }: { missionId?: string }) {
     const navigate = useNavigate();
     const { data: mission, isPending, error } = useQuery({ queryKey: ["missions", missionId], queryFn: () => missionService.getById(missionId!), enabled: Boolean(missionId) });
     const title = missionId ? "Editar missão" : "Nova missão";
-
-    if (missionId && isPending) return <MissionShell title={title}><Card className={HALL_PANEL}><Loading message="Carregando pergaminho da missão..." /></Card></MissionShell>;
-    if (missionId && (error || !mission)) return <MissionShell title={title}><Card className={cn("p-8 text-center", HALL_PANEL)}><p role={error ? "alert" : undefined} className="text-sm text-primary-light">{error?.message ?? "A missão solicitada não foi encontrada."}</p><Button onClick={() => navigate({ to: "/missions" })} className="mt-5 px-5 text-[10px]">Voltar para missões</Button></Card></MissionShell>;
+    if (missionId && isPending)
+        return (
+            <MissionShell title={title}>
+                <Card className={HALL_PANEL}>
+                    <Loading message="Carregando missão..." />
+                </Card>
+            </MissionShell>
+        );
+    if (missionId && (error || !mission))
+        return (
+            <MissionShell title={title}>
+                <Card className={cn("p-8 text-center", HALL_PANEL)}>
+                    <p role={error ? "alert" : undefined} className="text-sm text-primary-light">
+                        {error?.message ?? "Missão não encontrada."}
+                    </p>
+                    <Button onClick={() => navigate({ to: "/missions" })} className="mt-5 px-5 text-[10px]">
+                        Voltar para missões
+                    </Button>
+                </Card>
+            </MissionShell>
+        );
     return <MissionFormEditor key={missionId ?? "new"} missionId={missionId} mission={mission ?? null} />;
 }
 
@@ -61,129 +100,224 @@ function MissionFormEditor({ missionId, mission }: { missionId?: string; mission
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const createKey = useRef(mutationKey());
-    const [form, setForm] = useState<MissionFormData>(() => mission ? {
-        title: mission.title, description: mission.description, evidenceType: mission.evidenceType,
-        xp: mission.xp, startDate: mission.startDate, endDate: mission.endDate,
-        recurrenceType: mission.recurrenceType, recurrenceDays: mission.recurrenceDays,
-    } : emptyForm);
+    const [form, setForm] = useState<MissionFormData>(() =>
+        mission
+            ? {
+                  title: mission.title,
+                  description: mission.description,
+                  evidenceType: mission.evidenceType,
+                  startDate: mission.startDate,
+                  endDate: mission.endDate,
+                  recurrenceType: mission.recurrenceType,
+                  recurrenceDays: mission.recurrenceDays,
+                  isCheckin: mission.isCheckin,
+                  checkinMonth: mission.checkinMonth,
+                  allowsMultipleSubmissions: mission.allowsMultipleSubmissions,
+                  phaseDrafts: mission.phaseDrafts.map((phase) => ({ ...phase })),
+              }
+            : emptyForm(),
+    );
+    const [errors, setErrors] = useState<FormErrors>({ phaseDrafts: [] });
     const [saving, setSaving] = useState(false);
-    const [errors, setErrors] = useState<FieldErrors>({});
+    const [invalidating, setInvalidating] = useState(false);
     const [notice, setNotice] = useState<string | null>(null);
+    const rulesLocked = Boolean(mission?.hasProgress);
+    const readOnly = mission?.status === "Invalidada";
+    const valid = !hasErrors(validate(form));
 
-    const hasMultiplePhases = (mission?.phases?.length ?? 0) > 1;
-    const readOnly = Boolean(mission?.hasProgress || mission?.status === "Invalidada" || hasMultiplePhases);
-    const valid = Object.keys(validate(form)).length === 0;
-    const title = missionId ? "Editar missão" : "Nova missão";
-
-    function updateField(field: Exclude<FieldName, "recurrenceDays">, value: string) {
+    function change(next: MissionFormData) {
         createKey.current = mutationKey();
-        setForm((current) => ({ ...current, [field]: value }));
-        setErrors((current) => ({ ...current, [field]: undefined }));
+        setForm(next);
+        setErrors({ phaseDrafts: [] });
         setNotice(null);
     }
-
+    function updateField<K extends keyof MissionFormData>(field: K, value: MissionFormData[K]) {
+        change({ ...form, [field]: value });
+    }
+    function setCheckin(checked: boolean) {
+        change({ ...form, isCheckin: checked, recurrenceType: checked ? "monthly" : "none", recurrenceDays: [], allowsMultipleSubmissions: false, checkinMonth: form.checkinMonth || monthInSaoPaulo(), phaseDrafts: checked ? [{ title: "Check-in", xp: "1" }] : [{ title: "Conclusão", xp: form.phaseDrafts[0]?.xp ?? "" }] });
+    }
+    function setRecurrence(value: RecurrenceType) {
+        change({ ...form, recurrenceType: value, recurrenceDays: value === "weekly" ? form.recurrenceDays : [], allowsMultipleSubmissions: value === "none" && form.allowsMultipleSubmissions, phaseDrafts: value === "none" ? form.phaseDrafts : form.phaseDrafts.slice(0, 1) });
+    }
     function toggleWeekday(day: Weekday) {
-        createKey.current = mutationKey();
-        setForm((current) => ({
-            ...current,
-            recurrenceDays: current.recurrenceDays.includes(day) ? current.recurrenceDays.filter((item) => item !== day) : [...current.recurrenceDays, day],
-        }));
-        setErrors((current) => ({ ...current, recurrenceDays: undefined }));
-        setNotice(null);
+        updateField("recurrenceDays", form.recurrenceDays.includes(day) ? form.recurrenceDays.filter((item) => item !== day) : [...form.recurrenceDays, day]);
     }
-
+    function updatePhase(index: number, field: "title" | "xp", value: string) {
+        updateField(
+            "phaseDrafts",
+            form.phaseDrafts.map((phase, phaseIndex) => (phaseIndex === index ? { ...phase, [field]: value } : phase)),
+        );
+    }
     async function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const nextErrors = validate(form);
         setErrors(nextErrors);
-        if (Object.keys(nextErrors).length || readOnly) return;
-
+        if (hasErrors(nextErrors) || readOnly) return;
         setSaving(true);
         setNotice(null);
         try {
-            if (missionId) await missionService.update(missionId, form, mission ?? undefined);
+            if (missionId) await missionService.update(missionId, form);
             else await missionService.create(form, createKey.current);
-            await queryClient.invalidateQueries({ queryKey: ["missions"] });
-            await queryClient.invalidateQueries({ queryKey: ["mural"] });
+            await Promise.all([queryClient.invalidateQueries({ queryKey: ["missions"] }), queryClient.invalidateQueries({ queryKey: ["mural"] })]);
             navigate({ to: "/missions", search: { published: "1" } });
-        } catch (error) {
-            setNotice(error instanceof Error ? error.message : "Não foi possível salvar a missão. Tente novamente.");
+        } catch (cause) {
+            setNotice(cause instanceof Error ? cause.message : "Não foi possível salvar a missão. Tente novamente.");
         } finally {
             setSaving(false);
         }
     }
+    async function invalidateMission() {
+        if (!missionId || !mission || !window.confirm(`Invalidar “${mission.title}”? As submissões ativas terão sua EXP revertida.`)) return;
+        setInvalidating(true);
+        setNotice(null);
+        try {
+            await missionService.invalidate(missionId);
+            await Promise.all([queryClient.invalidateQueries({ queryKey: ["missions"] }), queryClient.invalidateQueries({ queryKey: ["mural"] }), queryClient.invalidateQueries({ queryKey: ["profile"] }), queryClient.invalidateQueries({ queryKey: ["ranking"] })]);
+            navigate({ to: "/missions" });
+        } catch (cause) {
+            setNotice(cause instanceof Error ? cause.message : "Não foi possível invalidar a missão.");
+        } finally {
+            setInvalidating(false);
+        }
+    }
 
+    const totalXp = form.phaseDrafts.reduce((sum, phase) => sum + (Number(phase.xp) || 0), 0);
     return (
-        <MissionShell title={title} subtitle={missionId ? "Atualize os detalhes antes que a aventura comece." : "Prepare um novo desafio para a guilda."}>
-            {readOnly ? (
-                <div className="fixed inset-0 z-100 grid place-items-center bg-black/80 p-5" role="presentation">
-                    <section role="dialog" aria-modal="true" aria-labelledby="locked-mission-title" className="w-full max-w-md border-2 border-(--color-orange) bg-black shadow-[6px_6px_0_var(--color-orange-dark)]">
-                        <div className="flex gap-3 border-b-2 border-(--color-orange-dark) bg-orange-overlay p-5 text-(--color-orange-light)">
-                            <span className="grid h-8 w-8 shrink-0 place-items-center border-2 border-(--color-orange) bg-orange-dark font-black">!</span>
-                            <div>
-                                <h2 id="locked-mission-title" className="text-sm font-black uppercase tracking-wider">Edição bloqueada</h2>
-                                <p className="mt-2 text-xs leading-relaxed">{hasMultiplePhases ? "Esta missão tem várias fases, que este formulário não permite editar com segurança." : "Esta missão já recebeu evidências ou foi invalidada; suas regras não podem ser alteradas aqui."}</p>
-                            </div>
-                        </div>
-                        <div className="flex justify-end p-5">
-                            <Button onClick={() => navigate({ to: "/missions" })} className="px-5 text-[10px]">Voltar para missões</Button>
-                        </div>
-                    </section>
-                </div>
+        <MissionShell title={missionId ? "Editar missão" : "Nova missão"} subtitle={missionId ? "Ajuste os detalhes sem perder o histórico de quem já participou." : "Defina o desafio e a recompensa para a guilda."}>
+            {rulesLocked || readOnly ? (
+                <p role="status" className="mb-5 border-l-4 border-primary bg-black-overlay px-4 py-3 text-xs leading-relaxed text-primary-light">
+                    {readOnly ? "Esta missão foi invalidada e está disponível somente para consulta." : "Esta missão já recebeu submissões. Você pode corrigir título e descrição; as regras e recompensas permanecem como foram criadas."}
+                </p>
             ) : null}
-
-            {notice && !readOnly ? (
-                <div role="alert" className="mb-6 border-2 border-(--color-orange) bg-orange-overlay px-4 py-3 text-xs font-bold text-(--color-orange-light)">
+            {notice ? (
+                <p role="alert" className="mb-5 border-2 border-(--color-danger) bg-danger-overlay px-4 py-3 text-xs font-bold text-(--color-danger-light)">
                     {notice}
-                </div>
+                </p>
             ) : null}
-
             <Card as="form" onSubmit={submit} noValidate className={HALL_PANEL}>
                 <div className="border-b-2 border-primary-dark bg-black px-5 py-5 sm:px-7">
-                    <Eyebrow>R1-01 · Formulário de missão</Eyebrow>
-                    <h2 className="mt-1 text-lg font-black uppercase tracking-[.08em] text-primary-light">Informações do desafio</h2>
-                    <p className="mt-1 text-xs text-white-muted">
-                        Campos marcados com <span className="text-primary">*</span> são obrigatórios.
-                    </p>
+                    <h2 className="text-lg font-black text-primary-light">Informações do desafio</h2>
+                    <p className="mt-1 text-xs text-white-muted">Campos marcados com * são obrigatórios.</p>
                 </div>
-
-                <fieldset disabled={readOnly} className="grid gap-5 bg-black-overlay p-5 sm:grid-cols-2 sm:p-7">
-                    <Input label="Título da missão" error={errors.title} containerClassName="sm:col-span-2" value={form.title} onChange={(event) => updateField("title", event.target.value)} placeholder="Ex.: Código limpo, guilda forte" required />
-                    <TextArea label="Descrição do desafio" error={errors.description} containerClassName="sm:col-span-2" value={form.description} onChange={(event) => updateField("description", event.target.value)} placeholder="Explique o que o aventureiro deve realizar..." rows={5} required />
-                    <Select label="Tipo de evidência" error={errors.evidenceType} value={form.evidenceType} onChange={(evidenceType) => updateField("evidenceType", evidenceType)} options={EVIDENCE_OPTIONS} placeholder="Selecione uma opção" disabled={readOnly} required />
-                    <Input label="Recompensa" error={errors.xp} type="number" min="1" value={form.xp} onChange={(event) => updateField("xp", event.target.value)} placeholder="0" endAdornment="EXP" required />
-                    <Select label="Recorrência" description="Defina com que frequência a missão ficará disponível." error={errors.recurrenceType} value={form.recurrenceType} onChange={(recurrenceType) => updateField("recurrenceType", recurrenceType)} options={RECURRENCE_OPTIONS} disabled={readOnly} required />
-                    {form.recurrenceType === "weekly" ? (
-                        <div className="sm:col-span-2">
-                            <p className="mb-2 text-[11px] font-black uppercase tracking-[0.14em] text-primary-light">
-                                Dias da semana <span className="text-primary">*</span>
-                            </p>
-                            <p className="mb-3 text-[11px] text-white-muted">Selecione os dias em que a missão deve se repetir.</p>
-                            <div className="flex flex-wrap gap-2" aria-describedby={errors.recurrenceDays ? "recurrence-days-error" : undefined}>
-                                {WEEKDAYS.map((day) => {
-                                    const selected = form.recurrenceDays.includes(day);
-                                    return (
-                                        <label key={day} className={cn("cursor-pointer border-2 px-3 py-2 text-[10px] font-black uppercase tracking-[.08em] transition", selected ? "border-primary bg-primary-dark text-primary-light" : "border-primary-dark bg-black text-white-muted hover:border-primary")}>
-                                            <input type="checkbox" className="sr-only" checked={selected} onChange={() => toggleWeekday(day)} />
-                                            {WEEKDAY_LABELS[day]}
-                                        </label>
-                                    );
-                                })}
-                            </div>
-                            {errors.recurrenceDays ? <span id="recurrence-days-error" role="alert" className="mt-2 block text-[11px] font-bold text-(--color-orange)">{errors.recurrenceDays}</span> : null}
-                        </div>
-                    ) : null}
-                    <Input label={form.recurrenceType === "none" ? "Início da missão" : "Início da recorrência"} error={errors.startDate} type="date" value={form.startDate} onChange={(event) => updateField("startDate", event.target.value)} required />
-                    <Input label={form.recurrenceType === "none" ? "Encerramento" : "Término da recorrência"} error={errors.endDate} type="date" min={form.startDate} value={form.endDate} onChange={(event) => updateField("endDate", event.target.value)} required />
+                <fieldset disabled={saving || invalidating || readOnly} className="grid gap-5 bg-black-overlay p-5 sm:p-7">
+                    <Input label="Título da missão" error={errors.title} value={form.title} onChange={(event) => updateField("title", event.target.value)} maxLength={140} placeholder="Ex.: Código limpo, guilda forte" required />
+                    <TextArea label="Descrição do desafio" error={errors.description} value={form.description} onChange={(event) => updateField("description", event.target.value)} maxLength={4000} placeholder="Explique o que a pessoa deve realizar..." rows={5} required />
                 </fieldset>
-
-                <div className="flex flex-col-reverse gap-3 border-t-2 border-primary-dark bg-black px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
-                    <p className="text-[10px] leading-relaxed text-white-muted">Ao criar, a missão ficará disponível para os colaboradores.</p>
-                    <div className="flex gap-3">
-                        <Button type="button" variant="secondary" onClick={() => navigate({ to: "/missions" })} className="border-primary-dark px-4 text-[10px] text-primary-light">
-                            Cancelar
+                <fieldset disabled={saving || invalidating || rulesLocked || readOnly} className="border-t-2 border-primary-dark bg-black-overlay p-5 sm:p-7">
+                    <legend className="sr-only">Regras da missão</legend>
+                    <h3 className="text-base font-black text-primary-light">Regras da missão</h3>
+                    <p className="mt-1 text-xs text-white-muted">Escolha entre um desafio comum e o registro de presença do mês.</p>
+                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                        {(
+                            [
+                                { value: false, label: "Missão comum", help: "Pode ser recorrente ou ter várias fases." },
+                                { value: true, label: "Check-in mensal", help: "Uma data por envio, com bônus por constância." },
+                            ] as const
+                        ).map((option) => (
+                            <label key={option.label} className={cn("flex cursor-pointer gap-3 border-2 bg-black px-4 py-4 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary-light", form.isCheckin === option.value ? "border-primary" : "border-primary-dark")}>
+                                <input type="radio" name="mission-kind" checked={form.isCheckin === option.value} onChange={() => setCheckin(option.value)} className="mt-0.5 h-4 w-4 accent-primary" />
+                                <span>
+                                    <strong className="block text-sm text-primary-light">{option.label}</strong>
+                                    <span className="mt-1 block text-xs leading-relaxed text-white-muted">{option.help}</span>
+                                </span>
+                            </label>
+                        ))}
+                    </div>
+                    <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                        <Select label="Tipo de evidência" error={errors.evidenceType} value={form.evidenceType} onChange={(value) => updateField("evidenceType", value as MissionFormData["evidenceType"])} options={EVIDENCE_OPTIONS} required disabled={saving || rulesLocked || readOnly} />
+                        {form.isCheckin ? <Input label="Mês do check-in" type="month" value={form.checkinMonth} onChange={(event) => updateField("checkinMonth", event.target.value)} error={errors.checkinMonth} description="A vigência cobre do primeiro ao último dia do mês." required /> : <Select label="Recorrência" value={form.recurrenceType} onChange={(value) => setRecurrence(value as RecurrenceType)} options={RECURRENCE_OPTIONS} disabled={saving || rulesLocked || readOnly} />}
+                        {!form.isCheckin ? (
+                            <>
+                                {form.recurrenceType === "weekly" ? (
+                                    <div className="sm:col-span-2">
+                                        <p className="mb-2 text-[11px] font-black text-primary-light">Dias da semana *</p>
+                                        <div className="flex flex-wrap gap-2" role="group" aria-label="Dias da semana">
+                                            {WEEKDAYS.map((day) => (
+                                                <label key={day} className={cn("cursor-pointer border-2 px-3 py-2 text-xs focus-within:outline-2 focus-within:outline-primary-light", form.recurrenceDays.includes(day) ? "border-primary bg-primary-dark text-primary-light" : "border-primary-dark bg-black text-white-muted")}>
+                                                    <input type="checkbox" className="sr-only" checked={form.recurrenceDays.includes(day)} onChange={() => toggleWeekday(day)} />
+                                                    {WEEKDAY_LABELS[day]}
+                                                </label>
+                                            ))}
+                                        </div>
+                                        {errors.recurrenceDays ? (
+                                            <p role="alert" className="mt-2 text-xs text-(--color-danger)">
+                                                {errors.recurrenceDays}
+                                            </p>
+                                        ) : null}
+                                    </div>
+                                ) : null}
+                                <Input label={form.recurrenceType === "none" ? "Início da missão" : "Início da recorrência"} type="date" value={form.startDate} onChange={(event) => updateField("startDate", event.target.value)} error={errors.startDate} required />
+                                <Input label={form.recurrenceType === "none" ? "Encerramento" : "Término da recorrência"} type="date" min={form.startDate} value={form.endDate} onChange={(event) => updateField("endDate", event.target.value)} error={errors.endDate} required />
+                            </>
+                        ) : null}
+                    </div>
+                    {!form.isCheckin && form.recurrenceType === "none" ? (
+                        <label className="mt-6 flex cursor-pointer items-start gap-3 border-t border-primary-dark pt-5 text-sm text-primary-light focus-within:outline-2 focus-within:outline-primary-light">
+                            <input type="checkbox" className="mt-0.5 h-4 w-4 accent-primary" checked={form.allowsMultipleSubmissions} onChange={(event) => updateField("allowsMultipleSubmissions", event.target.checked)} />
+                            <span>
+                                <strong className="block">Permitir várias submissões independentes</strong>
+                                <span className="mt-1 block text-xs leading-relaxed text-white-muted">Cada submissão tem suas próprias fases e sua própria recompensa.</span>
+                            </span>
+                        </label>
+                    ) : null}
+                </fieldset>
+                <fieldset disabled={saving || invalidating || rulesLocked || readOnly} className="border-t-2 border-primary-dark bg-black-soft p-5 sm:p-7">
+                    <legend className="sr-only">Fases e recompensas</legend>
+                    <div className="flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                            <h3 className="text-base font-black text-primary-light">Fases e recompensas</h3>
+                            <p className="mt-1 text-xs text-white-muted">A EXP é concedida assim que cada fase é enviada.</p>
+                        </div>
+                        <span className="text-sm font-black text-primary-light">Total: {totalXp} EXP</span>
+                    </div>
+                    <ol className="mt-5 divide-y divide-primary-dark border-y border-primary-dark">
+                        {form.phaseDrafts.map((phase, index) => (
+                            <li key={index} className="grid gap-4 py-5 sm:grid-cols-[auto_minmax(0,1fr)_11rem_auto] sm:items-start">
+                                <span className="mt-3 text-xs font-black text-primary">{String(index + 1).padStart(2, "0")}</span>
+                                <Input label="Nome da fase" value={phase.title} onChange={(event) => updatePhase(index, "title", event.target.value)} error={errors.phaseDrafts[index]?.title} maxLength={120} required />
+                                <Input label="Recompensa" type="number" min="1" step="1" value={phase.xp} onChange={(event) => updatePhase(index, "xp", event.target.value)} error={errors.phaseDrafts[index]?.xp} endAdornment="EXP" required />
+                                {form.phaseDrafts.length > 1 ? (
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        onClick={() =>
+                                            updateField(
+                                                "phaseDrafts",
+                                                form.phaseDrafts.filter((_, phaseIndex) => phaseIndex !== index),
+                                            )
+                                        }
+                                        aria-label={`Remover fase ${index + 1}`}
+                                        className="self-end px-2 py-3 text-xs"
+                                    >
+                                        Remover
+                                    </Button>
+                                ) : (
+                                    <span className="hidden sm:block" />
+                                )}
+                            </li>
+                        ))}
+                    </ol>
+                    {errors.phases ? (
+                        <p role="alert" className="mt-2 text-xs text-(--color-danger)">
+                            {errors.phases}
+                        </p>
+                    ) : null}
+                    {!form.isCheckin && form.recurrenceType === "none" ? (
+                        <Button type="button" variant="secondary" onClick={() => updateField("phaseDrafts", [...form.phaseDrafts, { title: "", xp: "" }])} className="mt-5 border-primary-dark px-4 py-2 text-xs">
+                            Adicionar fase
                         </Button>
-                        <Button type="submit" inactive={!valid || saving || readOnly} className="min-w-32 px-4 text-[10px] shadow-[4px_4px_0_var(--color-primary-dark)]" title={!valid ? "Preencha os campos obrigatórios para criar" : undefined}>
+                    ) : null}
+                </fieldset>
+                <div className="flex flex-col-reverse gap-3 border-t-2 border-primary-dark bg-black px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+                    <p className="text-xs leading-relaxed text-white-muted">{missionId ? "As alterações ficam disponíveis após salvar." : "A missão fica disponível na data de início."}</p>
+                    <div className="flex flex-wrap gap-3">
+                        {missionId && !readOnly ? (
+                            <Button type="button" variant="secondary" onClick={() => void invalidateMission()} inactive={saving || invalidating} className="border-red px-4 text-[10px] text-red-light">
+                                {invalidating ? "Invalidando" : "Invalidar missão"}
+                            </Button>
+                        ) : null}
+                        <Button type="submit" inactive={!valid || saving || invalidating || readOnly} className="min-w-32 px-4 text-[10px] shadow-[4px_4px_0_var(--color-primary-dark)]">
                             {saving ? (
                                 <>
                                     <SparkIcon className="h-4 w-4 animate-spin" /> Salvando
@@ -201,7 +335,7 @@ function MissionFormEditor({ missionId, mission }: { missionId?: string; mission
     );
 }
 
-function MissionShell({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
+function MissionShell({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
     const navigate = useNavigate();
     return (
         <main className={`flex min-h-screen flex-col overflow-x-hidden bg-(--color-black) ${BLEED_UNDER_RETURN_LINK}`}>
@@ -215,7 +349,7 @@ function MissionShell({ title, subtitle, children }: { title: string; subtitle?:
                             <ScrollIcon className="h-6 w-6" />
                         </span>
                         <div>
-                            <Eyebrow>Gestão de missões · OS-1</Eyebrow>
+                            <Eyebrow>Gestão de missões</Eyebrow>
                             <Heading className="mt-1">{title}</Heading>
                             {subtitle ? <p className="mt-2 text-sm text-primary-light/80">{subtitle}</p> : null}
                         </div>

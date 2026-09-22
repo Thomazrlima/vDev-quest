@@ -66,6 +66,7 @@ class QuestController(
         @PathVariable id: UUID,
         @RequestHeader("Idempotency-Key") idempotencyHeader: String,
         @RequestParam(required = false) submissionId: UUID?,
+        @RequestParam(defaultValue = "false") startNew: Boolean,
         @RequestParam(required = false) occurrenceDate: LocalDate?,
         @RequestParam(required = false) value: String?,
         @RequestPart(required = false) file: MultipartFile?,
@@ -74,7 +75,7 @@ class QuestController(
         val type = missions.evidenceType(user, id)
         val stored = file?.let { storage.upload(type, it) }
         return try {
-            val outcome = submissions.submit(user, id, submissionId, occurrenceDate, EvidencePayload(value?.trim()?.takeIf { it.isNotEmpty() }, stored), idempotencyHeader.toUuid())
+            val outcome = submissions.submit(user, id, submissionId, startNew, occurrenceDate, EvidencePayload(value?.trim()?.takeIf { it.isNotEmpty() }, stored), idempotencyHeader.toUuid())
             if (!outcome.consumedFile) stored?.let { storage.deleteQuietly(it.objectKey) }
             outcome.result
         } catch (error: RuntimeException) {

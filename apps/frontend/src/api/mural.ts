@@ -94,8 +94,9 @@ export const muralService = {
         for (const item of records) if (!missions.has(item.missionId)) missions.set(item.missionId, fromHistory(item, records));
         return submissionFeed([...missions.values()]);
     },
-    async submit(id: string, evidence: FormData, idempotencyKey = mutationKey(), submissionId?: string | null): Promise<MuralMission> {
+    async submit(id: string, evidence: FormData, idempotencyKey = mutationKey(), submissionId?: string | null, startNew = false): Promise<MuralMission> {
         if (submissionId) evidence.set("submissionId", submissionId);
+        if (startNew) evidence.set("startNew", "true");
         await api(`/missions/${id}/submissions`, { method: "POST", headers: { "Idempotency-Key": idempotencyKey }, body: evidence });
         return (await this.getById(id))!;
     },

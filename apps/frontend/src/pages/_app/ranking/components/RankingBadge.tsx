@@ -18,11 +18,11 @@ export function RankingBadge({ badge, className, compact = false }: { badge: Ran
             className={cn(
                 "inline-grid h-7.5 w-7.5 shrink-0 place-items-center rounded-full border-2 shadow-[inset_2px_2px_0_var(--color-white-overlay),2px_2px_0_var(--color-black)] [&_svg]:h-4 [&_svg]:w-4",
                 compact && "h-5.25 w-5.25 border shadow-[1px_1px_0_var(--color-black)] [&_svg]:h-3 [&_svg]:w-3",
-                badge === "champion" && "border-(--color-orange) bg-orange-dark text-primary",
+                badge === "champion" && "border-primary bg-primary-dark text-primary-light",
                 badge === "guardian" && "border-blue bg-blue-dark text-blue-light",
                 badge === "arcane" && "border-purple bg-purple-dark text-purple-light",
-                badge === "streak" && "border-(--color-orange) bg-orange-dark text-(--color-orange)",
-                !badge && "border-orange-dark bg-(--color-black) text-primary",
+                badge === "streak" && "border-green bg-green-dark text-green-light",
+                !badge && "border-primary-dark bg-(--color-black) text-primary",
                 className,
             )}
             title={label}

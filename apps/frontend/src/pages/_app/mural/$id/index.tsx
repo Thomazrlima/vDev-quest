@@ -18,7 +18,8 @@ import type { MuralMission } from "@/types/mission";
 import { acceptsEvidence, muralStateOf } from "@/utils/mural";
 
 /** O modal explica o que a missão pede — e, se houve recusa, que este envio é o reenvio dela. */
-function composerDescription(mission: MuralMission) {
+function composerDescription(mission: MuralMission, startsNew: boolean) {
+    if (startsNew) return `Esta evidência inicia uma submissão independente pela primeira fase. A missão exige evidência do tipo ${mission.evidenceType}.`;
     return `Esta missão exige evidência do tipo ${mission.evidenceType}. ${mission.nextPhaseTitle ? `Próxima fase: ${mission.nextPhaseTitle}.` : "Cada envio fica registrado no histórico."}`;
 }
 
@@ -37,6 +38,7 @@ function MuralMissionPage() {
     const [sent, setSent] = useState(false);
     const submitKey = useRef(mutationKey());
     const selectedSubmissionId = useRef<string | null>(null);
+    const [startsNewSubmission, setStartsNewSubmission] = useState(false);
     const lastEvidence = useRef<string | null>(null);
 
     // De volta ao mural, a aba certa é a de agora: quem acabou de enviar cai em "Aguardando".
@@ -45,11 +47,12 @@ function MuralMissionPage() {
     }
 
     // Abrir o modal começa uma entrega nova: o erro e o aviso da anterior não vêm junto.
-    function openComposer() {
+    function openComposer(submissionId: string | null = mission?.submissionId ?? null, startNew = false) {
         setError(null);
         setSent(false);
         submitKey.current = mutationKey();
-        selectedSubmissionId.current = mission?.submissionId ?? null;
+        selectedSubmissionId.current = submissionId;
+        setStartsNewSubmission(startNew);
         lastEvidence.current = null;
         setComposing(true);
     }
@@ -64,7 +67,7 @@ function MuralMissionPage() {
         setSubmitting(true);
         setError(null);
         try {
-            await muralService.submit(id, evidence, submitKey.current, selectedSubmissionId.current);
+            await muralService.submit(id, evidence, submitKey.current, selectedSubmissionId.current, startsNewSubmission);
             await Promise.all([queryClient.invalidateQueries({ queryKey: ["mural"] }), queryClient.invalidateQueries({ queryKey: ["profile"] }), queryClient.invalidateQueries({ queryKey: ["ranking"] })]);
             setComposing(false);
             setSent(true);
@@ -122,17 +125,18 @@ function MuralMissionPage() {
                                 <SubmissionsTable
                                     mission={mission}
                                     onCancelSubmission={cancelSubmission}
+                                    onAdvanceSubmission={mission.allowsMultipleSubmissions ? (submissionId) => openComposer(submissionId) : undefined}
                                     action={
                                         acceptsEvidence(mission) ? (
-                                            <Button type="button" onClick={openComposer} className="px-4 text-[10px] shadow-[4px_4px_0_var(--color-primary-dark)]">
-                                                <UploadIcon className="h-4 w-4" /> Nova evidência
+                                            <Button type="button" onClick={() => openComposer(null, mission.allowsMultipleSubmissions)} className="px-4 text-[10px] shadow-[4px_4px_0_var(--color-primary-dark)]">
+                                                <UploadIcon className="h-4 w-4" /> {mission.allowsMultipleSubmissions ? "Nova submissão" : "Nova evidência"}
                                             </Button>
                                         ) : null
                                     }
                                 />
                             </div>
 
-                            <Modal open={composing} title="Nova evidência" description={composerDescription(mission)} onClose={() => setComposing(false)}>
+                            <Modal open={composing} title={startsNewSubmission ? "Nova submissão" : "Nova evidência"} description={composerDescription(mission, startsNewSubmission)} onClose={() => setComposing(false)}>
                                 <MissionEvidenceForm mission={mission} submitting={submitting} submitError={error} onSubmit={submitEvidence} onCancel={() => setComposing(false)} />
                             </Modal>
                         </>

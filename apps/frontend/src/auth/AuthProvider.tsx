@@ -32,7 +32,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
         };
         void initialize();
-        const onLoaded = (next: User) => { queryClient.clear(); setUser(next); };
+        // A renovação silenciosa dispara userLoaded. O usuário é o mesmo, só o token mudou;
+        // manter o cache evita remontar toda a jornada a cada renovação de sessão.
+        const onLoaded = (next: User) => { setUser(next); setError(null); };
         const onUnloaded = () => { queryClient.clear(); setUser(null); setError(null); };
         const onExpired = () => { queryClient.clear(); setUser(null); setError("Sua sessão expirou. Entre novamente para continuar."); };
         userManager.events.addUserLoaded(onLoaded);

@@ -38,6 +38,11 @@ class DatabaseMigrationIntegrationTest {
     fun `migrations seed only level one and force RLS for application tables`() {
         DriverManager.getConnection(postgres.jdbcUrl, "vdev_app", "vdev_app").use { connection ->
             connection.createStatement().use { statement ->
+                statement.executeQuery("select has_table_privilege('vdev_app', 'quests.mission_phases', 'delete'), has_table_privilege('vdev_app', 'quests.mission_weekdays', 'delete')").use { result ->
+                    result.next()
+                    assertTrue(result.getBoolean(1), "Mission rule replacement requires DELETE on mission_phases")
+                    assertTrue(result.getBoolean(2), "Mission rule replacement requires DELETE on mission_weekdays")
+                }
                 statement.executeQuery("select count(*) from gamification.levels where level = 1 and minimum_xp = 0").use { result ->
                     result.next()
                     assertEquals(1, result.getInt(1))

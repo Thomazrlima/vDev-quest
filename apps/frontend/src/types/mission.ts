@@ -43,19 +43,23 @@ export type MissionFormData = {
     title: string;
     description: string;
     evidenceType: EvidenceType | "";
-    xp: string;
     startDate: string;
     endDate: string;
     recurrenceType: RecurrenceType;
     recurrenceDays: Weekday[];
+    isCheckin: boolean;
+    checkinMonth: string;
+    allowsMultipleSubmissions: boolean;
+    phaseDrafts: { title: string; xp: string }[];
 };
 
 export type Mission = MissionFormData & {
     id: string;
+    xp: string;
     status: MissionStatus;
     hasProgress: boolean;
     updatedAt: string;
-    phases?: { number: number; title: string; xpReward: number }[];
+    phases: { number: number; title: string; xpReward: number }[];
 };
 
 /** As abas do mural do colaborador, na ordem em que aparecem na tela. */

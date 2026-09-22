@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Trophy, Zap } from "pixelarticons/react";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { BLEED_UNDER_RETURN_LINK, CLEAR_RETURN_LINK, HALL_PANEL } from "@/components/ui/StoneWall";
 import { cn } from "@/lib/tailwind";
 import { ProfileFeed } from "./components/ProfileFeed";
@@ -40,6 +41,14 @@ function ProfilePage() {
                     <div className="mt-10">
                         <ProfileSettings />
                     </div>
+                    {profile?.role === "manager" ? <section className="mt-10" aria-labelledby="admin-catalog-title">
+                        <Card className={cn("p-5 sm:p-8", HALL_PANEL)}>
+                            <p className="text-[.7rem] font-black uppercase tracking-[.14em] text-primary">Administração</p>
+                            <h2 id="admin-catalog-title" className="mt-2 text-xl font-black text-primary-light">Títulos e insígnias</h2>
+                            <p className="mt-3 max-w-xl text-sm leading-relaxed text-white-muted">Cadastre os reconhecimentos disponíveis para a guilda. Somente gestores podem acessar este catálogo.</p>
+                            <Button asChild className="mt-6 px-5 py-3 text-[11px]"><Link to="/admin/catalog">Abrir catálogo</Link></Button>
+                        </Card>
+                    </section> : null}
                 </div>
             </div>
         </main>

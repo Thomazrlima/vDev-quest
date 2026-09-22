@@ -23,7 +23,7 @@ function AppLayout() {
     if (!accessToken) return <LoginScreen />;
     if (isPending) return <QuestLoader fullscreen hint="Abrindo o portal" label="Carregando sua jornada..." />;
     if (error) return <div role="alert" className="min-h-screen bg-black p-8 text-sm text-red-light">{error.message}</div>;
-    if (profile?.role !== "manager" && (pathname.startsWith("/missions") || pathname.startsWith("/moderation"))) return <div role="alert" className="min-h-screen bg-black p-8 text-sm text-red-light">Somente gestores podem acessar esta área.</div>;
+    if (profile?.role !== "manager" && (pathname.startsWith("/missions") || pathname.startsWith("/moderation") || pathname.startsWith("/admin"))) return <div role="alert" className="min-h-screen bg-black p-8 text-sm text-red-light">Somente gestores podem acessar esta área.</div>;
 
     return (
         <div className="min-h-screen bg-[linear-gradient(var(--color-black-overlay),var(--color-black-overlay)),url('/images/backgrounds/quest-landscape.png')] bg-cover bg-fixed bg-center">

@@ -16,6 +16,10 @@ export function toUiMission(mission: ApiMission): Mission {
         endDate: mission.endDate,
         recurrenceType: mission.recurrenceType,
         recurrenceDays: mission.weekdays,
+        isCheckin: mission.isCheckin,
+        checkinMonth: mission.isCheckin ? mission.startDate.slice(0, 7) : "",
+        allowsMultipleSubmissions: mission.allowsMultipleSubmissions,
+        phaseDrafts: mission.phases.map((phase) => ({ title: phase.title, xp: String(phase.xpReward) })),
         status: mission.status === "active" ? "Ativa" : "Invalidada",
         hasProgress: mission.hasSubmissions,
         updatedAt: "",
@@ -23,17 +27,23 @@ export function toUiMission(mission: ApiMission): Mission {
     };
 }
 
-function request(data: MissionFormData, existing?: Mission): MissionRequest {
-    const xp = Number(data.xp);
+export function checkinDateRange(month: string): { startDate: string; endDate: string } {
+    const [year, number] = month.split("-").map(Number);
+    const lastDay = new Date(Date.UTC(year, number, 0)).getUTCDate();
+    return { startDate: `${month}-01`, endDate: `${month}-${String(lastDay).padStart(2, "0")}` };
+}
+
+export function missionRequest(data: MissionFormData): MissionRequest {
+    const dates = data.isCheckin ? checkinDateRange(data.checkinMonth) : { startDate: data.startDate, endDate: data.endDate };
     return {
         title: data.title.trim(), description: data.description.trim(),
         evidenceType: evidenceToApi[data.evidenceType as keyof typeof evidenceToApi],
-        startDate: data.startDate, endDate: data.endDate,
-        recurrenceType: data.recurrenceType, weekdays: data.recurrenceType === "weekly" ? data.recurrenceDays : [],
-        isCheckin: false, allowsMultipleSubmissions: false,
-        phases: existing?.phases && existing.phases.length > 1
-            ? existing.phases
-            : [{ number: 1, title: "Conclusão", xpReward: xp }],
+        ...dates,
+        recurrenceType: data.isCheckin ? "monthly" : data.recurrenceType,
+        weekdays: !data.isCheckin && data.recurrenceType === "weekly" ? data.recurrenceDays : [],
+        isCheckin: data.isCheckin,
+        allowsMultipleSubmissions: data.allowsMultipleSubmissions,
+        phases: data.phaseDrafts.map((phase, index) => ({ number: index + 1, title: phase.title.trim(), xpReward: Number(phase.xp) })),
     };
 }
 
@@ -46,10 +56,10 @@ export const missionService = {
         catch (error) { if (error instanceof Error && "status" in error && error.status === 404) return null; throw error; }
     },
     async create(data: MissionFormData, idempotencyKey = mutationKey()): Promise<Mission> {
-        return toUiMission(await api<ApiMission>("/missions", { method: "POST", headers: { "Idempotency-Key": idempotencyKey }, body: JSON.stringify(request(data)) }));
+        return toUiMission(await api<ApiMission>("/missions", { method: "POST", headers: { "Idempotency-Key": idempotencyKey }, body: JSON.stringify(missionRequest(data)) }));
     },
-    async update(id: string, data: MissionFormData, existing?: Mission): Promise<Mission> {
-        return toUiMission(await api<ApiMission>(`/missions/${id}`, { method: "PATCH", body: JSON.stringify(request(data, existing)) }));
+    async update(id: string, data: MissionFormData): Promise<Mission> {
+        return toUiMission(await api<ApiMission>(`/missions/${id}`, { method: "PATCH", body: JSON.stringify(missionRequest(data)) }));
     },
     invalidate(id: string): Promise<void> {
         return api<void>(`/missions/${id}/invalidate`, { method: "POST" });

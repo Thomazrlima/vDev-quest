@@ -1,10 +1,11 @@
 import { afterEach, describe, expect, spyOn, test } from "bun:test";
 import { StrictMode } from "react";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import type { User } from "oidc-client-ts";
 import { AuthProvider } from "./AuthProvider";
 import { useAuth } from "./useAuth";
 import { userManager } from "./oidc";
+import { queryClient } from "@/api/queryClient";
 import { Route as RootRoute } from "@/pages/index";
 
 function SessionState() {
@@ -14,6 +15,7 @@ function SessionState() {
 
 afterEach(() => {
     window.history.replaceState(null, "", "/");
+    queryClient.clear();
 });
 
 describe("retorno do SSO", () => {
@@ -33,6 +35,18 @@ describe("retorno do SSO", () => {
         expect(getUser).not.toHaveBeenCalled();
         expect(window.location.search).toBe("");
         callback.mockRestore();
+        getUser.mockRestore();
+    });
+
+    test("mantém o cache da jornada ao renovar somente o token", async () => {
+        const getUser = spyOn(userManager, "getUser").mockResolvedValue({ access_token: "token-inicial", expired: false } as User);
+        render(<AuthProvider><SessionState /></AuthProvider>);
+        await screen.findByText("token-inicial");
+        queryClient.setQueryData(["profile", "me"], { name: "Aventureiro" });
+
+        await act(async () => { await userManager.events.load({ access_token: "token-renovado", expired: false } as User); });
+
+        expect(queryClient.getQueryData(["profile", "me"])).toEqual({ name: "Aventureiro" });
         getUser.mockRestore();
     });
 });

@@ -7,7 +7,7 @@ export type AlertTone = "error" | "warning" | "success" | "info";
 /** Erro e aviso interrompem a leitura de quem usa leitor de tela; sucesso e informação só anunciam. */
 const tones = {
     error: { role: "alert", panel: "border-red bg-red-overlay text-red-light", badge: "border-red bg-red-dark text-red-light" },
-    warning: { role: "alert", panel: "border-(--color-orange) bg-orange-overlay text-(--color-orange-light)", badge: "border-(--color-orange) bg-orange-dark text-(--color-orange-light)" },
+    warning: { role: "alert", panel: "border-(--color-danger) bg-danger-overlay text-(--color-danger-light)", badge: "border-(--color-danger) bg-danger-dark text-(--color-danger-light)" },
     success: { role: "status", panel: "border-green bg-green-overlay text-green-light", badge: "border-green bg-green-dark text-green-light" },
     info: { role: "status", panel: "border-primary bg-primary-overlay text-primary-light", badge: "border-primary bg-black text-primary" },
 } as const;

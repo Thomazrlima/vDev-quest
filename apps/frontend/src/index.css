@@ -56,15 +56,12 @@
     --color-primary-dark: #b88620;
     --color-border: var(--color-primary-dark);
 
-    --color-orange-light: #f3b26c;
-    --color-orange: #d86a2c;
-    --color-orange-dark: #7a351c;
-    --color-danger: var(--color-orange);
-    --color-danger-light: var(--color-orange-light);
-
     --color-red-light: #f2a0a0;
     --color-red: #c95050;
     --color-red-dark: #6b2525;
+    --color-danger-light: var(--color-red-light);
+    --color-danger: var(--color-red);
+    --color-danger-dark: var(--color-red-dark);
 
     --color-green-light: #a6d783;
     --color-green: #5c9a54;
@@ -98,8 +95,8 @@
     --color-black-overlay: rgb(15 14 14 / 72%);
     --color-white-overlay: rgb(244 244 244 / 12%);
     --color-primary-overlay: rgb(255 212 90 / 12%);
-    --color-orange-overlay: rgb(216 106 44 / 18%);
     --color-red-overlay: rgb(201 80 80 / 18%);
+    --color-danger-overlay: var(--color-red-overlay);
     --color-green-overlay: rgb(92 154 84 / 18%);
     --color-blue-overlay: rgb(78 154 175 / 18%);
     --color-purple-overlay: rgb(139 104 177 / 18%);

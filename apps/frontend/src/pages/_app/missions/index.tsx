@@ -1,14 +1,11 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { BLEED_UNDER_RETURN_LINK, StoneWall } from "@/components/ui/StoneWall";
 import { SparkIcon } from "@/components/icons";
 import { MissionList } from "./components/MissionList";
 import { missionService } from "@/api/missions";
-import type { Mission } from "@/types/mission";
 
 export type MissionSearch = {
     published?: "1";
@@ -23,25 +20,17 @@ export const Route = createFileRoute("/_app/missions/")({
 
 function MissionsPage() {
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
-    const [actionError, setActionError] = useState<string | null>(null);
     const { published: publishedSearch } = useSearch({ from: "/_app/missions/" });
     const { data: missions = [], isPending: loading, error } = useQuery({ queryKey: ["missions"], queryFn: missionService.list });
     const published = publishedSearch === "1";
-
-    async function invalidate(mission: Mission) {
-        if (!window.confirm(`Invalidar “${mission.title}”? As submissões ativas terão sua EXP revertida.`)) return;
-        setActionError(null);
-        try {
-            await missionService.invalidate(mission.id);
-            await Promise.all([queryClient.invalidateQueries({ queryKey: ["missions"] }), queryClient.invalidateQueries({ queryKey: ["mural"] }), queryClient.invalidateQueries({ queryKey: ["profile"] }), queryClient.invalidateQueries({ queryKey: ["ranking"] })]);
-        } catch (cause) { setActionError(cause instanceof Error ? cause.message : "Não foi possível invalidar a missão."); }
-    }
 
     const actions = (
         <div className="flex flex-wrap gap-3">
             <Button variant="secondary" onClick={() => navigate({ to: "/moderation" })} className="border-primary-dark px-5 py-4 text-[11px] text-primary-light shadow-[4px_4px_0_var(--color-black)]">
                 Consultar entregas
+            </Button>
+            <Button variant="secondary" onClick={() => navigate({ to: "/admin/imports" })} className="border-primary-dark px-5 py-4 text-[11px] text-primary-light shadow-[4px_4px_0_var(--color-black)]">
+                Importar .xlsx
             </Button>
             <Button onClick={() => navigate({ to: "/missions/new" })} className="px-5 py-4 text-[11px] shadow-[4px_4px_0_var(--color-primary-dark)]">
                 <SparkIcon className="h-4 w-4" /> Nova missão
@@ -59,8 +48,7 @@ function MissionsPage() {
                             Missão criada com sucesso. Ela já está disponível para a guilda.
                         </div>
                     ) : null}
-                    {actionError ? <p role="alert" className="mt-7 border-2 border-red bg-red-overlay p-5 text-sm text-red-light">{actionError}</p> : null}
-                    {error ? <p role="alert" className="mt-7 border-2 border-red bg-red-overlay p-5 text-sm text-red-light">{error.message}</p> : <MissionList missions={missions} loading={loading} onOpen={(mission) => navigate({ to: "/missions/$id/edit", params: { id: mission.id } })} onInvalidate={invalidate} />}
+                    {error ? <p role="alert" className="mt-7 border-2 border-red bg-red-overlay p-5 text-sm text-red-light">{error.message}</p> : <MissionList missions={missions} loading={loading} />}
                 </div>
             </StoneWall>
         </main>

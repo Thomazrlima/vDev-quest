@@ -8,7 +8,7 @@ type DetailCardProps = {
     icon?: ReactNode;
     /** Uma segunda linha menor, para o que explica o valor — "encerra amanhã", por exemplo. */
     hint?: string;
-    /** Tinge o dado de laranja quando ele pede atenção, como um prazo perto do fim. */
+    /** Tinge o dado de alerta quando ele pede atenção, como um prazo perto do fim. */
     highlight?: boolean;
     className?: string;
     valueClassName?: string;
@@ -22,8 +22,8 @@ export function DetailCard({ label, value, icon, hint, highlight = false, classN
                 {icon}
                 {renderTextWithNumericFont(label)}
             </h3>
-            <p className={cn("mt-2 text-sm font-bold", highlight ? "text-(--color-orange-light)" : "text-primary-light", valueClassName)}>{renderTextWithNumericFont(value)}</p>
-            {hint ? <p className={cn("mt-1 text-[.65rem] leading-relaxed", highlight ? "text-(--color-orange)" : "text-white-muted")}>{renderTextWithNumericFont(hint)}</p> : null}
+            <p className={cn("mt-2 text-sm font-bold", highlight ? "text-(--color-danger-light)" : "text-primary-light", valueClassName)}>{renderTextWithNumericFont(value)}</p>
+            {hint ? <p className={cn("mt-1 text-[.65rem] leading-relaxed", highlight ? "text-(--color-danger)" : "text-white-muted")}>{renderTextWithNumericFont(hint)}</p> : null}
         </article>
     );
 }

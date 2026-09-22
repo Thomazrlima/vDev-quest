@@ -23,9 +23,9 @@ type ButtonAsChildProps = {
 };
 
 const variants = {
-    primary: "border-[var(--color-black)] bg-primary text-black shadow-[4px_4px_0_var(--color-orange-dark)]",
-    secondary: "border-[var(--color-orange-dark)] bg-[var(--color-black)] text-[var(--color-orange)] shadow-[4px_4px_0_var(--color-black)]",
-    ghost: "border-[var(--color-alpha-zero)] bg-[var(--color-alpha-zero)] text-[var(--color-orange)] shadow-none hover:text-primary-light",
+    primary: "border-[var(--color-black)] bg-primary text-black shadow-[4px_4px_0_var(--color-primary-dark)]",
+    secondary: "border-[var(--color-primary-dark)] bg-[var(--color-black)] text-primary shadow-[4px_4px_0_var(--color-black)]",
+    ghost: "border-[var(--color-alpha-zero)] bg-[var(--color-alpha-zero)] text-primary shadow-none hover:text-primary-light",
 };
 
 function buttonClassName(variant: NonNullable<ButtonProps["variant"]>, className?: string) {

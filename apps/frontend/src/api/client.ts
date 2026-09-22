@@ -3,7 +3,7 @@ import { userManager } from "@/auth/oidc";
 const API_BASE = import.meta.env.VITE_API_URL ?? "/api/v1";
 
 export class ApiError extends Error {
-    constructor(message: string, readonly status: number) {
+    constructor(message: string, readonly status: number, readonly problem?: Record<string, unknown> | null) {
         super(message);
     }
 }
@@ -26,8 +26,8 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
     }
     if (response.status === 204) return undefined as T;
     if (!response.ok) {
-        const problem = await response.json().catch(() => null) as { detail?: string; title?: string } | null;
-        throw new ApiError(problem?.detail ?? problem?.title ?? `Falha na comunicação com o servidor (${response.status}).`, response.status);
+        const problem = await response.json().catch(() => null) as ({ detail?: string; title?: string } & Record<string, unknown>) | null;
+        throw new ApiError(problem?.detail ?? problem?.title ?? `Falha na comunicação com o servidor (${response.status}).`, response.status, problem);
     }
     return response.json() as Promise<T>;
 }

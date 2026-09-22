@@ -110,7 +110,7 @@ function EvidenceDetailsPage() {
                                 ) : (
                                     <div className="text-xs text-white-muted">
                                         <p><ScrollIcon className="mr-2 inline h-4 w-4 text-primary" /> Evidência <strong className="text-primary-light">{evidence.status.toLocaleLowerCase("pt-BR")}</strong>{evidence.reviewedAt ? ` em ${formatDate(evidence.reviewedAt, "full")}` : ""}.</p>
-                                        {evidence.justification ? <p className="mt-3 border-l-2 border-(--color-orange) pl-3 leading-relaxed text-(--color-orange-light)">{evidence.justification}</p> : null}
+                                        {evidence.justification ? <p className="mt-3 border-l-2 border-(--color-danger) pl-3 leading-relaxed text-(--color-danger-light)">{evidence.justification}</p> : null}
                                     </div>
                                 )}
                                 {notice ? <p role="status" className="mt-4 text-xs font-bold text-green-light">{notice}</p> : null}
@@ -132,10 +132,10 @@ function EvidenceDetailsPage() {
             ) : null}
             {evidence && rejecting ? (
                 <div className="fixed inset-0 z-[110] grid place-items-center bg-black/85 p-5" role="presentation">
-                    <form onSubmit={reject} noValidate role="dialog" aria-modal="true" aria-labelledby="reject-evidence-title" className="w-full md:w-[42rem] border-2 border-(--color-orange) bg-black shadow-[6px_6px_0_var(--color-orange-dark)]">
-                        <div className="border-b-2 border-(--color-orange-dark) bg-orange-overlay p-5">
-                            <h2 id="reject-evidence-title" className="text-sm font-black uppercase tracking-[.12em] text-(--color-orange-light)">Invalidar submissão</h2>
-                            <p className="mt-2 text-xs leading-relaxed text-(--color-orange-light)">A EXP desta submissão será revertida. Registre a justificativa para a auditoria.</p>
+                    <form onSubmit={reject} noValidate role="dialog" aria-modal="true" aria-labelledby="reject-evidence-title" className="w-full md:w-[42rem] border-2 border-(--color-danger) bg-black shadow-[6px_6px_0_var(--color-danger-dark)]">
+                        <div className="border-b-2 border-(--color-danger-dark) bg-danger-overlay p-5">
+                            <h2 id="reject-evidence-title" className="text-sm font-black uppercase tracking-[.12em] text-(--color-danger-light)">Invalidar submissão</h2>
+                            <p className="mt-2 text-xs leading-relaxed text-(--color-danger-light)">A EXP desta submissão será revertida. Registre a justificativa para a auditoria.</p>
                         </div>
                         <div className="p-5">
                             <TextArea label="Justificativa" value={justification} onChange={(event) => { setJustification(event.target.value); setJustificationError(null); }} error={justificationError ?? undefined} placeholder="Descreva o motivo da invalidação..." rows={5} required />

@@ -2,6 +2,7 @@ import { afterEach, describe, expect, spyOn, test } from "bun:test";
 import type { User } from "oidc-client-ts";
 import { userManager } from "@/auth/oidc";
 import { api, ApiError } from "@/api/client";
+import { importErrors } from "@/api/imports";
 import { muralService } from "@/api/mural";
 
 const id = "01977777-7777-7777-8777-777777777777";
@@ -17,7 +18,7 @@ describe("cliente da API", () => {
         spyOn(userManager, "getUser").mockResolvedValue({ access_token: "token-local", expired: false } as User);
         const fetch = spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify({ detail: "Data inválida." }), { status: 422, headers: { "Content-Type": "application/problem+json" } }));
 
-        await expect(api("/me")).rejects.toEqual(new ApiError("Data inválida.", 422));
+        await expect(api("/me")).rejects.toMatchObject({ message: "Data inválida.", status: 422, problem: { detail: "Data inválida." } });
         expect(fetch.mock.calls[0]?.[0]).toBe("/api/v1/me");
         expect((fetch.mock.calls[0]?.[1] as RequestInit).headers).toMatchObject({ Authorization: "Bearer token-local" });
     });
@@ -49,5 +50,10 @@ describe("cliente da API", () => {
         expect(mission.submissions[0]?.status).toBe("ativa");
         expect(mission.submissions[0]?.value).toBe("https://example.org/pr/1");
         expect(mission.submissions[0]?.evidences?.[0]).toMatchObject({ phaseNumber: 1, kind: "link", value: "https://example.org/pr/1" });
+    });
+
+    test("lê o relatório de uma importação recusada", () => {
+        const error = new ApiError("A planilha contém erros.", 422, { errors: [{ line: 4, field: "phase", reason: "Fase inválida para a missão." }] });
+        expect(importErrors(error)).toEqual([{ line: 4, field: "phase", reason: "Fase inválida para a missão." }]);
     });
 });

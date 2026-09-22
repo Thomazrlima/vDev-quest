@@ -17,6 +17,8 @@ import { Route as AppModerationIndexRouteImport } from './pages/_app/moderation/
 import { Route as AppMuralIndexRouteImport } from './pages/_app/mural/index'
 import { Route as AppPerfilIndexRouteImport } from './pages/_app/perfil/index'
 import { Route as AppRankingIndexRouteImport } from './pages/_app/ranking/index'
+import { Route as AppAdminCatalogIndexRouteImport } from './pages/_app/admin/catalog/index'
+import { Route as AppAdminImportsIndexRouteImport } from './pages/_app/admin/imports/index'
 import { Route as AppMissionsNewIndexRouteImport } from './pages/_app/missions/new/index'
 import { Route as AppModerationIdIndexRouteImport } from './pages/_app/moderation/$id/index'
 import { Route as AppMuralIdIndexRouteImport } from './pages/_app/mural/$id/index'
@@ -61,6 +63,16 @@ const AppRankingIndexRoute = AppRankingIndexRouteImport.update({
   path: '/ranking/',
   getParentRoute: () => AppLayoutRoute,
 } as any)
+const AppAdminCatalogIndexRoute = AppAdminCatalogIndexRouteImport.update({
+  id: '/admin/catalog/',
+  path: '/admin/catalog/',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppAdminImportsIndexRoute = AppAdminImportsIndexRouteImport.update({
+  id: '/admin/imports/',
+  path: '/admin/imports/',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
 const AppMissionsNewIndexRoute = AppMissionsNewIndexRouteImport.update({
   id: '/missions/new/',
   path: '/missions/new/',
@@ -90,6 +102,8 @@ export interface FileRoutesByFullPath {
   '/mural/': typeof AppMuralIndexRoute
   '/perfil/': typeof AppPerfilIndexRoute
   '/ranking/': typeof AppRankingIndexRoute
+  '/admin/catalog/': typeof AppAdminCatalogIndexRoute
+  '/admin/imports/': typeof AppAdminImportsIndexRoute
   '/missions/new/': typeof AppMissionsNewIndexRoute
   '/moderation/$id/': typeof AppModerationIdIndexRoute
   '/mural/$id/': typeof AppMuralIdIndexRoute
@@ -103,6 +117,8 @@ export interface FileRoutesByTo {
   '/mural': typeof AppMuralIndexRoute
   '/perfil': typeof AppPerfilIndexRoute
   '/ranking': typeof AppRankingIndexRoute
+  '/admin/catalog': typeof AppAdminCatalogIndexRoute
+  '/admin/imports': typeof AppAdminImportsIndexRoute
   '/missions/new': typeof AppMissionsNewIndexRoute
   '/moderation/$id': typeof AppModerationIdIndexRoute
   '/mural/$id': typeof AppMuralIdIndexRoute
@@ -118,6 +134,8 @@ export interface FileRoutesById {
   '/_app/mural/': typeof AppMuralIndexRoute
   '/_app/perfil/': typeof AppPerfilIndexRoute
   '/_app/ranking/': typeof AppRankingIndexRoute
+  '/_app/admin/catalog/': typeof AppAdminCatalogIndexRoute
+  '/_app/admin/imports/': typeof AppAdminImportsIndexRoute
   '/_app/missions/new/': typeof AppMissionsNewIndexRoute
   '/_app/moderation/$id/': typeof AppModerationIdIndexRoute
   '/_app/mural/$id/': typeof AppMuralIdIndexRoute
@@ -133,6 +151,8 @@ export interface FileRouteTypes {
     | '/mural/'
     | '/perfil/'
     | '/ranking/'
+    | '/admin/catalog/'
+    | '/admin/imports/'
     | '/missions/new/'
     | '/moderation/$id/'
     | '/mural/$id/'
@@ -146,6 +166,8 @@ export interface FileRouteTypes {
     | '/mural'
     | '/perfil'
     | '/ranking'
+    | '/admin/catalog'
+    | '/admin/imports'
     | '/missions/new'
     | '/moderation/$id'
     | '/mural/$id'
@@ -160,6 +182,8 @@ export interface FileRouteTypes {
     | '/_app/mural/'
     | '/_app/perfil/'
     | '/_app/ranking/'
+    | '/_app/admin/catalog/'
+    | '/_app/admin/imports/'
     | '/_app/missions/new/'
     | '/_app/moderation/$id/'
     | '/_app/mural/$id/'
@@ -229,6 +253,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRankingIndexRouteImport
       parentRoute: typeof AppLayoutRoute
     }
+    '/_app/admin/catalog/': {
+      id: '/_app/admin/catalog/'
+      path: '/admin/catalog'
+      fullPath: '/admin/catalog/'
+      preLoaderRoute: typeof AppAdminCatalogIndexRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/admin/imports/': {
+      id: '/_app/admin/imports/'
+      path: '/admin/imports'
+      fullPath: '/admin/imports/'
+      preLoaderRoute: typeof AppAdminImportsIndexRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
     '/_app/missions/new/': {
       id: '/_app/missions/new/'
       path: '/missions/new'
@@ -267,6 +305,8 @@ interface AppLayoutRouteChildren {
   AppMuralIndexRoute: typeof AppMuralIndexRoute
   AppPerfilIndexRoute: typeof AppPerfilIndexRoute
   AppRankingIndexRoute: typeof AppRankingIndexRoute
+  AppAdminCatalogIndexRoute: typeof AppAdminCatalogIndexRoute
+  AppAdminImportsIndexRoute: typeof AppAdminImportsIndexRoute
   AppMissionsNewIndexRoute: typeof AppMissionsNewIndexRoute
   AppModerationIdIndexRoute: typeof AppModerationIdIndexRoute
   AppMuralIdIndexRoute: typeof AppMuralIdIndexRoute
@@ -280,6 +320,8 @@ const AppLayoutRouteChildren: AppLayoutRouteChildren = {
   AppMuralIndexRoute: AppMuralIndexRoute,
   AppPerfilIndexRoute: AppPerfilIndexRoute,
   AppRankingIndexRoute: AppRankingIndexRoute,
+  AppAdminCatalogIndexRoute: AppAdminCatalogIndexRoute,
+  AppAdminImportsIndexRoute: AppAdminImportsIndexRoute,
   AppMissionsNewIndexRoute: AppMissionsNewIndexRoute,
   AppModerationIdIndexRoute: AppModerationIdIndexRoute,
   AppMuralIdIndexRoute: AppMuralIdIndexRoute,

@@ -52,7 +52,7 @@ export function Select({ id, label, error, description, containerClassName, clas
                 // do menu: o absolute/z-index abaixo é o que o faz flutuar sobre os campos.
                 classNames={{
                     container: () => "relative",
-                    control: ({ isFocused, isDisabled }) => cn("flex w-full cursor-pointer items-center gap-2 border-2 bg-[var(--color-black)] px-4 py-3 text-sm text-white transition", isFocused ? "border-primary" : error ? "border-[var(--color-orange)]" : "border-[var(--color-primary-dark)]", isDisabled && "cursor-not-allowed border-[var(--color-black-soft)] text-[var(--color-black-muted)]", className),
+                    control: ({ isFocused, isDisabled }) => cn("flex w-full cursor-pointer items-center gap-2 border-2 bg-[var(--color-black)] px-4 py-3 text-sm text-white transition", isFocused ? "border-primary" : error ? "border-[var(--color-danger)]" : "border-[var(--color-primary-dark)]", isDisabled && "cursor-not-allowed border-[var(--color-black-soft)] text-[var(--color-black-muted)]", className),
                     valueContainer: () => "flex min-w-0 flex-1 items-center",
                     singleValue: () => "truncate",
                     placeholder: () => "truncate text-[var(--color-white-muted)]",
@@ -68,7 +68,7 @@ export function Select({ id, label, error, description, containerClassName, clas
             />
             {description ? <span className="mt-2 block text-[11px] text-[var(--color-white-muted)]">{renderTextWithNumericFont(description)}</span> : null}
             {error ? (
-                <span role="alert" className="mt-2 block text-[11px] font-bold text-[var(--color-orange)]">
+                <span role="alert" className="mt-2 block text-[11px] font-bold text-[var(--color-danger)]">
                     {renderTextWithNumericFont(error)}
                 </span>
             ) : null}

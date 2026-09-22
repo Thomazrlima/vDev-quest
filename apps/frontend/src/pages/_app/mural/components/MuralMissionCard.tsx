@@ -56,12 +56,12 @@ export function MuralMissionCard({ mission, index = 0 }: { mission: MuralMission
                         <dd className="normal-case tracking-normal text-white-muted">{renderTextWithNumericFont(mission.evidenceType)}</dd>
                     </div>
                     <div className="flex items-center justify-between gap-3">
-                        <dt className={cn("flex items-center gap-1.5", urgent ? "text-(--color-orange-light)" : "text-primary")}>
+                        <dt className={cn("flex items-center gap-1.5", urgent ? "text-(--color-danger-light)" : "text-primary")}>
                             <DeadlineIcon className="h-3.5 w-3.5" /> Prazo
                         </dt>
-                        <dd className={cn("text-right", urgent ? "text-(--color-orange-light)" : "text-primary-light")}>
+                        <dd className={cn("text-right", urgent ? "text-(--color-danger-light)" : "text-primary-light")}>
                             {renderTextWithNumericFont(formatDate(mission.deadline, "dd/MM/yyyy"))}
-                            <span className={cn("mt-0.5 block text-[.58rem] tracking-[.1em]", urgent ? "text-(--color-orange)" : "text-white-muted")}>{renderTextWithNumericFont(deadlineLabel(remainingDays))}</span>
+                            <span className={cn("mt-0.5 block text-[.58rem] tracking-[.1em]", urgent ? "text-(--color-danger)" : "text-white-muted")}>{renderTextWithNumericFont(deadlineLabel(remainingDays))}</span>
                         </dd>
                     </div>
                 </dl>

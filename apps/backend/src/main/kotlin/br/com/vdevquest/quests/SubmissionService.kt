@@ -42,12 +42,13 @@ class SubmissionService(
         user: AuthenticatedUser,
         missionId: UUID,
         submissionId: UUID?,
+        startNew: Boolean,
         occurrenceDate: LocalDate?,
         payload: EvidencePayload,
         idempotencyKey: UUID,
     ): SubmissionOutcome {
         val actor = contexts.establish(user)
-        val fingerprint = listOf(missionId, submissionId, occurrenceDate, payload.value, payload.file?.sha256, payload.file?.originalFileName, payload.file?.mimeType).joinToString("|")
+        val fingerprint = listOf(missionId, submissionId, startNew, occurrenceDate, payload.value, payload.file?.sha256, payload.file?.originalFileName, payload.file?.mimeType).joinToString("|")
         idempotency.existing(actor.email, idempotencyKey, fingerprint, SubmitResult::class.java)?.let { return SubmissionOutcome(it, false) }
 
         val mission = missions.find(missionId, lock = true) ?: throw NotFoundException("Missão não encontrada.")
@@ -56,7 +57,7 @@ class SubmissionService(
         val phases = missions.phases(missionId)
         val active = submissions.activeForMission(missionId, actor.email)
         val requiredOccurrence = missionService.occurrenceDate(mission, LocalDate.now(clock), occurrenceDate)
-        val record = chooseSubmission(mission, phases, active, submissionId, requiredOccurrence, actor.email)
+        val record = chooseSubmission(mission, phases, active, submissionId, startNew, requiredOccurrence, actor.email)
         val nextPhase = if (record.currentPhase == 0) 1 else record.currentPhase + 1
         val phase = phases.firstOrNull { it.number == nextPhase }
             ?: throw ConflictException("Esta submissão já concluiu todas as fases da missão.")
@@ -125,6 +126,7 @@ class SubmissionService(
         phases: List<MissionPhaseResponse>,
         active: List<SubmissionRecord>,
         selectedId: UUID?,
+        startNew: Boolean,
         occurrenceDate: LocalDate?,
         actorEmail: String,
     ): SubmissionRecord {
@@ -133,7 +135,12 @@ class SubmissionService(
             return createSubmission(mission.id, actorEmail, occurrenceDate)
         }
         if (selectedId != null) {
+            if (startNew) throw ValidationException("Escolha uma submissão existente ou inicie uma nova, não os dois.")
             return active.firstOrNull { it.id == selectedId } ?: throw NotFoundException("Submissão ativa não encontrada nesta missão.")
+        }
+        if (startNew) {
+            if (!mission.allowsMultipleSubmissions) throw ConflictException("Esta missão não permite várias submissões independentes.")
+            return createSubmission(mission.id, actorEmail, null)
         }
         val incomplete = active.firstOrNull { it.currentPhase < phases.last().number }
         if (incomplete != null) return incomplete

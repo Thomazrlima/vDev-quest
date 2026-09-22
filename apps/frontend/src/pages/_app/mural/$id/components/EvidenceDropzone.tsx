@@ -61,7 +61,7 @@ export function EvidenceDropzone({ evidenceType, input, file, error, disabled = 
             <label htmlFor={inputId} className="mb-2 block text-[11px] font-black uppercase tracking-[0.14em] text-primary-light">
                 Arquivo da evidência<span className="text-primary"> *</span>
             </label>
-            <div onDragOver={handleDragOver} onDragLeave={() => setDragging(false)} onDrop={handleDrop} className={cn("border-2 border-dashed bg-(--color-black) transition has-[input:focus-visible]:border-primary", error ? "border-(--color-orange)" : dragging ? "border-primary bg-primary-overlay" : "border-primary-dark", disabled && "cursor-not-allowed opacity-60")}>
+            <div onDragOver={handleDragOver} onDragLeave={() => setDragging(false)} onDrop={handleDrop} className={cn("border-2 border-dashed bg-(--color-black) transition has-[input:focus-visible]:border-primary", error ? "border-(--color-danger)" : dragging ? "border-primary bg-primary-overlay" : "border-primary-dark", disabled && "cursor-not-allowed opacity-60")}>
                 <input ref={fieldRef} id={inputId} type="file" accept={input.accept} disabled={disabled} onChange={handleChange} className="sr-only" />
 
                 {file ? (
@@ -73,7 +73,7 @@ export function EvidenceDropzone({ evidenceType, input, file, error, disabled = 
                             <p className="truncate text-sm font-bold text-primary-light">{file.name}</p>
                             <p className="mt-0.5 text-[.65rem] uppercase tracking-[.1em] text-white-muted">{renderTextWithNumericFont(formatFileSize(file.size))}</p>
                         </div>
-                        <button type="button" onClick={clear} disabled={disabled} aria-label={`Remover o arquivo ${file.name}`} className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center border-2 border-primary-dark text-primary transition hover:border-(--color-orange) hover:text-(--color-orange-light) disabled:cursor-not-allowed">
+                        <button type="button" onClick={clear} disabled={disabled} aria-label={`Remover o arquivo ${file.name}`} className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center border-2 border-primary-dark text-primary transition hover:border-(--color-danger) hover:text-(--color-danger-light) disabled:cursor-not-allowed">
                             <CloseIcon className="h-4 w-4" />
                         </button>
                     </div>
@@ -88,7 +88,7 @@ export function EvidenceDropzone({ evidenceType, input, file, error, disabled = 
                 )}
             </div>
             {error ? (
-                <span role="alert" className="mt-2 block text-[11px] font-bold text-(--color-orange)">
+                <span role="alert" className="mt-2 block text-[11px] font-bold text-(--color-danger)">
                     {renderTextWithNumericFont(error)}
                 </span>
             ) : null}

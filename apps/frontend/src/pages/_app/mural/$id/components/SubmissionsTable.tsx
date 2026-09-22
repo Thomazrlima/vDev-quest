@@ -13,7 +13,7 @@ import { formatDate } from "@/utils/date";
 const COLUMNS = "md:grid-cols-[minmax(120px,.55fr)_minmax(0,1.75fr)_minmax(110px,auto)]";
 
 /** O histórico de entregas da missão: cada linha é uma submissão, com o veredito que ela recebeu. */
-export function SubmissionsTable({ mission, action, onCancelSubmission }: { mission: MuralMission; action?: ReactNode; onCancelSubmission?: (id: string) => void }) {
+export function SubmissionsTable({ mission, action, onCancelSubmission, onAdvanceSubmission }: { mission: MuralMission; action?: ReactNode; onCancelSubmission?: (id: string) => void; onAdvanceSubmission?: (id: string) => void }) {
     const total = mission.submissions.length;
 
     return (
@@ -72,6 +72,9 @@ export function SubmissionsTable({ mission, action, onCancelSubmission }: { miss
                                 )}
                                 {submission.status === "ativa" && onCancelSubmission ? (
                                     <Button type="button" variant="ghost" onClick={() => onCancelSubmission(submission.id)} className="mt-2 p-0 text-[10px] text-red-light">Cancelar submissão</Button>
+                                ) : null}
+                                {submission.status === "ativa" && submission.phase !== undefined && submission.phase < mission.phaseCount && onAdvanceSubmission ? (
+                                    <Button type="button" variant="ghost" onClick={() => onAdvanceSubmission(submission.id)} className="mt-2 ml-4 p-0 text-[10px] text-primary-light">Enviar fase {submission.phase + 1}</Button>
                                 ) : null}
 
                                 {submission.justification ? (
