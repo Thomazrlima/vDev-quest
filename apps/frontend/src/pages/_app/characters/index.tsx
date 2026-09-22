@@ -1,14 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Sparkle } from "pixelarticons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CharacterLayersPanel } from "./components/CharacterLayersPanel";
 import { CharacterPresetPanel } from "./components/CharacterPresetPanel";
 import { CharacterPreview } from "./components/CharacterPreview";
 import { EMPTY_MANA_SEED_APPEARANCE } from "@/mocks/data/mana-seed";
-import { Button } from "@/components/ui/Button";
 import { QuestLoader } from "@/components/ui/QuestLoader";
 import type { BodyType, CharacterPreset, ManaSeedAppearance, ManaSeedColors, ManaSeedLayer, ManaSeedSlot } from "@/types/character";
-import { readStoredCharacter, saveStoredCharacter } from "@/utils/character-storage";
+import type { StoredCharacter } from "@/utils/character-storage";
+import { useStoredCharacter } from "@/utils/use-stored-character";
+import { avatarService } from "@/api/avatar";
 import { cycleManaSeedSlot, getManaSeedLayers } from "@/utils/mana-seed";
 import { useSpritesReady } from "@/utils/use-sprites-ready";
 
@@ -17,13 +19,24 @@ export const Route = createFileRoute("/_app/characters/")({
 });
 
 function CharacterCreatorPage() {
-    // O vilarejo monta o avatar a partir do mesmo registro: a oficina abre no que já foi escolhido.
-    const [storedCharacter] = useState(readStoredCharacter);
-    const [appearance, setAppearance] = useState<ManaSeedAppearance>(storedCharacter.appearance);
-    const [name, setName] = useState(storedCharacter.name);
-    const [bodyType, setBodyType] = useState<BodyType>(storedCharacter.bodyType);
+    const storedCharacter = useStoredCharacter();
+    if (storedCharacter.error) return <main className="mx-auto min-h-[calc(100vh-9rem)] max-w-370 px-4 py-7 text-sm text-red-light" role="alert">{storedCharacter.error.message}</main>;
+    if (!storedCharacter.ready) return <main className="mx-auto flex min-h-[calc(100vh-9rem)] max-w-370 items-center justify-center px-4 py-7 sm:px-6 sm:py-9"><QuestLoader hint="Costurando os trajes" label="Preparando a oficina..." /></main>;
+    return <CharacterEditor initial={storedCharacter} />;
+}
+
+function CharacterEditor({ initial }: { initial: StoredCharacter }) {
+    const queryClient = useQueryClient();
+    const [appearance, setAppearance] = useState<ManaSeedAppearance>(initial.appearance);
+    const [name, setName] = useState(initial.name);
+    const [bodyType, setBodyType] = useState<BodyType>(initial.bodyType);
     const [activePreset, setActivePreset] = useState("");
-    const [colors, setColors] = useState<ManaSeedColors>(storedCharacter.colors);
+    const [colors, setColors] = useState<ManaSeedColors>(initial.colors);
+    const [saving, setSaving] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
+    const lastSaved = useRef(JSON.stringify(initial));
+    const saveQueue = useRef<Promise<void>>(Promise.resolve());
+    const saveRevision = useRef(0);
     const layers = useMemo(() => getManaSeedLayers(appearance, bodyType, colors), [appearance, bodyType, colors]);
     const spritesReady = useSpritesReady(layers);
     /**
@@ -38,11 +51,23 @@ function CharacterCreatorPage() {
     // que é justamente o piscar que se quer evitar.
     if (spritesReady && paintedLayers !== layers) setPaintedLayers(layers);
 
-    // O vilarejo remonta o avatar a partir deste registro, então a cor e o corpo entram
-    // junto com as peças: gravar só a aparência devolvia o herói nas rampas de teste.
     useEffect(() => {
-        saveStoredCharacter({ appearance, name, colors, bodyType });
-    }, [appearance, bodyType, colors, name]);
+        const next: StoredCharacter = { appearance, name, colors, bodyType };
+        const signature = JSON.stringify(next);
+        if (signature === lastSaved.current) return;
+        const timer = window.setTimeout(() => {
+            const revision = ++saveRevision.current;
+            setSaving(true);
+            setSaveError(null);
+            const operation = saveQueue.current.catch(() => undefined).then(() => avatarService.save(next)).then(async () => {
+                lastSaved.current = signature;
+                queryClient.setQueryData(["character"], next);
+                await queryClient.invalidateQueries({ queryKey: ["profile", "me"] });
+            }).catch((cause: unknown) => { if (revision === saveRevision.current) setSaveError(cause instanceof Error ? cause.message : "Não foi possível salvar o personagem."); }).finally(() => { if (revision === saveRevision.current) setSaving(false); });
+            saveQueue.current = operation;
+        }, 500);
+        return () => window.clearTimeout(timer);
+    }, [appearance, bodyType, colors, name, queryClient]);
 
     function rotate(slot: ManaSeedSlot, direction: -1 | 1) {
         setActivePreset("");
@@ -89,7 +114,7 @@ function CharacterCreatorPage() {
                 <CharacterLayersPanel bodyType={bodyType} appearance={appearance} colors={colors} onBodyTypeChange={setBodyType} onRotate={rotate} onColorChange={changeColor} onReset={reset} />
             </div>
             <footer className="mt-6 flex justify-center">
-                <p className="text-center text-[10px] font-black uppercase tracking-[.16em] text-[var(--color-primary-dark)]">Alterações salvas automaticamente</p>
+                <p role={saveError ? "alert" : "status"} className="text-center text-[10px] font-black uppercase tracking-[.16em] text-[var(--color-primary-dark)]">{saveError ?? (saving ? "Salvando alterações..." : "Alterações salvas automaticamente")}</p>
             </footer>
             </div>
         </main>

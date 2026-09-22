@@ -63,6 +63,9 @@ data class MuralMissionResponse(
     val occurrenceDate: LocalDate?,
     val isCheckin: Boolean,
     val allowsMultipleSubmissions: Boolean,
+    val endDate: LocalDate,
+    val xpReward: Int,
+    val phaseCount: Int,
 )
 
 data class SubmitResult(

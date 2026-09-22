@@ -11,10 +11,11 @@ const items = [
     { href: "/perfil", label: "Perfil", icon: ProfileNavIcon },
 ];
 
-export function NavBar() {
+export function NavBar({ isManager = false }: { isManager?: boolean }) {
     const pathname = useRouterState({ select: (state) => state.location.pathname });
     const navigate = useNavigate();
-    const activeItem = items.find(
+    const visibleItems = items.filter((item) => isManager || item.href !== "/missions");
+    const activeItem = visibleItems.find(
         (item) =>
             pathname === item.href ||
             pathname.startsWith(`${item.href}/`) ||
@@ -28,7 +29,7 @@ export function NavBar() {
                 <div className="mx-auto hidden h-22 max-w-7xl grid-cols-[128px_minmax(0,1fr)] items-center gap-4 px-6 md:grid">
                     <Logo href="/ranking" priority className="flex h-20 w-32 shrink-0 items-center justify-center" imageClassName="h-20 w-32" />
                     <nav aria-label="Navegação principal">
-                        <Slider className="flex min-w-0 justify-self-end items-center gap-1" indicatorClassName="border-2 border-primary bg-black-soft shadow-[3px_3px_0_var(--color-black)]" items={items} value={activeItem?.href ?? "/ranking"} getValue={(item) => item.href} onValueChange={(href) => navigate({ to: href })}>
+                        <Slider className="flex min-w-0 justify-self-end items-center gap-1" indicatorClassName="border-2 border-primary bg-black-soft shadow-[3px_3px_0_var(--color-black)]" items={visibleItems} value={activeItem?.href ?? "/ranking"} getValue={(item) => item.href} onValueChange={(href) => navigate({ to: href })}>
                             {(item, { active, indicator, select }) => {
                                 const Icon = item.icon;
                                 return (
@@ -45,7 +46,7 @@ export function NavBar() {
             </header>
 
             <nav aria-label="Navegação principal" className="fixed inset-x-0 bottom-0 z-50 border-t-2 border-black-muted bg-black-soft px-4 pb-[env(safe-area-inset-bottom)] md:hidden">
-                <Slider className="mx-auto flex h-14 max-w-xs items-stretch justify-around" indicatorClassName="border-x-2 border-primary bg-primary-overlay" items={items} value={activeItem?.href ?? "/ranking"} getValue={(item) => item.href} onValueChange={(href) => navigate({ to: href })}>
+                <Slider className="mx-auto flex h-14 max-w-xs items-stretch justify-around" indicatorClassName="border-x-2 border-primary bg-primary-overlay" items={visibleItems} value={activeItem?.href ?? "/ranking"} getValue={(item) => item.href} onValueChange={(href) => navigate({ to: href })}>
                     {(item, { active, indicator, select }) => {
                         const Icon = item.icon;
                         return (

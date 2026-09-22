@@ -18,8 +18,8 @@ const tilts = ["-rotate-[1.4deg]", "rotate-[.9deg]", "-rotate-[.6deg]", "rotate-
 /** O que espera o colaborador do outro lado do clique muda com o estado da missão. */
 const callToAction = {
     disponiveis: "Enviar evidência",
-    aguardando: "Ver minhas submissões",
-    recusadas: "Reenviar evidência",
+    aguardando: "Enviar próxima fase",
+    recusadas: "Ver histórico",
     concluidas: "Ver conquista",
 } as const;
 
@@ -70,11 +70,11 @@ export function MuralMissionCard({ mission, index = 0 }: { mission: MuralMission
                     {/* A recusa em aberto é o que faz o colaborador voltar ao papel: ela vem antes do convite. */}
                     {refusal ? (
                         <p className="flex items-center gap-1.5 text-[.6rem] font-black uppercase tracking-[.1em] text-red-light">
-                            <AlertIcon className="h-3.5 w-3.5 shrink-0" /> Última submissão recusada
+                            <AlertIcon className="h-3.5 w-3.5 shrink-0" /> Última submissão invalidada
                         </p>
                     ) : null}
                     <span aria-hidden="true" className="flex items-center gap-1.5 text-[.6rem] font-black uppercase tracking-[.12em] text-primary transition group-hover:text-primary-light">
-                        {refusal ? "Reenviar evidência" : callToAction[state]}
+                        {callToAction[state]}
                         <ChevronIcon className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
                     </span>
                 </div>

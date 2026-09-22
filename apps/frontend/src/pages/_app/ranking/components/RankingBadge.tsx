@@ -10,6 +10,7 @@ const badgeDetails = {
 } as const;
 
 export function RankingBadge({ badge, className, compact = false }: { badge: RankingBadgeType; className?: string; compact?: boolean }) {
+    if (typeof badge === "object") return <span className={cn("inline-grid h-7.5 w-7.5 shrink-0 place-items-center rounded-full border-2 border-primary-dark bg-black shadow-[1px_1px_0_var(--color-black)]", compact && "h-5.25 w-5.25", className)} title={badge.label} aria-label={badge.label}><img src={badge.imagePath} alt="" loading="lazy" className="h-full w-full object-contain" /></span>;
     const { label, Icon } = badgeDetails[badge];
 
     return (

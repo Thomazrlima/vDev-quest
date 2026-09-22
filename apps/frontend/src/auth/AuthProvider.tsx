@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import type { User } from "oidc-client-ts";
 import { completeOidcCallback, isOidcCallback, userManager } from "@/auth/oidc";
 import { AuthContext } from "@/auth/context";
+import { queryClient } from "@/api/queryClient";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -31,14 +32,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
         };
         void initialize();
-        const onLoaded = (next: User) => setUser(next);
-        const onUnloaded = () => { setUser(null); setError(null); };
+        const onLoaded = (next: User) => { queryClient.clear(); setUser(next); };
+        const onUnloaded = () => { queryClient.clear(); setUser(null); setError(null); };
+        const onExpired = () => { queryClient.clear(); setUser(null); setError("Sua sessão expirou. Entre novamente para continuar."); };
         userManager.events.addUserLoaded(onLoaded);
         userManager.events.addUserUnloaded(onUnloaded);
+        userManager.events.addAccessTokenExpired(onExpired);
         return () => {
             active = false;
             userManager.events.removeUserLoaded(onLoaded);
             userManager.events.removeUserUnloaded(onUnloaded);
+            userManager.events.removeAccessTokenExpired(onExpired);
         };
     }, []);
 
@@ -49,5 +53,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (cause) {
             setError(cause instanceof Error ? `Não foi possível iniciar o login: ${cause.message}` : "Não foi possível iniciar o login. Tente novamente.");
         }
-    }, signOut: () => userManager.signoutRedirect() }}>{children}</AuthContext.Provider>;
+    }, signOut: () => { queryClient.clear(); return userManager.signoutRedirect(); } }}>{children}</AuthContext.Provider>;
 }

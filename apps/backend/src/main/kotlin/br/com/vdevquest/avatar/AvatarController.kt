@@ -33,10 +33,10 @@ data class AvatarItemResponse(
 
 data class AvatarSlotResponse(val slot: String, val item: AvatarItemResponse?, val colorIndex: Int)
 data class AvatarResponse(val bodyType: String, val skinColorIndex: Int, val slots: List<AvatarSlotResponse>)
-data class AvatarSlotUpdate(@field:NotBlank val slot: String, val itemId: UUID?, @field:Min(0) @field:Max(15) val colorIndex: Int)
+data class AvatarSlotUpdate(@field:NotBlank val slot: String, val itemId: UUID?, @field:Min(0) @field:Max(63) val colorIndex: Int)
 data class AvatarUpdateRequest(
     @field:NotBlank val bodyType: String,
-    @field:Min(0) @field:Max(15) val skinColorIndex: Int,
+    @field:Min(0) @field:Max(63) val skinColorIndex: Int,
     val slots: List<@Valid AvatarSlotUpdate>,
 )
 

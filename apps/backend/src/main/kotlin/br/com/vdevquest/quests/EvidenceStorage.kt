@@ -20,9 +20,11 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest
 import java.net.URI
 import java.time.Duration
+import java.security.MessageDigest
+import java.util.HexFormat
 import java.util.UUID
 
-data class StoredEvidence(val objectKey: String, val originalFileName: String, val mimeType: String, val size: Long)
+data class StoredEvidence(val objectKey: String, val originalFileName: String, val mimeType: String, val size: Long, val sha256: String)
 
 @Configuration
 class StorageConfiguration {
@@ -65,11 +67,12 @@ class EvidenceStorage(
         if (mime !in accepted) throw ValidationException("O arquivo enviado não corresponde ao tipo de evidência solicitado.")
         val fileName = file.originalFilename?.takeIf { it.isNotBlank() }?.take(255) ?: "evidencia"
         val key = "evidence/${ids.next()}/${sanitizeFileName(fileName)}"
+        val bytes = file.bytes
         s3.putObject(
             PutObjectRequest.builder().bucket(properties.storage.bucket).key(key).contentType(mime).contentLength(file.size).build(),
-            RequestBody.fromInputStream(file.inputStream, file.size),
+            RequestBody.fromBytes(bytes),
         )
-        return StoredEvidence(key, fileName, mime, file.size)
+        return StoredEvidence(key, fileName, mime, file.size, HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes)))
     }
 
     fun deleteQuietly(key: String) {

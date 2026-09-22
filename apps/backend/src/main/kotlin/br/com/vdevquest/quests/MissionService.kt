@@ -88,7 +88,7 @@ class MissionService(
                 val phases = missions.phases(mission.id)
                 val active = submissions.activeForMissionRead(mission.id, actor.email)
                 val incomplete = active.firstOrNull { it.currentPhase < phases.last().number }
-                val completedCurrentOccurrence = active.any { it.currentPhase == phases.last().number && it.occurrenceDate == occurrenceDate(mission, today, null) }
+                val completedCurrentOccurrence = mission.recurrenceType != RecurrenceType.none && active.any { it.currentPhase == phases.last().number && it.occurrenceDate == occurrenceDate(mission, today, null) }
                 val completedOneOff = mission.recurrenceType == RecurrenceType.none && active.any { it.currentPhase == phases.last().number }
                 val status = when {
                     incomplete != null -> "in_progress"
@@ -99,6 +99,7 @@ class MissionService(
                     mission.id, mission.title, mission.description, mission.evidenceType, status, incomplete?.id,
                     if (incomplete == null) phases.firstOrNull() else phases.getOrNull(incomplete.currentPhase),
                     occurrenceDate(mission, today, null), mission.isCheckin, mission.allowsMultipleSubmissions,
+                    mission.endDate, phases.sumOf { it.xpReward }, phases.size,
                 )
             }
     }

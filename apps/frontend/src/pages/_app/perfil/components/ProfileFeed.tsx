@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
@@ -9,7 +10,7 @@ import { FeedEmptyState } from "./FeedEmptyState";
 import { FeedFilters } from "./FeedFilters";
 import { FeedPost } from "./FeedPost";
 import { FeedTile } from "./FeedTile";
-import { muralService } from "@/mocks/services/mural";
+import { muralService } from "@/api/mural";
 import type { FeedEntry, FeedFilters as Filters } from "@/types/mission";
 import { feedMissions, filterFeed } from "@/utils/mural";
 import { clampPage, pageCountOf, pageSlice } from "@/utils/pagination";
@@ -21,26 +22,14 @@ const NO_FILTERS: Filters = { missionId: "", status: "" };
 
 /** O mosaico do perfil: cada quadrado é uma entrega, da mais recente para a mais antiga. */
 export function ProfileFeed() {
-    const [feed, setFeed] = useState<FeedEntry[] | null>(null);
+    const { data: feed, isPending, error } = useQuery({ queryKey: ["profile", "feed"], queryFn: muralService.feed });
     const [filters, setFilters] = useState<Filters>(NO_FILTERS);
     const [page, setPage] = useState(1);
     // Guardar o id, e não a entrega, deixa o post aberto acompanhar uma lista que se atualize.
     const [openId, setOpenId] = useState<string | null>(null);
 
-    useEffect(() => {
-        let active = true;
-
-        muralService.feed().then((data) => {
-            if (active) setFeed(data);
-        });
-
-        return () => {
-            active = false;
-        };
-    }, []);
-
     // Estabilizar a lista vazia evita refazer os recortes a cada render enquanto o feed carrega.
-    const entries = useMemo(() => feed ?? [], [feed]);
+    const entries = useMemo<FeedEntry[]>(() => feed ?? [], [feed]);
     // O filtro por missão só oferece o que já foi entregue, então ele sai do feed inteiro.
     const missions = useMemo(() => feedMissions(entries), [entries]);
     const visible = useMemo(() => filterFeed(entries, filters), [entries, filters]);
@@ -70,8 +59,8 @@ export function ProfileFeed() {
         () =>
             [
                 [visible.length, visible.length === 1 ? "entrega" : "entregas"],
-                [visible.filter(({ submission }) => submission.status === "aprovada").length, "aprovadas"],
-                [visible.filter(({ submission }) => submission.status === "pendente").length, "em análise"],
+                [visible.filter(({ submission }) => submission.status === "ativa").length, "ativas"],
+                [visible.filter(({ submission }) => submission.status !== "ativa").length, "revertidas"],
             ] as const,
         [visible],
     );
@@ -108,7 +97,7 @@ export function ProfileFeed() {
             {/* Sem histórico não há o que recortar: a barra de filtros só aparece com entregas em mãos. */}
             {entries.length ? <FeedFilters missions={missions} filters={filters} onChange={applyFilters} onClear={clearFilters} /> : null}
 
-            {feed === null ? (
+            {error ? <p role="alert" className="p-5 text-xs text-red-light">{error.message}</p> : isPending ? (
                 <div className="grid grid-cols-3 gap-1.5 bg-black-overlay p-3 sm:gap-2.5 sm:p-4" role="status" aria-label="Carregando suas entregas">
                     {Array.from({ length: PAGE_SIZE }, (_, index) => (
                         <span key={index} aria-hidden="true" className="aspect-square animate-pulse border-2 border-primary-dark bg-black-muted" />

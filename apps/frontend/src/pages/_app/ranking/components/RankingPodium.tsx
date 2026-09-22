@@ -81,7 +81,7 @@ export function RankingPodium({ leaders }: { leaders: RankingLeader[] }) {
                                     </div>
                                     <div className="absolute bottom-0 left-1/2 z-3 flex -translate-x-1/2 translate-y-1/2 items-center justify-center gap-1 max-[760px]:gap-0.5">
                                         {leader.badges.map((badge) => (
-                                            <RankingBadge badge={badge} className="h-6.5 w-6.5 [&_svg]:h-3.5 [&_svg]:w-3.5 max-[760px]:h-5.5 max-[760px]:w-5.5 max-[760px]:[&_svg]:h-3 max-[760px]:[&_svg]:w-3" compact key={badge} />
+                                            <RankingBadge badge={badge} className="h-6.5 w-6.5 [&_svg]:h-3.5 [&_svg]:w-3.5 max-[760px]:h-5.5 max-[760px]:w-5.5 max-[760px]:[&_svg]:h-3 max-[760px]:[&_svg]:w-3" compact key={typeof badge === "string" ? badge : badge.label} />
                                         ))}
                                     </div>
                                 </Card>

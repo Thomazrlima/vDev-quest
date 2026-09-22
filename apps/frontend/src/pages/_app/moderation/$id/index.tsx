@@ -1,4 +1,5 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronIcon, ScrollIcon } from "@/components/icons";
 import { Card } from "@/components/ui/Card";
@@ -10,8 +11,7 @@ import { Loading } from "@/components/ui/Loading";
 import { BLEED_UNDER_RETURN_LINK, HALL_PANEL, StoneWall } from "@/components/ui/StoneWall";
 import { TextArea } from "@/components/ui/TextArea";
 import { cn } from "@/lib/tailwind";
-import { moderationService } from "@/mocks/services/moderation";
-import type { EvidenceSubmission } from "@/types/moderation";
+import { moderationService } from "@/api/moderation";
 import { formatDate } from "@/utils/date";
 
 export const Route = createFileRoute("/_app/moderation/$id/")({
@@ -21,8 +21,8 @@ export const Route = createFileRoute("/_app/moderation/$id/")({
 function EvidenceDetailsPage() {
     const { id: evidenceId } = Route.useParams();
     const navigate = useNavigate();
-    const [evidence, setEvidence] = useState<EvidenceSubmission | null>(null);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
+    const { data: evidence, isPending: loading, error: loadError, refetch } = useQuery({ queryKey: ["admin", "submission", evidenceId], queryFn: () => moderationService.getById(evidenceId) });
     const [previewOpen, setPreviewOpen] = useState(false);
     const [rejecting, setRejecting] = useState(false);
     const [justification, setJustification] = useState("");
@@ -30,32 +30,11 @@ function EvidenceDetailsPage() {
     const [saving, setSaving] = useState(false);
     const [notice, setNotice] = useState<string | null>(null);
 
-    useEffect(() => {
-        moderationService.getById(evidenceId).then((data) => {
-            setEvidence(data);
-            setLoading(false);
-        });
-    }, [evidenceId]);
-
-    async function approve() {
-        if (!evidence) return;
-        setSaving(true);
-        setNotice(null);
-        try {
-            setEvidence(await moderationService.approve(evidence.id));
-            setNotice("Evidência aprovada com sucesso.");
-        } catch (error) {
-            setNotice(error instanceof Error ? error.message : "Não foi possível aprovar a evidência.");
-        } finally {
-            setSaving(false);
-        }
-    }
-
     async function reject(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!evidence) return;
         if (!justification.trim()) {
-            setJustificationError("Informe o motivo da recusa.");
+            setJustificationError("Informe o motivo da invalidação.");
             return;
         }
 
@@ -63,11 +42,13 @@ function EvidenceDetailsPage() {
         setJustificationError(null);
         setNotice(null);
         try {
-            setEvidence(await moderationService.reject(evidence.id, justification));
+            await moderationService.invalidate(evidence.id, justification);
+            await Promise.all([queryClient.invalidateQueries({ queryKey: ["admin"] }), queryClient.invalidateQueries({ queryKey: ["mural"] }), queryClient.invalidateQueries({ queryKey: ["profile"] }), queryClient.invalidateQueries({ queryKey: ["ranking"] })]);
+            await refetch();
             setRejecting(false);
-            setNotice("Evidência recusada e devolvida com justificativa.");
+            setNotice("Submissão invalidada e EXP revertida.");
         } catch (error) {
-            setNotice(error instanceof Error ? error.message : "Não foi possível recusar a evidência.");
+            setNotice(error instanceof Error ? error.message : "Não foi possível invalidar a submissão.");
         } finally {
             setSaving(false);
         }
@@ -78,7 +59,7 @@ function EvidenceDetailsPage() {
             <StoneWall>
                 <div className="mx-auto w-[min(768px,100%)]">
                     <Button variant="ghost" onClick={() => navigate({ to: "/moderation" })} className="mb-7 p-0 text-[11px] text-primary hover:text-primary-light">
-                        <ChevronIcon className="h-4 w-4 rotate-180" /> Fila de moderação
+                        <ChevronIcon className="h-4 w-4 rotate-180" /> Consulta de entregas
                     </Button>
                     {loading ? (
                         <Card className={HALL_PANEL}>
@@ -86,19 +67,19 @@ function EvidenceDetailsPage() {
                         </Card>
                     ) : !evidence ? (
                         <Card className={cn("p-8 text-center", HALL_PANEL)}>
-                            <p className="text-sm text-primary-light">Evidência não encontrada.</p>
+                            <p role={loadError ? "alert" : undefined} className="text-sm text-primary-light">{loadError?.message ?? "Evidência não encontrada."}</p>
                         </Card>
                     ) : (
                         <Card className={cn("overflow-hidden", HALL_PANEL)}>
                             <div className="border-b-2 border-primary-dark bg-black p-6">
-                                <Eyebrow>FE-03 / FE-04 · Detalhe da evidência</Eyebrow>
+                                <Eyebrow>Detalhe da evidência</Eyebrow>
                                 <Heading className="mt-2">Entrega de {evidence.collaborator.name}</Heading>
-                                <p className="mt-2 text-sm text-white-muted">{evidence.status === "Pendente" ? `Registro pendente para a missão “${evidence.missionTitle}”.` : `Registro ${evidence.status.toLocaleLowerCase("pt-BR")} para a missão “${evidence.missionTitle}”.`}</p>
+                                <p className="mt-2 text-sm text-white-muted">{`Registro ${evidence.status.toLocaleLowerCase("pt-BR")} para a missão “${evidence.missionTitle}”.`}</p>
                             </div>
                             <div className="grid gap-5 bg-black-overlay p-6 sm:grid-cols-2">
                                 <DetailCard label="Missão" value={evidence.missionTitle} />
                                 <DetailCard label="Tipo enviado" value={evidence.evidenceType} />
-                                <DetailCard label="Arquivo" value={evidence.fileName} />
+                                <DetailCard label={evidence.evidenceType === "Link" || evidence.evidenceType === "Texto" ? "Evidência" : "Arquivo"} value={evidence.fileName} />
                                 <DetailCard label="Submetida em" value={formatDate(evidence.submittedAt, "full")} />
                             </div>
                             {evidence.evidenceType === "Foto (PNG, JPEG)" && evidence.previewUrl ? (
@@ -122,10 +103,9 @@ function EvidenceDetailsPage() {
                                 </div>
                             ) : null}
                             <div className="border-t-2 border-primary-dark bg-black p-6">
-                                {evidence.status === "Pendente" ? (
+                                {evidence.status === "Ativa" ? (
                                     <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                                        <Button type="button" variant="secondary" onClick={() => setRejecting(true)} disabled={saving} className="px-5 text-[10px]">Recusar evidência</Button>
-                                        <Button type="button" onClick={approve} disabled={saving} className="px-5 text-[10px]">{saving ? "Salvando" : "Aprovar evidência"}</Button>
+                                        <Button type="button" variant="secondary" onClick={() => setRejecting(true)} disabled={saving} className="px-5 text-[10px]">Invalidar submissão</Button>
                                     </div>
                                 ) : (
                                     <div className="text-xs text-white-muted">
@@ -154,15 +134,15 @@ function EvidenceDetailsPage() {
                 <div className="fixed inset-0 z-[110] grid place-items-center bg-black/85 p-5" role="presentation">
                     <form onSubmit={reject} noValidate role="dialog" aria-modal="true" aria-labelledby="reject-evidence-title" className="w-full md:w-[42rem] border-2 border-(--color-orange) bg-black shadow-[6px_6px_0_var(--color-orange-dark)]">
                         <div className="border-b-2 border-(--color-orange-dark) bg-orange-overlay p-5">
-                            <h2 id="reject-evidence-title" className="text-sm font-black uppercase tracking-[.12em] text-(--color-orange-light)">Recusar evidência</h2>
-                            <p className="mt-2 text-xs leading-relaxed text-(--color-orange-light)">Explique ao colaborador o que precisa ser ajustado antes de um novo envio.</p>
+                            <h2 id="reject-evidence-title" className="text-sm font-black uppercase tracking-[.12em] text-(--color-orange-light)">Invalidar submissão</h2>
+                            <p className="mt-2 text-xs leading-relaxed text-(--color-orange-light)">A EXP desta submissão será revertida. Registre a justificativa para a auditoria.</p>
                         </div>
                         <div className="p-5">
-                            <TextArea label="Justificativa" value={justification} onChange={(event) => { setJustification(event.target.value); setJustificationError(null); }} error={justificationError ?? undefined} placeholder="Descreva o motivo da recusa..." rows={5} required />
+                            <TextArea label="Justificativa" value={justification} onChange={(event) => { setJustification(event.target.value); setJustificationError(null); }} error={justificationError ?? undefined} placeholder="Descreva o motivo da invalidação..." rows={5} required />
                         </div>
                         <div className="flex flex-col-reverse gap-3 border-t-2 border-primary-dark p-5 sm:flex-row sm:justify-end">
                             <Button type="button" variant="secondary" onClick={() => { setRejecting(false); setJustificationError(null); }} disabled={saving} className="px-5 text-[10px]">Cancelar</Button>
-                            <Button type="submit" disabled={saving} className="px-5 text-[10px]">{saving ? "Salvando" : "Confirmar recusa"}</Button>
+                            <Button type="submit" disabled={saving} className="px-5 text-[10px]">{saving ? "Salvando" : "Confirmar invalidação"}</Button>
                         </div>
                     </form>
                 </div>

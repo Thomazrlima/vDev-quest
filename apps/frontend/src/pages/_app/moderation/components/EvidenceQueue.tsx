@@ -6,7 +6,7 @@ import { formatDate } from "@/utils/date";
 import { renderTextWithNumericFont } from "@/lib/typography";
 
 export function EvidenceQueue({ evidences, loading, onOpen, emptyTitle = "Nenhuma pendência encontrada", emptyDescription = "Ajuste ou limpe os filtros para consultar a fila completa." }: { evidences: EvidenceSubmission[]; loading: boolean; onOpen: (id: string) => void; emptyTitle?: string; emptyDescription?: string }) {
-    if (loading) return <Loading message="Buscando evidências pendentes..." />;
+    if (loading) return <Loading message="Buscando entregas..." />;
     if (!evidences.length)
         return (
             <div className="p-10 text-center">
@@ -37,7 +37,7 @@ export function EvidenceQueue({ evidences, loading, onOpen, emptyTitle = "Nenhum
                     <span className="text-xs text-white-muted">{renderTextWithNumericFont(evidence.evidenceType)}</span>
                     <time className="text-xs text-white-muted">{renderTextWithNumericFont(formatDate(evidence.submittedAt))}</time>
                     <span className="flex items-center justify-between gap-3">
-                        <strong className={evidence.status === "Aprovada" ? "border-2 border-green bg-green-overlay px-2 py-1 text-[9px] uppercase tracking-wider text-green-light" : evidence.status === "Recusada" ? "border-2 border-red bg-red-overlay px-2 py-1 text-[9px] uppercase tracking-wider text-red-light" : "border-2 border-primary-dark bg-black px-2 py-1 text-[9px] uppercase tracking-wider text-primary-light"}>{evidence.status}</strong>
+                        <strong className={evidence.status === "Ativa" ? "border-2 border-green bg-green-overlay px-2 py-1 text-[9px] uppercase tracking-wider text-green-light" : evidence.status === "Invalidada" ? "border-2 border-red bg-red-overlay px-2 py-1 text-[9px] uppercase tracking-wider text-red-light" : "border-2 border-primary-dark bg-black px-2 py-1 text-[9px] uppercase tracking-wider text-primary-light"}>{evidence.status}</strong>
                         <ChevronIcon className="h-4 w-4 text-primary transition group-hover:text-primary-light" />
                     </span>
                 </Button>

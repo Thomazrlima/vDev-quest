@@ -1,6 +1,6 @@
 import type { BodyType, ManaSeedAppearance, ManaSeedColors } from "@/types/character";
 
-export type RankingBadgeType = "champion" | "guardian" | "arcane" | "streak";
+export type RankingBadgeType = "champion" | "guardian" | "arcane" | "streak" | { label: string; imagePath: string };
 
 type RankingPlayer = {
     name: string;

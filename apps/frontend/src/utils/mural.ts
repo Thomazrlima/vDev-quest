@@ -4,10 +4,7 @@ import type { EvidenceInput, FeedEntry, FeedFilters, MuralFilter, MuralMission, 
 export const URGENT_THRESHOLD_IN_DAYS = 3;
 
 /** Teto do anexo, o mesmo que a BE-06 aceitará no multipart. */
-export const MAX_EVIDENCE_SIZE_IN_MB = 10;
-
-/** A largura da miniatura guardada: o bastante para o feed e leve o suficiente para o localStorage. */
-const PREVIEW_SIZE_IN_PX = 480;
+export const MAX_EVIDENCE_SIZE_IN_MB = 3;
 
 /** Da entrega mais recente para a mais antiga: é assim que o histórico é lido na tela. */
 export function byNewest(submissions: MuralSubmission[]) {
@@ -15,37 +12,27 @@ export function byNewest(submissions: MuralSubmission[]) {
 }
 
 export function pendingSubmission(mission: MuralMission) {
-    return mission.submissions.find((submission) => submission.status === "pendente") ?? null;
+    return mission.state === "aguardando" ? mission.submissions.find((submission) => submission.status === "ativa") ?? null : null;
 }
 
 export function approvedSubmission(mission: MuralMission) {
-    return mission.submissions.find((submission) => submission.status === "aprovada") ?? null;
+    return mission.state === "concluidas" ? mission.submissions.find((submission) => submission.status === "ativa") ?? null : null;
 }
 
-/**
- * A recusa só vira alerta quando é a última palavra do gestor. Se depois dela veio outra
- * entrega, ela virou histórico e fica na tabela de submissões, não no topo da tela.
- */
+/** Destaca a última invalidação no histórico da missão. */
 export function openRefusal(mission: MuralMission) {
     const [latest] = mission.submissions;
-    return latest?.status === "recusada" ? latest : null;
+    return latest?.status === "invalidada" ? latest : null;
 }
 
-/**
- * A aba do mural sai das submissões: aprovada encerra a missão, pendente a deixa em análise e
- * uma recusa aberta ganha sua própria seção para deixar claro que ela pede reenvio.
- */
+/** A API calcula o estado atual de cada missão. */
 export function muralStateOf(mission: MuralMission): MuralFilter {
-    if (approvedSubmission(mission)) return "concluidas";
-    if (pendingSubmission(mission)) return "aguardando";
-    if (openRefusal(mission)) return "recusadas";
-    return "disponiveis";
+    return mission.state;
 }
 
-/** Uma entrega por vez: enquanto o gestor não responde, ou depois que aprovou, o formulário sai. */
+/** A API informa se existe uma próxima fase ou nova ocorrência disponível. */
 export function acceptsEvidence(mission: MuralMission) {
-    const state = muralStateOf(mission);
-    return state === "disponiveis" || state === "recusadas";
+    return mission.canSubmit;
 }
 
 /** O feed do perfil é o histórico inteiro do colaborador: toda entrega, da mais nova para a mais antiga. */
@@ -68,11 +55,6 @@ export function feedMissions(entries: FeedEntry[]) {
     return [...missions.values()].sort((a, b) => a.title.localeCompare(b.title, "pt-BR"));
 }
 
-/** No feed a foto é o post; as outras evidências viram um cartão com o que foi escrito ou anexado. */
-export function isPhotoSubmission(submission: MuralSubmission) {
-    return submission.kind === "file" && Boolean(submission.preview);
-}
-
 export function deadlineLabel(remainingDays: number) {
     if (remainingDays < 0) return "Prazo encerrado";
     if (remainingDays === 0) return "Encerra hoje";
@@ -80,7 +62,7 @@ export function deadlineLabel(remainingDays: number) {
     return `Encerra em ${remainingDays} dias`;
 }
 
-/** Com a entrega em análise ou aprovada o prazo é só histórico: não há o que correr atrás. */
+/** O prazo só é urgente quando ainda há uma ação disponível. */
 export function isDeadlineUrgent(state: MuralFilter, remainingDays: number) {
     return (state === "disponiveis" || state === "recusadas") && remainingDays <= URGENT_THRESHOLD_IN_DAYS;
 }
@@ -117,32 +99,5 @@ export function isEvidenceLink(value: string) {
         return protocol === "http:" || protocol === "https:";
     } catch {
         return false;
-    }
-}
-
-/**
- * A foto entregue só existe no navegador de quem enviou, e o arquivo inteiro não cabe no
- * localStorage. Guardar uma miniatura reduzida deixa a entrega aparecer no feed do perfil
- * depois de recarregar a página, sem estourar a cota.
- */
-export async function createEvidencePreview(file: File): Promise<string | null> {
-    if (!file.type.startsWith("image/")) return null;
-
-    try {
-        const bitmap = await createImageBitmap(file);
-        const scale = Math.min(1, PREVIEW_SIZE_IN_PX / Math.max(bitmap.width, bitmap.height));
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.round(bitmap.width * scale);
-        canvas.height = Math.round(bitmap.height * scale);
-
-        const context = canvas.getContext("2d");
-        if (!context) return null;
-
-        context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-        bitmap.close();
-        return canvas.toDataURL("image/jpeg", 0.72);
-    } catch {
-        // Sem miniatura a entrega continua valendo: o feed mostra o cartão do anexo no lugar da foto.
-        return null;
     }
 }

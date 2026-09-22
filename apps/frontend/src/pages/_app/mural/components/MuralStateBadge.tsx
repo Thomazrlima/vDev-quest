@@ -5,8 +5,8 @@ import type { MuralFilter } from "@/types/mission";
 /** O estado da missão sai das submissões; o selo só o traduz para quem está lendo o mural. */
 const states = {
     disponiveis: { label: "Disponível", Icon: SparkIcon, tone: "primary" },
-    aguardando: { label: "Em análise", Icon: PendingIcon, tone: "muted" },
-    recusadas: { label: "Recusada", Icon: AlertIcon, tone: "danger" },
+    aguardando: { label: "Em andamento", Icon: PendingIcon, tone: "muted" },
+    recusadas: { label: "Histórico", Icon: AlertIcon, tone: "danger" },
     concluidas: { label: "Concluída", Icon: DoneIcon, tone: "success" },
 } as const satisfies Record<MuralFilter, { label: string; Icon: typeof SparkIcon; tone: BadgeTone }>;
 

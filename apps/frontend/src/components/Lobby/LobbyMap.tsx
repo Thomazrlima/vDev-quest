@@ -64,7 +64,7 @@ function initialSpawn() {
 
 /** `onReady` avisa quando a arte do mapa e o avatar terminaram de carregar (ou falharam),
  *  para quem estiver segurando a tela de abertura poder sair da frente. */
-export function LobbyMap({ onReady }: { onReady?: () => void }) {
+export function LobbyMap({ onReady, isManager = false }: { onReady?: () => void; isManager?: boolean }) {
     const router = useRouter();
     const navigate = useNavigate();
     const [spawn] = useState(initialSpawn);
@@ -77,7 +77,7 @@ export function LobbyMap({ onReady }: { onReady?: () => void }) {
 
     // Mesma ficha da oficina, cor e corpo incluídos: o herói do vilarejo é o que foi montado lá.
     const character = useStoredCharacter();
-    const avatarLayers = useMemo(() => getManaSeedLayers(character.appearance, character.bodyType, character.colors), [character]);
+    const avatarLayers = useMemo(() => getManaSeedLayers(character.appearance, character.bodyType, character.colors), [character.appearance, character.bodyType, character.colors]);
     const spritesReady = useSpritesReady(avatarLayers);
     const [mapArtReady, setMapArtReady] = useState(false);
     const handleMapArt = useCallback(() => setMapArtReady(true), []);
@@ -168,9 +168,10 @@ export function LobbyMap({ onReady }: { onReady?: () => void }) {
             pressedKeysRef.current.clear();
             rememberLobbyExit(href);
             setTransitionHref(href);
-            transitionTimerRef.current = window.setTimeout(() => void navigate({ to: href }), TRANSITION_MS);
+            const target = href === "/missions" && !isManager ? "/mural" : href;
+            transitionTimerRef.current = window.setTimeout(() => void navigate({ to: target }), TRANSITION_MS);
         },
-        [navigate],
+        [navigate, isManager],
     );
 
     /** Ponto da tela para o espaço nativo da arte, descontando a câmera. */
@@ -454,7 +455,7 @@ export function LobbyMap({ onReady }: { onReady?: () => void }) {
                     const near = activeHref === destination.href;
                     return (
                         <div className={`lobby__marker ${near ? "lobby__marker--near" : ""}`} key={destination.href} style={{ left: `${destination.arrival.x * LOBBY_MAP.zoom}px`, top: `${destination.arrival.y * LOBBY_MAP.zoom}px` }}>
-                            <button aria-label={`Entrar em ${destination.label}`} className="lobby__sign" onClick={() => enterDestination(destination.href)} type="button">
+                            <button aria-label={`Entrar em ${destination.href === "/missions" && !isManager ? "Mural de missões" : destination.label}`} className="lobby__sign" onClick={() => enterDestination(destination.href)} type="button">
                                 <Icon className="lobby__sign-icon" />
                                 <span className="lobby__sign-label">{destination.sign}</span>
                             </button>

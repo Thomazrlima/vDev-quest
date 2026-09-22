@@ -13,7 +13,7 @@ export function ModerationFilters({ collaborators, missions, collaboratorQuery, 
 
     return (
         <div className="border-b-2 border-primary-dark bg-black p-5 sm:px-7">
-            <Eyebrow>R1-02 · Filtros da fila</Eyebrow>
+            <Eyebrow>Filtros da consulta</Eyebrow>
             <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-end">
                 <Input label="Pesquisar colaborador" list="moderation-collaborators" value={collaboratorQuery} onChange={(event) => onCollaboratorChange(event.target.value)} placeholder="Digite ou selecione um colaborador">
                     <datalist id="moderation-collaborators">

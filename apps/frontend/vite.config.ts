@@ -5,6 +5,11 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
+    server: {
+        proxy: {
+            "/api": { target: "http://localhost:8080", changeOrigin: true },
+        },
+    },
     resolve: {
         alias: {
             "@": fileURLToPath(new URL("./src", import.meta.url)),

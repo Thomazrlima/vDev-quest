@@ -16,6 +16,8 @@ import java.time.Clock
 import java.time.LocalDate
 import java.util.UUID
 
+data class SubmissionOutcome(val result: SubmitResult, val consumedFile: Boolean)
+
 @Service
 class SubmissionService(
     private val contexts: UserContextService,
@@ -43,10 +45,10 @@ class SubmissionService(
         occurrenceDate: LocalDate?,
         payload: EvidencePayload,
         idempotencyKey: UUID,
-    ): SubmitResult {
+    ): SubmissionOutcome {
         val actor = contexts.establish(user)
-        val fingerprint = listOf(missionId, submissionId, occurrenceDate, payload.value, payload.file?.objectKey).joinToString("|")
-        idempotency.existing(actor.email, idempotencyKey, fingerprint, SubmitResult::class.java)?.let { return it }
+        val fingerprint = listOf(missionId, submissionId, occurrenceDate, payload.value, payload.file?.sha256, payload.file?.originalFileName, payload.file?.mimeType).joinToString("|")
+        idempotency.existing(actor.email, idempotencyKey, fingerprint, SubmitResult::class.java)?.let { return SubmissionOutcome(it, false) }
 
         val mission = missions.find(missionId, lock = true) ?: throw NotFoundException("Missão não encontrada.")
         validateAvailability(mission, occurrenceDate)
@@ -77,7 +79,7 @@ class SubmissionService(
             submissions.userXp(actor.email),
         )
         idempotency.finish(actor.email, idempotencyKey, result)
-        return result
+        return SubmissionOutcome(result, true)
     }
 
     @Transactional

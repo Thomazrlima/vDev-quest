@@ -4,9 +4,9 @@ import { SUBMISSION_STATUS_LABELS, type SubmissionStatus } from "@/types/mission
 
 /** O veredito de uma entrega: é a submissão que é aprovada ou recusada, não a missão. */
 const statuses = {
-    pendente: { Icon: PendingIcon, tone: "muted" },
-    aprovada: { Icon: DoneIcon, tone: "success" },
-    recusada: { Icon: AlertIcon, tone: "danger" },
+    ativa: { Icon: DoneIcon, tone: "success" },
+    cancelada: { Icon: PendingIcon, tone: "muted" },
+    invalidada: { Icon: AlertIcon, tone: "danger" },
 } as const satisfies Record<SubmissionStatus, { Icon: typeof DoneIcon; tone: BadgeTone }>;
 
 /** No mosaico do feed não cabe o rótulo: `compact` deixa só o símbolo, e o texto segue para quem lê a tela. */

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { EvidenceIcon, ScrollIcon } from "@/components/icons";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { HALL_PANEL } from "@/components/ui/StoneWall";
 import { cn } from "@/lib/tailwind";
 import { renderTextWithNumericFont } from "@/lib/typography";
@@ -12,7 +13,7 @@ import { formatDate } from "@/utils/date";
 const COLUMNS = "md:grid-cols-[minmax(120px,.55fr)_minmax(0,1.75fr)_minmax(110px,auto)]";
 
 /** O histórico de entregas da missão: cada linha é uma submissão, com o veredito que ela recebeu. */
-export function SubmissionsTable({ mission, action }: { mission: MuralMission; action?: ReactNode }) {
+export function SubmissionsTable({ mission, action, onCancelSubmission }: { mission: MuralMission; action?: ReactNode; onCancelSubmission?: (id: string) => void }) {
     const total = mission.submissions.length;
 
     return (
@@ -55,14 +56,27 @@ export function SubmissionsTable({ mission, action }: { mission: MuralMission; a
                             </div>
 
                             <div className="mt-3 min-w-0 md:mt-0">
-                                <div className="flex items-start gap-2.5">
-                                    <EvidenceIcon type={mission.evidenceType} aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                                    <EvidenceValue submission={submission} className="min-w-0 flex-1" />
-                                </div>
+                                {(submission.evidences?.length ?? 0) > 1 ? submission.evidences?.map((evidence) => (
+                                    <div key={evidence.phaseNumber} className="mb-3 last:mb-0">
+                                        <span className="mb-1 block text-[.65rem] font-black uppercase tracking-[.1em] text-primary-light">Fase {evidence.phaseNumber}</span>
+                                        <div className="flex items-start gap-2.5">
+                                            <EvidenceIcon type={mission.evidenceType} aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                            <EvidenceValue submission={{ ...submission, ...evidence, phase: evidence.phaseNumber, downloadPhase: evidence.phaseNumber }} className="min-w-0 flex-1" />
+                                        </div>
+                                    </div>
+                                )) : (
+                                    <div className="flex items-start gap-2.5">
+                                        <EvidenceIcon type={mission.evidenceType} aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                        <EvidenceValue submission={submission} className="min-w-0 flex-1" />
+                                    </div>
+                                )}
+                                {submission.status === "ativa" && onCancelSubmission ? (
+                                    <Button type="button" variant="ghost" onClick={() => onCancelSubmission(submission.id)} className="mt-2 p-0 text-[10px] text-red-light">Cancelar submissão</Button>
+                                ) : null}
 
                                 {submission.justification ? (
                                     <div className="mt-3 border-l-4 border-red bg-red-overlay px-3 py-2">
-                                        <p className="text-[.6rem] font-black uppercase tracking-[.1em] text-red-light">Justificativa do gestor</p>
+                                        <p className="text-[.6rem] font-black uppercase tracking-[.1em] text-red-light">Justificativa da invalidação</p>
                                         <p className="mt-1 text-xs leading-relaxed text-white-soft">{renderTextWithNumericFont(submission.justification)}</p>
                                     </div>
                                 ) : null}

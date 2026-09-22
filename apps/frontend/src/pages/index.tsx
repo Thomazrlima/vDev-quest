@@ -10,6 +10,8 @@ import { LOBBY_DESTINATIONS } from "@/mocks/data/lobby-map";
 import { readNavigationMode } from "@/utils/navigation-preference";
 import { useCoarsePointer } from "@/utils/use-coarse-pointer";
 import { useStoredCharacter } from "@/utils/use-stored-character";
+import { useQuery } from "@tanstack/react-query";
+import { profileService } from "@/api/profile";
 
 /** Tempo do fade da abertura: precisa bater com `quest-loader-out` no CSS. */
 const BOOT_FADE_MS = 260;
@@ -35,7 +37,10 @@ function RootPage() {
 }
 
 function LobbyPage() {
-    const { name } = useStoredCharacter();
+    const character = useStoredCharacter();
+    const { name } = character;
+    const { data: profile, isPending: profilePending, error: profileError } = useQuery({ queryKey: ["profile", "me"], queryFn: profileService.me });
+    const isManager = profile?.role === "manager";
     const [ready, setReady] = useState(false);
     const [booting, setBooting] = useState(true);
     const coarsePointer = useCoarsePointer();
@@ -49,9 +54,12 @@ function LobbyPage() {
         return () => window.clearTimeout(timer);
     }, [ready]);
 
+    if (profileError || character.error) return <main role="alert" className="min-h-screen bg-black p-8 text-sm text-red-light">{profileError?.message ?? character.error?.message}</main>;
+    if (profilePending || !character.ready) return <QuestLoader fullscreen hint="Abrindo o portal" label="Carregando sua jornada..." />;
+
     return (
         <div className="lobby">
-            <LobbyMap onReady={handleReady} />
+            <LobbyMap onReady={handleReady} isManager={isManager} />
 
             {booting ? <QuestLoader fullscreen hint="Desenhando o vilarejo" label="Preparando a jornada..." leaving={ready} /> : null}
 
@@ -76,8 +84,8 @@ function LobbyPage() {
             {/* Rotas reais: leitores de tela e toque não dependem do teclado. */}
             <nav className="lobby__routes" aria-label="Destinos do vilarejo">
                 {LOBBY_DESTINATIONS.map((destination) => (
-                    <Link className="lobby__route" key={destination.href} to={destination.href}>
-                        {destination.label}
+                    <Link className="lobby__route" key={destination.href} to={destination.href === "/missions" && !isManager ? "/mural" : destination.href}>
+                        {destination.href === "/missions" && !isManager ? "Mural de missões" : destination.label}
                     </Link>
                 ))}
             </nav>

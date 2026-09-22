@@ -6,10 +6,10 @@ import type { MuralFilter } from "@/types/mission";
 
 /** Cada aba vazia fala do próprio estado — um texto genérico não diria o que fazer a seguir. */
 const emptyByFilter = {
-    disponiveis: { Icon: ScrollIcon, title: "Nenhuma missão disponível para esta temporada ainda!", hint: "Assim que a guilda publicar novos desafios, eles aparecem aqui." },
-    aguardando: { Icon: PendingIcon, title: "Nenhuma entrega aguardando aprovação", hint: "Envie a evidência de uma missão disponível para acompanhar a moderação por aqui." },
-    recusadas: { Icon: AlertIcon, title: "Nenhuma missão recusada", hint: "Quando uma entrega precisar de ajuste, ela aparecerá aqui para você reenviar." },
-    concluidas: { Icon: DoneIcon, title: "Você ainda não concluiu missões nesta temporada", hint: "Complete um desafio disponível para conquistar sua primeira EXP da temporada." },
+    disponiveis: { Icon: ScrollIcon, title: "Nenhuma missão disponível agora", hint: "Assim que a guilda criar novos desafios, eles aparecem aqui." },
+    aguardando: { Icon: PendingIcon, title: "Nenhuma missão em andamento", hint: "Missões com mais de uma fase aparecem aqui após a primeira entrega." },
+    recusadas: { Icon: AlertIcon, title: "Nenhum registro de cancelamento ou invalidação", hint: "Seu histórico de revisões aparecerá aqui." },
+    concluidas: { Icon: DoneIcon, title: "Você ainda não concluiu missões", hint: "Complete um desafio para conquistar sua primeira EXP." },
 } as const;
 
 export function MuralEmptyState({ filter }: { filter: MuralFilter }) {

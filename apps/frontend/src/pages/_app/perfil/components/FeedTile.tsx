@@ -1,10 +1,10 @@
 import { EvidenceIcon } from "@/components/icons";
+import { useEvidencePreview } from "@/api/useEvidencePreview";
 import { SubmissionStatusBadge } from "@/components/Mission/SubmissionStatusBadge";
 import { cn } from "@/lib/tailwind";
 import { renderTextWithNumericFont } from "@/lib/typography";
 import { SUBMISSION_STATUS_LABELS, type FeedEntry } from "@/types/mission";
 import { formatDate } from "@/utils/date";
-import { isPhotoSubmission } from "@/utils/mural";
 
 /**
  * Um quadrado do mosaico: a foto entregue quando existe, o conteúdo da evidência quando não.
@@ -12,7 +12,8 @@ import { isPhotoSubmission } from "@/utils/mural";
  */
 export function FeedTile({ entry, onOpen }: { entry: FeedEntry; onOpen: () => void }) {
     const { mission, submission } = entry;
-    const photo = isPhotoSubmission(submission);
+    const preview = useEvidencePreview(entry);
+    const photo = Boolean(preview);
 
     return (
         <button
@@ -21,7 +22,7 @@ export function FeedTile({ entry, onOpen }: { entry: FeedEntry; onOpen: () => vo
             aria-label={`Abrir a entrega de ${mission.title}, enviada em ${formatDate(submission.submittedAt)} e ${SUBMISSION_STATUS_LABELS[submission.status].toLocaleLowerCase("pt-BR")}`}
             className={cn("group relative aspect-square cursor-pointer overflow-hidden border-2 border-primary-dark text-left transition duration-200 hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-light", photo ? "bg-black" : "bg-card")}
         >
-            {photo ? <img src={submission.preview} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105" /> : null}
+            {photo ? <img src={preview} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105" /> : null}
 
             <SubmissionStatusBadge status={submission.status} compact className="absolute right-1.5 top-1.5 z-10 bg-black-overlay" />
 

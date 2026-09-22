@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -11,7 +11,9 @@ import { BLEED_UNDER_RETURN_LINK, HALL_PANEL, StoneWall } from "@/components/ui/
 import { TextArea } from "@/components/ui/TextArea";
 import { ChevronIcon, ScrollIcon, SparkIcon } from "@/components/icons";
 import { cn } from "@/lib/tailwind";
-import { missionService } from "@/mocks/services/missions";
+import { missionService } from "@/api/missions";
+import { mutationKey } from "@/api/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { EVIDENCE_TYPES, RECURRENCE_TYPE_LABELS, WEEKDAYS, WEEKDAY_LABELS, type Mission, type MissionFormData, type Weekday } from "@/types/mission";
 
 type FieldName = keyof MissionFormData;
@@ -47,46 +49,41 @@ function validate(form: MissionFormData): FieldErrors {
 
 export function MissionForm({ missionId }: { missionId?: string }) {
     const navigate = useNavigate();
-    const [form, setForm] = useState<MissionFormData>(emptyForm);
-    const [mission, setMission] = useState<Mission | null>(null);
-    const [loading, setLoading] = useState(Boolean(missionId));
+    const { data: mission, isPending, error } = useQuery({ queryKey: ["missions", missionId], queryFn: () => missionService.getById(missionId!), enabled: Boolean(missionId) });
+    const title = missionId ? "Editar missão" : "Nova missão";
+
+    if (missionId && isPending) return <MissionShell title={title}><Card className={HALL_PANEL}><Loading message="Carregando pergaminho da missão..." /></Card></MissionShell>;
+    if (missionId && (error || !mission)) return <MissionShell title={title}><Card className={cn("p-8 text-center", HALL_PANEL)}><p role={error ? "alert" : undefined} className="text-sm text-primary-light">{error?.message ?? "A missão solicitada não foi encontrada."}</p><Button onClick={() => navigate({ to: "/missions" })} className="mt-5 px-5 text-[10px]">Voltar para missões</Button></Card></MissionShell>;
+    return <MissionFormEditor key={missionId ?? "new"} missionId={missionId} mission={mission ?? null} />;
+}
+
+function MissionFormEditor({ missionId, mission }: { missionId?: string; mission: Mission | null }) {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const createKey = useRef(mutationKey());
+    const [form, setForm] = useState<MissionFormData>(() => mission ? {
+        title: mission.title, description: mission.description, evidenceType: mission.evidenceType,
+        xp: mission.xp, startDate: mission.startDate, endDate: mission.endDate,
+        recurrenceType: mission.recurrenceType, recurrenceDays: mission.recurrenceDays,
+    } : emptyForm);
     const [saving, setSaving] = useState(false);
     const [errors, setErrors] = useState<FieldErrors>({});
     const [notice, setNotice] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!missionId) return;
-        missionService.getById(missionId).then((data) => {
-            if (!data) {
-                setNotice("A missão solicitada não foi encontrada.");
-            } else {
-                setMission(data);
-                setForm({
-                    title: data.title,
-                    description: data.description,
-                    evidenceType: data.evidenceType,
-                    xp: data.xp,
-                    startDate: data.startDate,
-                    endDate: data.endDate,
-                    recurrenceType: data.recurrenceType ?? "none",
-                    recurrenceDays: data.recurrenceDays ?? [],
-                });
-            }
-            setLoading(false);
-        });
-    }, [missionId]);
-
-    const readOnly = Boolean(mission?.hasProgress);
-    const valid = useMemo(() => Object.keys(validate(form)).length === 0, [form]);
+    const hasMultiplePhases = (mission?.phases?.length ?? 0) > 1;
+    const readOnly = Boolean(mission?.hasProgress || mission?.status === "Invalidada" || hasMultiplePhases);
+    const valid = Object.keys(validate(form)).length === 0;
     const title = missionId ? "Editar missão" : "Nova missão";
 
     function updateField(field: Exclude<FieldName, "recurrenceDays">, value: string) {
+        createKey.current = mutationKey();
         setForm((current) => ({ ...current, [field]: value }));
         setErrors((current) => ({ ...current, [field]: undefined }));
         setNotice(null);
     }
 
     function toggleWeekday(day: Weekday) {
+        createKey.current = mutationKey();
         setForm((current) => ({
             ...current,
             recurrenceDays: current.recurrenceDays.includes(day) ? current.recurrenceDays.filter((item) => item !== day) : [...current.recurrenceDays, day],
@@ -104,37 +101,16 @@ export function MissionForm({ missionId }: { missionId?: string }) {
         setSaving(true);
         setNotice(null);
         try {
-            if (missionId) await missionService.update(missionId, form);
-            else await missionService.create(form);
+            if (missionId) await missionService.update(missionId, form, mission ?? undefined);
+            else await missionService.create(form, createKey.current);
+            await queryClient.invalidateQueries({ queryKey: ["missions"] });
+            await queryClient.invalidateQueries({ queryKey: ["mural"] });
             navigate({ to: "/missions", search: { published: "1" } });
         } catch (error) {
             setNotice(error instanceof Error ? error.message : "Não foi possível salvar a missão. Tente novamente.");
         } finally {
             setSaving(false);
         }
-    }
-
-    if (loading) {
-        return (
-            <MissionShell title={title}>
-                <Card className={HALL_PANEL}>
-                    <Loading message="Carregando pergaminho da missão..." />
-                </Card>
-            </MissionShell>
-        );
-    }
-
-    if (missionId && !mission) {
-        return (
-            <MissionShell title={title}>
-                <Card className={cn("p-8 text-center", HALL_PANEL)}>
-                    <p className="text-sm text-primary-light">{notice}</p>
-                    <Button onClick={() => navigate({ to: "/missions" })} className="mt-5 px-5 text-[10px]">
-                        Voltar para missões
-                    </Button>
-                </Card>
-            </MissionShell>
-        );
     }
 
     return (
@@ -146,7 +122,7 @@ export function MissionForm({ missionId }: { missionId?: string }) {
                             <span className="grid h-8 w-8 shrink-0 place-items-center border-2 border-(--color-orange) bg-orange-dark font-black">!</span>
                             <div>
                                 <h2 id="locked-mission-title" className="text-sm font-black uppercase tracking-wider">Edição bloqueada</h2>
-                                <p className="mt-2 text-xs leading-relaxed">Não é possível editar missões que já possuem progresso. Esta missão já recebeu evidências ou EXP.</p>
+                                <p className="mt-2 text-xs leading-relaxed">{hasMultiplePhases ? "Esta missão tem várias fases, que este formulário não permite editar com segurança." : "Esta missão já recebeu evidências ou foi invalidada; suas regras não podem ser alteradas aqui."}</p>
                             </div>
                         </div>
                         <div className="flex justify-end p-5">
@@ -202,12 +178,12 @@ export function MissionForm({ missionId }: { missionId?: string }) {
                 </fieldset>
 
                 <div className="flex flex-col-reverse gap-3 border-t-2 border-primary-dark bg-black px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
-                    <p className="text-[10px] leading-relaxed text-white-muted">Ao publicar, a missão ficará disponível para os colaboradores.</p>
+                    <p className="text-[10px] leading-relaxed text-white-muted">Ao criar, a missão ficará disponível para os colaboradores.</p>
                     <div className="flex gap-3">
                         <Button type="button" variant="secondary" onClick={() => navigate({ to: "/missions" })} className="border-primary-dark px-4 text-[10px] text-primary-light">
                             Cancelar
                         </Button>
-                        <Button type="submit" inactive={!valid || saving || readOnly} className="min-w-32 px-4 text-[10px] shadow-[4px_4px_0_var(--color-primary-dark)]" title={!valid ? "Preencha os campos obrigatórios para publicar" : undefined}>
+                        <Button type="submit" inactive={!valid || saving || readOnly} className="min-w-32 px-4 text-[10px] shadow-[4px_4px_0_var(--color-primary-dark)]" title={!valid ? "Preencha os campos obrigatórios para criar" : undefined}>
                             {saving ? (
                                 <>
                                     <SparkIcon className="h-4 w-4 animate-spin" /> Salvando
@@ -215,7 +191,7 @@ export function MissionForm({ missionId }: { missionId?: string }) {
                             ) : missionId ? (
                                 "Salvar alterações"
                             ) : (
-                                "Publicar"
+                                "Criar missão"
                             )}
                         </Button>
                     </div>

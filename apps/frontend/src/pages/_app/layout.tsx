@@ -1,4 +1,6 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { profileService } from "@/api/profile";
 import { LobbyReturnLink } from "@/components/Lobby/LobbyReturnLink";
 import { NavBar } from "@/components/NavBar";
 import { useNavigationMode } from "@/utils/use-navigation-mode";
@@ -14,14 +16,19 @@ function AppLayout() {
     const [navigationMode] = useNavigationMode();
     const usingNavBar = navigationMode === "navbar";
     const { ready, accessToken } = useAuth();
+    const pathname = useRouterState({ select: (state) => state.location.pathname });
+    const { data: profile, isPending, error } = useQuery({ queryKey: ["profile", "me"], queryFn: profileService.me, enabled: ready && Boolean(accessToken) });
 
     if (!ready) return <QuestLoader fullscreen hint="Abrindo o portal" label="Conferindo sua jornada..." />;
     if (!accessToken) return <LoginScreen />;
+    if (isPending) return <QuestLoader fullscreen hint="Abrindo o portal" label="Carregando sua jornada..." />;
+    if (error) return <div role="alert" className="min-h-screen bg-black p-8 text-sm text-red-light">{error.message}</div>;
+    if (profile?.role !== "manager" && (pathname.startsWith("/missions") || pathname.startsWith("/moderation"))) return <div role="alert" className="min-h-screen bg-black p-8 text-sm text-red-light">Somente gestores podem acessar esta área.</div>;
 
     return (
         <div className="min-h-screen bg-[linear-gradient(var(--color-black-overlay),var(--color-black-overlay)),url('/images/backgrounds/quest-landscape.png')] bg-cover bg-fixed bg-center">
             {/* Uma coisa ou outra: com a barra ligada, o vilarejo deixa de ser o caminho de volta. */}
-            {usingNavBar ? <NavBar /> : <LobbyReturnLink />}
+            {usingNavBar ? <NavBar isManager={profile?.role === "manager"} /> : <LobbyReturnLink />}
             {/*
              A barra é opaca e cobre exatamente o que reserva — cabeçalho de 5.5rem no desktop, abas
              de 3.5rem embaixo no celular —, então nada da paisagem aparece atrás dela. O atalho de

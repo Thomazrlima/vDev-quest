@@ -10,9 +10,15 @@ import { isEvidenceLink } from "@/utils/mural";
 
 /** Cada tipo de evidência pede um campo diferente, com o texto que explica o que se espera. */
 const fieldCopy = {
-    link: { label: "Endereço da evidência", placeholder: "https://...", description: "Cole um endereço que o gestor consiga abrir, como o do pull request ou do documento." },
-    text: { label: "Relato da entrega", placeholder: "Conte o que foi feito, onde está e quem participou...", description: "Descreva a entrega com detalhes suficientes para o gestor avaliar sem precisar perguntar." },
+    link: { label: "Endereço da evidência", placeholder: "https://...", description: "Cole um endereço acessível, como o do pull request ou do documento." },
+    text: { label: "Relato da entrega", placeholder: "Conte o que foi feito, onde está e quem participou...", description: "Descreva a entrega com detalhes suficientes para registrá-la na guilda." },
 } as const;
+
+function dateInSaoPaulo(): string {
+    const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date());
+    const part = (type: string) => parts.find((item) => item.type === type)?.value ?? "";
+    return `${part("year")}-${part("month")}-${part("day")}`;
+}
 
 type MissionEvidenceFormProps = {
     mission: MuralMission;
@@ -29,10 +35,14 @@ export function MissionEvidenceForm({ mission, submitting, submitError, onSubmit
     const [file, setFile] = useState<File | null>(null);
     const [value, setValue] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [occurrenceDate, setOccurrenceDate] = useState("");
+    const today = dateInSaoPaulo();
     // O botão só acende com a evidência em mãos, como pede o cenário 4 da FE-06.
-    const filled = input.kind === "file" ? Boolean(file) : Boolean(value.trim());
+    const filled = (input.kind === "file" ? Boolean(file) : Boolean(value.trim())) && (!mission.isCheckin || Boolean(occurrenceDate));
 
     function validate() {
+        if (mission.isCheckin && !occurrenceDate) return "Informe a data do check-in.";
+        if (mission.isCheckin && (occurrenceDate < `${today.slice(0, 7)}-01` || occurrenceDate > today)) return "Escolha uma data deste mês até hoje.";
         if (input.kind === "file") return file ? null : "Anexe o arquivo pedido por esta missão.";
         if (!value.trim()) return input.kind === "link" ? "Informe o endereço da evidência." : "Escreva o relato da entrega.";
         if (input.kind === "link" && !isEvidenceLink(value)) return "Informe um endereço completo, começando com http:// ou https://.";
@@ -52,6 +62,7 @@ export function MissionEvidenceForm({ mission, submitting, submitError, onSubmit
         evidence.append("kind", input.kind);
         if (input.kind === "file" && file) evidence.append("file", file);
         else evidence.append("value", value.trim());
+        if (mission.isCheckin && occurrenceDate) evidence.append("occurrenceDate", occurrenceDate);
 
         onSubmit(evidence);
     }
@@ -91,6 +102,7 @@ export function MissionEvidenceForm({ mission, submitting, submitError, onSubmit
                 ) : (
                     <TextArea label={fieldCopy.text.label} description={fieldCopy.text.description} error={error ?? undefined} value={value} onChange={(event) => updateValue(event.target.value)} placeholder={fieldCopy.text.placeholder} rows={6} required />
                 )}
+                {mission.isCheckin ? <Input label="Data do check-in" type="date" min={`${today.slice(0, 7)}-01`} max={today} value={occurrenceDate} onChange={(event) => { setOccurrenceDate(event.target.value); setError(null); }} error={error?.includes("data") ? error : undefined} required /> : null}
             </fieldset>
 
             <div className="flex flex-col-reverse gap-3 border-t-2 border-primary-dark bg-black px-5 py-4 sm:flex-row sm:items-center sm:justify-end sm:px-6">

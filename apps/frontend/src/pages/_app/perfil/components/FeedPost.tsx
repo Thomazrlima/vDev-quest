@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useEvidencePreview } from "@/api/useEvidencePreview";
 import { ChevronIcon, EvidenceIcon } from "@/components/icons";
 import { EvidenceValue } from "@/components/Mission/EvidenceValue";
 import { SubmissionStatusBadge } from "@/components/Mission/SubmissionStatusBadge";
@@ -7,18 +8,18 @@ import { Modal } from "@/components/ui/Modal";
 import { renderTextWithNumericFont } from "@/lib/typography";
 import type { FeedEntry } from "@/types/mission";
 import { formatDate } from "@/utils/date";
-import { isPhotoSubmission } from "@/utils/mural";
 
 /** A entrega aberta em tamanho de leitura: a evidência, o veredito que ela recebeu e o caminho de volta à missão. */
 export function FeedPost({ entry, onClose }: { entry: FeedEntry; onClose: () => void }) {
     const { mission, submission } = entry;
+    const preview = useEvidencePreview(entry);
 
     return (
         <Modal open title={mission.title} description={`${mission.evidenceType} · enviada em ${formatDate(submission.submittedAt, "full")}`} onClose={onClose} className="w-[min(680px,calc(100vw-2rem))]">
             <div className="grid gap-5 bg-black-overlay p-5 sm:p-6">
-                {isPhotoSubmission(submission) ? (
+                {preview ? (
                     <figure className="grid gap-2">
-                        <img src={submission.preview} alt={`Evidência enviada para a missão ${mission.title}`} className="max-h-[46vh] w-full border-2 border-primary-dark bg-(--color-black) object-contain" />
+                        <img src={preview} alt={`Evidência enviada para a missão ${mission.title}`} className="max-h-[46vh] w-full border-2 border-primary-dark bg-(--color-black) object-contain" />
                         <figcaption className="flex items-center gap-2 text-[.65rem] text-white-muted">
                             <EvidenceIcon type={mission.evidenceType} aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-primary" />
                             <span className="break-all">{submission.value}</span>

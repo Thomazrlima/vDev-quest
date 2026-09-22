@@ -38,13 +38,13 @@ export function RankingTable({ entries }: { entries: RankingEntry[] }) {
                             <article className={cn(rowClass, borderColor)} key={person.position}>
                                 <strong className={cn("text-center text-2xl text-primary-light max-[760px]:col-start-1 max-[760px]:row-span-2 max-[760px]:row-start-1 max-[760px]:grid max-[760px]:place-items-center max-[760px]:border-r max-[760px]:text-lg", borderColor)}>{renderTextWithNumericFont(String(person.position).padStart(2, "0"))}</strong>
                                 <div className="flex min-w-0 items-center gap-3.75 max-[760px]:col-start-2 max-[760px]:gap-2.5">
-                                    <ManaSeedAvatar size="md" alt={`Retrato de ${person.name}`} layers={getManaSeedLayers(person.appearance)} className={cn("bg-black max-[760px]:h-11.5 max-[760px]:w-11.5 max-[760px]:border-2", borderColor)} />
+                                    <ManaSeedAvatar size="md" alt={`Retrato de ${person.name}`} layers={getManaSeedLayers(person.appearance, person.bodyType, person.colors)} className={cn("bg-black max-[760px]:h-11.5 max-[760px]:w-11.5 max-[760px]:border-2", borderColor)} />
                                     <div className="min-w-0 flex-1">
                                         <div className="flex min-w-0 items-center gap-2.25 max-[760px]:flex-wrap max-[760px]:gap-x-1.5 max-[760px]:gap-y-1.25">
                                             <h3 className="min-w-0 overflow-hidden truncate text-[.98rem] font-black text-primary-light max-[760px]:text-[.9rem]">{person.name}</h3>
                                             <div className="flex shrink-0 items-center gap-1 max-[760px]:gap-0.75">
                                                 {person.badges.map((badge) => (
-                                                    <RankingBadge badge={badge} compact key={badge} />
+                                                    <RankingBadge badge={badge} compact key={typeof badge === "string" ? badge : badge.label} />
                                                 ))}
                                             </div>
                                         </div>

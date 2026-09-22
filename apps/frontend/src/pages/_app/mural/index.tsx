@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { BLEED_UNDER_RETURN_LINK, CLEAR_RETURN_LINK } from "@/components/ui/StoneWall";
 import { cn } from "@/lib/tailwind";
@@ -7,8 +7,8 @@ import { MuralEmptyState } from "./components/MuralEmptyState";
 import { MuralFilters } from "./components/MuralFilters";
 import { MuralMissionCard } from "./components/MuralMissionCard";
 import { MuralMissionSkeleton } from "./components/MuralMissionSkeleton";
-import { muralService } from "@/mocks/services/mural";
-import { MURAL_FILTERS, type MuralFilter, type MuralMission } from "@/types/mission";
+import { muralService } from "@/api/mural";
+import { MURAL_FILTERS, type MuralFilter } from "@/types/mission";
 
 const SKELETON_COUNT = 4;
 
@@ -30,36 +30,22 @@ function MuralPage() {
     const navigate = useNavigate();
     const { status } = useSearch({ from: "/_app/mural/" });
     const filter = parseFilter(status);
-    // Guardar de qual aba veio a resposta deixa "carregando" ser derivado: enquanto o que está
-    // em mãos não for da aba atual, o grid mostra o skeleton — e uma resposta atrasada da aba
-    // anterior nunca preenche a aba nova.
-    const [loaded, setLoaded] = useState<{ filter: MuralFilter; missions: MuralMission[] } | null>(null);
-    const loading = loaded?.filter !== filter;
-    const missions = loaded?.missions ?? [];
-
-    useEffect(() => {
-        let active = true;
-
-        muralService.list(filter).then((data) => {
-            if (active) setLoaded({ filter, missions: data });
-        });
-
-        return () => {
-            active = false;
-        };
-    }, [filter]);
+    const { data: all = [], isPending: loading, error } = useQuery({ queryKey: ["mural", "all"], queryFn: muralService.all });
+    const missions = all.filter((mission) => filter === "recusadas" ? mission.submissions.some((item) => item.status !== "ativa") : mission.state === filter);
 
     return (
         <main className={`flex min-h-screen flex-col overflow-x-hidden bg-(--color-black) ${BLEED_UNDER_RETURN_LINK}`}>
             {/* O mural tem tábua própria em vez da parede de pedra do Hall da Fama. */}
             <section className={cn("flex-1 bg-[linear-gradient(rgb(15_14_14/58%),rgb(15_14_14/58%)),url('/images/backgrounds/mural3.png')] bg-cover bg-fixed bg-center px-4 pb-9 sm:px-6 sm:pb-13", CLEAR_RETURN_LINK)}>
                 <div className="mx-auto w-[min(1180px,100%)]">
-                    <PageHeader eyebrow="Mural de missões · FE-05" title="Mural da temporada" description="Escolha seus desafios, acompanhe o que está em moderação e revise o que já conquistou." />
+                    <PageHeader eyebrow="Mural de missões" title="Mural da guilda" description="Escolha seus desafios, avance nas fases e acompanhe a EXP conquistada." />
                     <div className="mt-7">
                         <MuralFilters value={filter} onChange={(next) => navigate({ to: "/mural", search: { status: next } })} />
                     </div>
 
-                    {loading ? (
+                    {error ? (
+                        <p role="alert" className="mt-7 border-2 border-red bg-red-overlay p-5 text-sm text-red-light">{error.message}</p>
+                    ) : loading ? (
                         <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-3" role="status" aria-label="Carregando missões do mural">
                             {Array.from({ length: SKELETON_COUNT }, (_, index) => (
                                 <MuralMissionSkeleton key={index} />
