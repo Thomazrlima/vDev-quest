@@ -80,19 +80,4 @@ from (values
  ('headwear','14head-headwear','mushroom105','Cogumelo VI','fbas_14head_mushroom1_05.png',null,null,false,false)
 ) as catalog(slot, directory, code, label, file, shaped_file, under_file, hides_hair, hidden_by_hats);
 
-create or replace function private.ranking_profiles()
-returns table(name text, xp bigint, active_submissions bigint)
-language sql security definer set search_path = '' as $$
-  select u.name, u.xp, count(s.id) filter (where s.status = 'active')
-  from core.users u left join quests.submissions s on s.collaborator_email = u.email
-  group by u.email, u.name, u.xp
-  order by u.xp desc, count(s.id) filter (where s.status = 'active') desc, u.name asc;
-$$;
-
-revoke all on function private.ranking_profiles() from public;
-do $$ begin
-  if exists (select 1 from pg_roles where rolname = 'vdev_app') then
-    grant execute on function private.ranking_profiles() to vdev_app;
-    grant insert on gamification.badges, gamification.titles to vdev_app;
-  end if;
-end $$;
+grant insert on gamification.badges, gamification.titles to vdev_app;

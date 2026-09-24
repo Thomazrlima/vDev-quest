@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: vdev-quest-api
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/vdev_quest}
+    username: ${DATABASE_USERNAME:vdev_app}
+    password: ${DATABASE_PASSWORD:vdev_app}
+    hikari:
+      maximum-pool-size: ${DATABASE_POOL_SIZE:10}
+      connection-timeout: 3000
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    user: ${FLYWAY_USERNAME:postgres}
+    password: ${FLYWAY_PASSWORD:postgres}
+    schemas: core,quests,avatar,gamification,private
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 4MB
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8180/realms/vdev-quest}
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  error:
+    include-message: never
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}
+  clock-zone: America/Sao_Paulo
+  oidc:
+    issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8180/realms/vdev-quest}
+    jwk-set-uri: ${OIDC_JWK_SET_URI:http://localhost:8180/realms/vdev-quest/protocol/openid-connect/certs}
+  storage:
+    endpoint: ${S3_ENDPOINT:http://localhost:9000}
+    public-endpoint: ${S3_PUBLIC_ENDPOINT:http://localhost:9000}
+    region: ${S3_REGION:us-east-1}
+    bucket: ${S3_BUCKET:vdev-evidence}
+    access-key: ${S3_ACCESS_KEY:minioadmin}
+    secret-key: ${S3_SECRET_KEY:minioadmin}
+    presign-minutes: 5

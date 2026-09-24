@@ -8,6 +8,8 @@ type RankingPlayer = {
     level: number;
     badges: RankingBadgeType[];
     exp: string;
+    progress: number | null;
+    xpToNextLevel: number | null | undefined;
     appearance: ManaSeedAppearance;
     bodyType: BodyType;
     colors: ManaSeedColors;
@@ -19,5 +21,4 @@ export type RankingLeader = RankingPlayer & {
 
 export type RankingEntry = RankingPlayer & {
     position: number;
-    progress: number;
 };

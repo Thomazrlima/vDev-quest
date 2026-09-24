@@ -33,7 +33,7 @@ class UserRepository(private val jdbc: JdbcTemplate) {
     }
 
     fun updateName(email: String, name: String) {
-        jdbc.update("update core.users set name = ?, updated_at = current_timestamp where email = ?", name, email)
+        jdbc.update("update core.users set name = ? where email = ?", name, email)
     }
 
     fun levelFor(xp: Long): LevelRecord = jdbc.query(

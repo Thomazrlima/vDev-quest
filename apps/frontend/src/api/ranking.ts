@@ -21,16 +21,21 @@ export async function ranking(): Promise<{ leaders: RankingLeader[]; entries: Ra
             appearance[slot] = setting.code;
             colors[slot] = setting.colorIndex;
         }
+        const progress = typeof item.progress === "number" && Number.isFinite(item.progress) ? item.progress : null;
+        const xpToNextLevel = typeof item.xpToNextLevel === "number" && Number.isFinite(item.xpToNextLevel)
+            ? item.xpToNextLevel
+            : item.xpToNextLevel == null && progress !== null ? null : undefined;
         return {
             position: item.position, name: item.name, title: item.activeTitle ?? item.levelLabel,
             level: item.level, exp: new Intl.NumberFormat("pt-BR").format(item.xp),
+            progress, xpToNextLevel,
             badges: item.badges.map((badge) => ({ label: badge.label, imagePath: badge.imagePath ?? "" })),
             bodyType: item.avatar.bodyType, appearance, colors,
         };
     });
     return {
         leaders: people.filter((person) => person.position <= 3) as RankingLeader[],
-        entries: people.filter((person) => person.position > 3).map((person) => ({ ...person, progress: 100 })),
+        entries: people.filter((person) => person.position > 3),
         updatedAt: new Date().toISOString(),
     };
 }

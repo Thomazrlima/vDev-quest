@@ -32,7 +32,7 @@ class XpLedgerService(
             "insert into gamification.xp_awards(id, user_email, submission_id, phase_number, amount, movement_type) values (?, ?, ?, ?, ?, ?::gamification.xp_movement_type)",
             id, userEmail, submissionId, phase, amount, type.name,
         )
-        jdbc.update("update core.users set xp = xp + ?, updated_at = current_timestamp where email = ?", amount, userEmail)
+        jdbc.update("update core.users set xp = xp + ? where email = ?", amount, userEmail)
         return XpMovement(id, amount, type)
     }
 
@@ -59,7 +59,7 @@ class XpLedgerService(
                 "insert into gamification.xp_awards(id, user_email, submission_id, amount, movement_type, related_award_id) values (?, ?, ?, ?, ?::gamification.xp_movement_type, ?)",
                 ids.next(), award.userEmail, submissionId, -award.amount, reversalType.name, award.id,
             )
-            jdbc.update("update core.users set xp = xp - ?, updated_at = current_timestamp where email = ?", award.amount, award.userEmail)
+            jdbc.update("update core.users set xp = xp - ? where email = ?", award.amount, award.userEmail)
             reversed += award.amount
         }
         return reversed
@@ -74,7 +74,7 @@ class XpLedgerService(
             "insert into gamification.xp_awards(id, user_email, submission_id, amount, movement_type) values (?, ?, ?, ?, ?::gamification.xp_movement_type)",
             ids.next(), userEmail, submissionId, amount, type.name,
         )
-        jdbc.update("update core.users set xp = xp + ?, updated_at = current_timestamp where email = ?", amount, userEmail)
+        jdbc.update("update core.users set xp = xp + ? where email = ?", amount, userEmail)
     }
 
     fun reconciliationMismatches(): List<String> = jdbc.queryForList(

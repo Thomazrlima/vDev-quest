@@ -35,6 +35,51 @@
       "firstName": "Aventureiro",
       "lastName": "Local",
       "credentials": [{ "type": "password", "value": "vdev-local", "temporary": false }]
+    },
+    {
+      "username": "ana.silva@vdev.local",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "ana.silva@vdev.local",
+      "firstName": "Ana",
+      "lastName": "Silva",
+      "credentials": [{ "type": "password", "value": "vdev-local", "temporary": false }]
+    },
+    {
+      "username": "bruno.lima@vdev.local",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "bruno.lima@vdev.local",
+      "firstName": "Bruno",
+      "lastName": "Lima",
+      "credentials": [{ "type": "password", "value": "vdev-local", "temporary": false }]
+    },
+    {
+      "username": "carla.souza@vdev.local",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "carla.souza@vdev.local",
+      "firstName": "Carla",
+      "lastName": "Souza",
+      "credentials": [{ "type": "password", "value": "vdev-local", "temporary": false }]
+    },
+    {
+      "username": "diego.rocha@vdev.local",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "diego.rocha@vdev.local",
+      "firstName": "Diego",
+      "lastName": "Rocha",
+      "credentials": [{ "type": "password", "value": "vdev-local", "temporary": false }]
+    },
+    {
+      "username": "elisa.costa@vdev.local",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "elisa.costa@vdev.local",
+      "firstName": "Elisa",
+      "lastName": "Costa",
+      "credentials": [{ "type": "password", "value": "vdev-local", "temporary": false }]
     }
   ]
 }

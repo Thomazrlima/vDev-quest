@@ -32,6 +32,6 @@ export type Profile = {
 };
 export type RankingEntry = {
     position: number; name: string; xp: number; completedMissions: number; level: number;
-    levelLabel: string; activeTitle: string | null; badges: Profile["badges"];
+    levelLabel: string; progress?: number; xpToNextLevel?: number | null; activeTitle: string | null; badges: Profile["badges"];
     avatar: { bodyType: "hero" | "heroine"; skinColorIndex: number; slots: { slot: string; code: string | null; colorIndex: number }[] };
 };

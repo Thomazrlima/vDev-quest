@@ -57,7 +57,7 @@ class SubmissionRepository(private val jdbc: JdbcTemplate) {
     }
 
     fun advance(id: UUID, phase: Int) {
-        jdbc.update("update quests.submissions set current_phase = ?, updated_at = current_timestamp where id = ? and status = 'active'", phase, id)
+        jdbc.update("update quests.submissions set current_phase = ? where id = ? and status = 'active'", phase, id)
     }
 
     fun addEvidence(id: UUID, phase: Int, payload: EvidencePayload) {
@@ -74,8 +74,8 @@ class SubmissionRepository(private val jdbc: JdbcTemplate) {
         jdbc.update(
             """
             update quests.submissions
-            set status = ?::quests.submission_status, status_changed_at = current_timestamp, status_changed_by_email = ?,
-                status_change_source = ?::quests.submission_status_change_source, invalidation_justification = ?, updated_at = current_timestamp
+            set status = ?::quests.submission_status, status_changed_at = now(), status_changed_by_email = ?,
+                status_change_source = ?::quests.submission_status_change_source, invalidation_justification = ?
             where id = ? and status = 'active'
             """.trimIndent(),
             status.name, actorEmail, source, justification, id,

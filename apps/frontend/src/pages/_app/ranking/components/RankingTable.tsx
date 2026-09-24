@@ -50,9 +50,14 @@ export function RankingTable({ entries }: { entries: RankingEntry[] }) {
                                         </div>
                                         <p className="mt-1 overflow-hidden truncate text-[.65rem] font-black uppercase tracking-[.08em] text-primary max-[760px]:text-[.6rem]">{person.title}</p>
                                     </div>
-                                    <ExperienceProgress level={person.level} xp={person.exp} progress={person.progress} showLevelShadow={false} className="hidden shrink-0 max-[760px]:block" levelClassName="text-[.65rem]" levelValueClassName="text-[.96rem]" xpClassName="hidden" progressClassName="hidden" />
+                                    <ExperienceProgress level={person.level} xp={person.exp} progress={person.progress ?? 0} showProgress={person.progress !== null} showLevelShadow={false} className="hidden shrink-0 max-[760px]:block" levelClassName="text-[.65rem]" levelValueClassName="text-[.96rem]" xpClassName="hidden" progressClassName="hidden" />
                                 </div>
-                                <ExperienceProgress level={person.level} xp={person.exp} progress={person.progress} showLevelShadow={false} className={cn("max-[760px]:hidden", borderColor)} levelClassName="text-[.62rem]" levelValueClassName="text-[.98rem]" xpClassName="text-[.78rem]" progressClassName="mt-2.5 h-[15px]" />
+                                <div className="max-[760px]:hidden">
+                                    <ExperienceProgress level={person.level} xp={person.exp} progress={person.progress ?? 0} showProgress={person.progress !== null} showLevelShadow={false} className={borderColor} levelClassName="text-[.62rem]" levelValueClassName="text-[.98rem]" xpClassName="text-[.78rem]" progressClassName="mt-2.5 h-[15px]" />
+                                    <p className="mt-1 text-right text-[.6rem] font-black uppercase tracking-[.08em] text-primary-light">
+                                        {renderTextWithNumericFont(person.xpToNextLevel === undefined ? "Progresso indisponível" : person.xpToNextLevel === null ? "Nível máximo cadastrado" : `${new Intl.NumberFormat("pt-BR").format(person.xpToNextLevel)} XP para o próximo nível`)}
+                                    </p>
+                                </div>
                             </article>
                         );
                     })}

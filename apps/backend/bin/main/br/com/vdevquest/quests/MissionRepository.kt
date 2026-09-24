@@ -57,7 +57,7 @@ class MissionRepository(private val jdbc: JdbcTemplate) {
     }
 
     fun updateText(id: UUID, title: String, description: String) {
-        jdbc.update("update quests.missions set title = ?, description = ?, updated_at = current_timestamp where id = ?", title, description, id)
+        jdbc.update("update quests.missions set title = ?, description = ? where id = ?", title, description, id)
     }
 
     fun replaceRules(id: UUID, phases: List<PhaseInput>, weekdays: Set<Weekday>) {
@@ -80,7 +80,7 @@ class MissionRepository(private val jdbc: JdbcTemplate) {
     fun hasSubmissions(id: UUID): Boolean = jdbc.queryForObject("select exists(select 1 from quests.submissions where mission_id = ?)", Boolean::class.java, id) ?: false
 
     fun invalidate(id: UUID, managerEmail: String) {
-        jdbc.update("update quests.missions set status = 'invalidated', invalidated_at = current_timestamp, invalidated_by_email = ?, updated_at = current_timestamp where id = ? and status = 'active'", managerEmail, id)
+        jdbc.update("update quests.missions set status = 'invalidated', invalidated_at = now(), invalidated_by_email = ? where id = ? and status = 'active'", managerEmail, id)
     }
 
     fun isWeeklyOccurrence(id: UUID, weekday: Weekday): Boolean = jdbc.queryForObject(

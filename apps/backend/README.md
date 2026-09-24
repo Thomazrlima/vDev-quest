@@ -29,7 +29,18 @@ bun run dev
 
 O Vite abre em `http://localhost:5173` e encaminha `/api` para o `bootRun` local. O login SSO usa o Keycloak em `http://localhost:8180`. O backend **não** é iniciado pelo Compose.
 
-No ambiente local importado pelo Compose, `admin@vdev.local` é gestor e `colaborador@vdev.local` é colaborador; a senha de desenvolvimento dos dois está em `infrastructure/keycloak/vdev-quest-realm.json`. O papel é lido do PostgreSQL, não do token do Keycloak.
+No ambiente local importado pelo Compose, `admin@vdev.local` é gestor. As contas abaixo são colaboradores para testar perfis, missões, envios de evidências e ranking:
+
+| Conta | Nome |
+| --- | --- |
+| `colaborador@vdev.local` | Aventureiro Local |
+| `ana.silva@vdev.local` | Ana Silva |
+| `bruno.lima@vdev.local` | Bruno Lima |
+| `carla.souza@vdev.local` | Carla Souza |
+| `diego.rocha@vdev.local` | Diego Rocha |
+| `elisa.costa@vdev.local` | Elisa Costa |
+
+Todas as contas locais, incluindo o gestor, usam a senha de desenvolvimento `vdev-local`. Elas são definidas em `infrastructure/keycloak/vdev-quest-realm.json`. O backend cria o perfil de colaborador no PostgreSQL no primeiro acesso; o papel é lido do banco, não do token do Keycloak.
 
 Em uma hospedagem sem o proxy de desenvolvimento do Vite, configure `VITE_API_URL` para a base pública da API (por exemplo, `https://api.exemplo.com/api/v1`) e permita a origem do frontend em `CORS_ALLOWED_ORIGINS`.
 
