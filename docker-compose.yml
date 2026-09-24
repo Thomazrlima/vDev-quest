@@ -17,7 +17,10 @@ services:
       retries: 12
 
   minio:
-    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
+    build:
+      context: ./infrastructure/minio
+      dockerfile: Dockerfile.server
+    image: vdev-quest/minio:RELEASE.2025-04-22T22-12-26Z
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
@@ -29,7 +32,10 @@ services:
       - minio_data:/data
 
   minio-init:
-    image: quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
+    build:
+      context: ./infrastructure/minio
+      dockerfile: Dockerfile.mc
+    image: vdev-quest/minio-mc:RELEASE.2025-08-13T08-35-41Z
     entrypoint: ["/bin/sh", "-ec"]
     command: ["until mc alias set local http://minio:9000 minioadmin minioadmin; do sleep 1; done; mc mb --ignore-existing local/vdev-evidence; mc anonymous set none local/vdev-evidence"]
     depends_on:
