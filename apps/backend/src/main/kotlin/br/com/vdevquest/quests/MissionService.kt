@@ -63,8 +63,7 @@ class MissionService(
             if (!unchangedRules) throw ConflictException("As regras da missão não podem mudar após a primeira submissão.")
             missions.updateText(id, request.title.trim(), request.description.trim())
         } else {
-            missions.updateText(id, request.title.trim(), request.description.trim())
-            missions.replaceRules(id, request.phases, request.weekdays)
+            missions.updateRules(id, request)
         }
         return response(missions.find(id) ?: error("Missão atualizada não encontrada."))
     }
@@ -146,7 +145,7 @@ class MissionService(
 
     private fun uniqueSlug(title: String): String {
         val base = title.lowercase().trim().replace(Regex("[^a-z0-9]+"), "-").trim('-').ifBlank { "missao" }
-        return "${base.take(45).trimEnd('-')}-${ids.next().toString().take(8)}"
+        return "${base.take(45).trimEnd('-')}-${ids.next()}"
     }
 }
 

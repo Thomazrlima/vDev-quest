@@ -3,3 +3,4 @@ apps/backend/.gradle/
 apps/backend/build/
 apps/backend/.kotlin/
 dist/
+docs/qa

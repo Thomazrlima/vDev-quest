@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // A renovação silenciosa dispara userLoaded. O usuário é o mesmo, só o token mudou;
         // manter o cache evita remontar toda a jornada a cada renovação de sessão.
         const onLoaded = (next: User) => { setUser(next); setError(null); };
-        const onUnloaded = () => { queryClient.clear(); setUser(null); setError(null); };
+        const onUnloaded = () => { queryClient.clear(); sessionStorage.removeItem("vdev-quest-character-draft"); setUser(null); setError(null); };
         const onExpired = () => { queryClient.clear(); setUser(null); setError("Sua sessão expirou. Entre novamente para continuar."); };
         userManager.events.addUserLoaded(onLoaded);
         userManager.events.addUserUnloaded(onUnloaded);
@@ -55,5 +55,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (cause) {
             setError(cause instanceof Error ? `Não foi possível iniciar o login: ${cause.message}` : "Não foi possível iniciar o login. Tente novamente.");
         }
-    }, signOut: () => { queryClient.clear(); return userManager.signoutRedirect(); } }}>{children}</AuthContext.Provider>;
+    }, signOut: () => { queryClient.clear(); sessionStorage.removeItem("vdev-quest-character-draft"); return userManager.signoutRedirect(); } }}>{children}</AuthContext.Provider>;
 }

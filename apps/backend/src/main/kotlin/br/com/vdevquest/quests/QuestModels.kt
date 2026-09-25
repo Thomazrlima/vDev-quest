@@ -1,5 +1,6 @@
 package br.com.vdevquest.quests
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
@@ -31,7 +32,7 @@ data class MissionRequest(
     val weekdays: Set<Weekday> = emptySet(),
     val isCheckin: Boolean = false,
     val allowsMultipleSubmissions: Boolean = false,
-    @field:NotEmpty val phases: List<@Valid PhaseInput>,
+    @field:NotEmpty @field:Valid val phases: List<PhaseInput>,
 )
 
 data class MissionPhaseResponse(val number: Int, val title: String, val xpReward: Int)
@@ -45,7 +46,7 @@ data class MissionResponse(
     val endDate: LocalDate,
     val recurrenceType: RecurrenceType,
     val weekdays: Set<Weekday>,
-    val isCheckin: Boolean,
+    @get:JsonProperty("isCheckin") val isCheckin: Boolean,
     val allowsMultipleSubmissions: Boolean,
     val status: MissionStatus,
     val hasSubmissions: Boolean,
@@ -61,7 +62,7 @@ data class MuralMissionResponse(
     val submissionId: UUID?,
     val nextPhase: MissionPhaseResponse?,
     val occurrenceDate: LocalDate?,
-    val isCheckin: Boolean,
+    @get:JsonProperty("isCheckin") val isCheckin: Boolean,
     val allowsMultipleSubmissions: Boolean,
     val endDate: LocalDate,
     val xpReward: Int,

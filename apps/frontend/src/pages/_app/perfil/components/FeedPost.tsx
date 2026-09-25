@@ -17,7 +17,19 @@ export function FeedPost({ entry, onClose }: { entry: FeedEntry; onClose: () => 
     return (
         <Modal open title={mission.title} description={`${mission.evidenceType} · enviada em ${formatDate(submission.submittedAt, "full")}`} onClose={onClose} className="w-[min(680px,calc(100vw-2rem))]">
             <div className="grid gap-5 bg-black-overlay p-5 sm:p-6">
-                {preview ? (
+                {(submission.evidences?.length ?? 0) > 1 ? (
+                    <div className="grid gap-4">
+                        {submission.evidences?.map((evidence) => (
+                            <section key={evidence.phaseNumber} className="grid gap-2 border-2 border-primary-dark bg-(--color-black) p-4">
+                                <h3 className="text-xs font-black uppercase tracking-[.1em] text-primary-light">Fase {evidence.phaseNumber}</h3>
+                                <div className="flex items-start gap-2.5">
+                                    <EvidenceIcon type={mission.evidenceType} aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                    <EvidenceValue submission={{ ...submission, ...evidence, phase: evidence.phaseNumber, downloadPhase: evidence.phaseNumber }} className="min-w-0 flex-1" />
+                                </div>
+                            </section>
+                        ))}
+                    </div>
+                ) : preview ? (
                     <figure className="grid gap-2">
                         <img src={preview} alt={`Evidência enviada para a missão ${mission.title}`} className="max-h-[46vh] w-full border-2 border-primary-dark bg-(--color-black) object-contain" />
                         <figcaption className="flex items-center gap-2 text-[.65rem] text-white-muted">

@@ -42,6 +42,12 @@ export function MuralMissionCard({ mission }: { mission: MuralMission; index?: n
                         </dt>
                         <dd className="text-[.85rem] text-primary-light">{renderTextWithNumericFont(`${mission.xp} EXP`)}</dd>
                     </div>
+                    {mission.nextPhaseTitle && (state === "disponiveis" || state === "aguardando") ? (
+                        <div className="flex items-center justify-between gap-3">
+                            <dt className="text-primary">Próxima fase</dt>
+                            <dd className="text-right normal-case tracking-normal text-primary-light">{renderTextWithNumericFont(mission.nextPhaseTitle)}</dd>
+                        </div>
+                    ) : null}
                     <div className="flex items-center justify-between gap-3">
                         <dt className="flex items-center gap-1.5 text-primary">
                             <EvidenceIcon type={mission.evidenceType} className="h-3.5 w-3.5" /> Evidência

@@ -32,7 +32,7 @@ class SecurityConfiguration {
         .cors { }
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
         .authorizeHttpRequests {
-            it.requestMatchers("/actuator/health", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+            it.requestMatchers("/error", "/actuator/health", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             it.requestMatchers("/api/v1/**").authenticated()
             it.anyRequest().denyAll()

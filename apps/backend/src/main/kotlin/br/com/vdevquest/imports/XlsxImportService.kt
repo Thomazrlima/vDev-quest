@@ -39,7 +39,13 @@ class XlsxImportService(
         if (file.isEmpty || !file.originalFilename.orEmpty().endsWith(".xlsx", ignoreCase = true)) {
             throw ImportValidationException(listOf(ImportError(0, "arquivo", "Envie um arquivo .xlsx.")))
         }
-        return file.inputStream.use(::parseStream)
+        return try {
+            file.inputStream.use(::parseStream)
+        } catch (error: ImportValidationException) {
+            throw error
+        } catch (_: Exception) {
+            throw ImportValidationException(listOf(ImportError(0, "arquivo", "O arquivo .xlsx está corrompido ou não é uma planilha válida.")))
+        }
     }
 
     @Transactional
