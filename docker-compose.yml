@@ -39,17 +39,87 @@ services:
       minio:
         condition: service_started
 
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.1.4
-    command: start-dev --import-realm
-    environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+  cognito-local:
+    image: jagregory/cognito-local:5.3.0
     ports:
-      - "8180:8080"
+      - "9229:9229"
     volumes:
-      - ./infrastructure/keycloak/vdev-quest-realm.json:/opt/keycloak/data/import/vdev-quest-realm.json:ro
+      - cognito_data:/app/.cognito
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('net').connect(9229, '127.0.0.1').on('connect', () => process.exit(0)).on('error', () => process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+
+  cognito-init:
+    image: amazon/aws-cli:2.27.41
+    environment:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        endpoint=http://cognito-local:9229
+        until aws --endpoint-url "$${endpoint}" cognito-idp list-user-pools >/dev/null 2>&1; do sleep 2; done
+
+        pool_id=$$(aws --endpoint-url "$${endpoint}" cognito-idp list-user-pools --query "UserPools[?Name=='vdev-quest'].Id | [0]" --output text)
+        if [ "$${pool_id}" = None ]; then
+          pool_id=$$(aws --endpoint-url "$${endpoint}" cognito-idp create-user-pool \
+            --pool-name vdev-quest \
+            --username-attributes email \
+            --auto-verified-attributes email \
+            --username-configuration CaseSensitive=false \
+            --query UserPool.Id --output text)
+        fi
+
+        client_id=$$(aws --endpoint-url "$${endpoint}" cognito-idp list-user-pool-clients \
+          --user-pool-id "$${pool_id}" \
+          --query "UserPoolClients[?ClientName=='vdev-quest-web'].ClientId | [0]" --output text)
+        if [ "$${client_id}" = None ]; then
+          client_id=$$(aws --endpoint-url "$${endpoint}" cognito-idp create-user-pool-client \
+            --user-pool-id "$${pool_id}" \
+            --client-name vdev-quest-web \
+            --no-generate-secret \
+            --allowed-o-auth-flows-user-pool-client \
+            --allowed-o-auth-flows code \
+            --allowed-o-auth-scopes openid profile email \
+            --supported-identity-providers COGNITO \
+            --callback-urls http://localhost:3000/ http://localhost:5173/ \
+            --logout-urls http://localhost:3000/ http://localhost:5173/ \
+            --explicit-auth-flows ALLOW_USER_PASSWORD_AUTH ALLOW_REFRESH_TOKEN_AUTH \
+            --query UserPoolClient.ClientId --output text)
+        fi
+
+        while IFS='|' read -r email first_name last_name; do
+          if ! aws --endpoint-url "$${endpoint}" cognito-idp admin-get-user \
+            --user-pool-id "$${pool_id}" --username "$${email}" >/dev/null 2>&1; then
+            aws --endpoint-url "$${endpoint}" cognito-idp admin-create-user \
+              --user-pool-id "$${pool_id}" \
+              --username "$${email}" \
+              --message-action SUPPRESS \
+              --user-attributes "Name=email,Value=$${email}" "Name=email_verified,Value=true" "Name=name,Value=$${first_name} $${last_name}" >/dev/null
+          fi
+          aws --endpoint-url "$${endpoint}" cognito-idp admin-set-user-password \
+            --user-pool-id "$${pool_id}" --username "$${email}" \
+            --password vdev-local --permanent >/dev/null
+        done <<'USERS'
+        admin@vdev.local|Administradora|Local
+        colaborador@vdev.local|Aventureiro|Local
+        ana.silva@vdev.local|Ana|Silva
+        bruno.lima@vdev.local|Bruno|Lima
+        carla.souza@vdev.local|Carla|Souza
+        diego.rocha@vdev.local|Diego|Rocha
+        elisa.costa@vdev.local|Elisa|Costa
+        USERS
+
+        printf 'Cognito Local ready: pool_id=%s client_id=%s issuer=http://localhost:9229/%s jwks=http://localhost:9229/%s/.well-known/jwks.json\n' "$${pool_id}" "$${client_id}" "$${pool_id}" "$${pool_id}"
+    depends_on:
+      cognito-local:
+        condition: service_healthy
+    restart: "no"
 
 volumes:
   postgres_data:
   minio_data:
+  cognito_data:
