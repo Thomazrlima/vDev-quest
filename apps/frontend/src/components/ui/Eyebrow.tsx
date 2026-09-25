@@ -4,7 +4,7 @@ import { renderTextWithNumericFont } from "@/lib/typography";
 
 export function Eyebrow({ className, children, ...props }: HTMLAttributes<HTMLParagraphElement>) {
     return (
-        <p className={cn("text-[.7rem] font-extrabold uppercase tracking-[.2em] text-primary", className)} {...props}>
+        <p className={cn("text-[.68rem] font-extrabold uppercase tracking-[.16em] text-primary", className)} {...props}>
             {typeof children === "string" || typeof children === "number" ? renderTextWithNumericFont(children) : children}
         </p>
     );

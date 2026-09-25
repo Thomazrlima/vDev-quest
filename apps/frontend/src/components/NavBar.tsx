@@ -28,15 +28,15 @@ export function NavBar({ isManager = false }: { isManager?: boolean }) {
 
     return (
         <>
-            <header className="fixed inset-x-0 top-0 z-50 hidden bg-(--color-black) backdrop-blur-md md:block">
-                <div className="mx-auto hidden h-22 max-w-7xl grid-cols-[128px_minmax(0,1fr)_auto] items-center gap-4 px-6 md:grid">
+            <header className="fixed inset-x-0 top-0 z-50 hidden border-b border-primary-dark/70 bg-[rgb(15_14_14/94%)] backdrop-blur-md md:block">
+                <div className="mx-auto hidden h-22 max-w-7xl grid-cols-[128px_minmax(0,1fr)_auto] items-center gap-6 px-6 md:grid">
                     <Logo href="/ranking" priority className="flex h-20 w-32 shrink-0 items-center justify-center" imageClassName="h-20 w-32" />
                     <nav aria-label="Navegação principal">
-                        <Slider className="flex min-w-0 justify-self-end items-center gap-1" indicatorClassName="border-2 border-primary bg-black-soft shadow-[3px_3px_0_var(--color-black)]" items={visibleItems} value={activeItem?.href ?? "/ranking"} getValue={(item) => item.href} onValueChange={(href) => navigate({ to: href })}>
+                        <Slider className="flex min-w-0 justify-self-end items-center gap-1" indicatorClassName="border-b-2 border-primary bg-primary-overlay" items={visibleItems} value={activeItem?.href ?? "/ranking"} getValue={(item) => item.href} onValueChange={(href) => navigate({ to: href })}>
                             {(item, { active, indicator, select }) => {
                                 const Icon = item.icon;
                                 return (
-                                    <Button key={item.href} type="button" onClick={select} variant="ghost" className={`h-12 items-center gap-2 border-2 px-3 text-[12px] uppercase leading-none tracking-wider lg:px-4 lg:text-[13px] ${active ? "border-transparent text-primary-light" : "border-transparent text-(--color-white-muted) hover:border-transparent hover:shadow-[inset_0_0_0_2px_var(--color-primary)] hover:text-(--color-white-muted)"}`} aria-current={active ? "page" : undefined}>
+                                    <Button key={item.href} type="button" onClick={select} variant="ghost" className={`h-12 items-center gap-2 border-0 px-3 text-[12px] leading-none tracking-[.04em] lg:px-4 lg:text-[13px] ${active ? "text-primary-light" : "text-(--color-white-muted) hover:text-primary-light"}`} aria-current={active ? "page" : undefined}>
                                         {indicator}
                                         <Icon className="relative z-10 h-5 w-5 shrink-0" />
                                         <span className="relative z-10 leading-none">{item.label}</span>
@@ -45,7 +45,7 @@ export function NavBar({ isManager = false }: { isManager?: boolean }) {
                             }}
                         </Slider>
                     </nav>
-                    <Button type="button" onClick={() => void signOut()} variant="secondary" className="h-10 border-2 px-3 py-2 text-[11px] text-primary-light">
+                    <Button type="button" onClick={() => void signOut()} variant="secondary" className="h-10 px-3 py-2 text-[11px] text-primary-light">
                         <Logout className="h-4 w-4" aria-hidden="true" />
                         Sair
                     </Button>

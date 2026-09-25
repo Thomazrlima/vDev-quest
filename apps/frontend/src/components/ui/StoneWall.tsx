@@ -17,4 +17,4 @@ export function StoneWall({ className, children }: { className?: string; childre
 }
 
 /** O painel do ranking: moldura dourada grossa sobre a pedra, que ainda aparece por trás. */
-export const HALL_PANEL = "border-4 border-primary bg-black-overlay";
+export const HALL_PANEL = "border border-primary-dark bg-[rgb(15_14_14/88%)]";
