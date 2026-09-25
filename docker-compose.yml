@@ -16,6 +16,31 @@ services:
       timeout: 5s
       retries: 12
 
+  demo-users:
+    image: postgres:17-alpine
+    environment:
+      PGHOST: postgres
+      PGDATABASE: vdev_quest
+      PGUSER: vdev_app
+      PGPASSWORD: vdev_app
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        for attempt in $$(seq 1 120); do
+          if [ "$$(psql -Atqc "select to_regclass('core.users') is not null" 2>/dev/null)" = t ]; then
+            exec psql -v ON_ERROR_STOP=1 -f /seed/seed-demo-users.sql
+          fi
+          sleep 1
+        done
+        echo 'core.users was not created by Flyway' >&2
+        exit 1
+    volumes:
+      - ./infrastructure/postgres/seed-demo-users.sql:/seed/seed-demo-users.sql:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
   minio:
     image: ghcr.io/coollabsio/minio:RELEASE.2025-04-22T22-12-26Z
     command: server /data --console-address ":9001"

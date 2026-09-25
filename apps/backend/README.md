@@ -41,7 +41,7 @@ No ambiente local importado pelo Compose, `admin@vdev.local` é gestor. As conta
 | `diego.rocha@vdev.local` | Diego Rocha |
 | `elisa.costa@vdev.local` | Elisa Costa |
 
-Todas as contas locais, incluindo o gestor, usam a senha de desenvolvimento `vdev-local`. Elas são definidas em `infrastructure/keycloak/vdev-quest-realm.json`. O backend cria o perfil de colaborador no PostgreSQL no primeiro acesso; o papel é lido do banco, não do token do Keycloak.
+Todas as contas locais, incluindo o gestor, usam a senha de desenvolvimento `vdev-local`. Elas são definidas em `infrastructure/keycloak/vdev-quest-realm.json`. O serviço `demo-users` cria os perfis locais no PostgreSQL para que todas as contas apareçam no ranking após a inicialização do Compose, sem sobrescrever XP ou dados existentes. Contas adicionais recebem um perfil no primeiro acesso; o papel é lido do banco, não do token do Keycloak.
 
 Em uma hospedagem sem o proxy de desenvolvimento do Vite, configure `VITE_API_URL` para a base pública da API (por exemplo, `https://api.exemplo.com/api/v1`) e permita a origem do frontend em `CORS_ALLOWED_ORIGINS`.
 
