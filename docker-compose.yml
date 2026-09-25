@@ -49,6 +49,37 @@ services:
       - "8180:8080"
     volumes:
       - ./infrastructure/keycloak/vdev-quest-realm.json:/opt/keycloak/data/import/vdev-quest-realm.json:ro
+    healthcheck:
+      test: ["CMD-SHELL", "bash -ec 'exec 3<>/dev/tcp/localhost/8080; printf \"GET /realms/vdev-quest/.well-known/openid-configuration HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3; grep -q \"HTTP/1.1 200\" <&3'"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 20s
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    image: vdev-quest/backend:latest
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/vdev_quest
+      DATABASE_USERNAME: vdev_app
+      DATABASE_PASSWORD: vdev_app
+      FLYWAY_USERNAME: postgres
+      FLYWAY_PASSWORD: postgres
+      OIDC_ISSUER_URI: http://keycloak:8080/realms/vdev-quest
+      OIDC_JWK_SET_URI: http://keycloak:8080/realms/vdev-quest/protocol/openid-connect/certs
+      S3_ENDPOINT: http://minio:9000
+      S3_PUBLIC_ENDPOINT: http://localhost:9000
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+      keycloak:
+        condition: service_healthy
 
 volumes:
   postgres_data:
