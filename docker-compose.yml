@@ -61,9 +61,9 @@ services:
     command:
       - |
         endpoint=http://cognito-local:9229
-        until aws --endpoint-url "$${endpoint}" cognito-idp list-user-pools >/dev/null 2>&1; do sleep 2; done
+        until aws --endpoint-url "$${endpoint}" cognito-idp list-user-pools --max-results 60 >/dev/null 2>&1; do sleep 2; done
 
-        pool_id=$$(aws --endpoint-url "$${endpoint}" cognito-idp list-user-pools --query "UserPools[?Name=='vdev-quest'].Id | [0]" --output text)
+        pool_id=$$(aws --endpoint-url "$${endpoint}" cognito-idp list-user-pools --max-results 60 --query "UserPools[?Name=='vdev-quest'].Id | [0]" --output text)
         if [ "$${pool_id}" = None ]; then
           pool_id=$$(aws --endpoint-url "$${endpoint}" cognito-idp create-user-pool \
             --pool-name vdev-quest \
