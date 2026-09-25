@@ -4,20 +4,21 @@
 
 Pré-requisitos: Java 21, Bun e Docker.
 
-Na raiz do repositório, suba somente as dependências:
+Na raiz do repositório, suba a API e as dependências:
 
 ```bash
 docker compose up -d
 ```
 
-Depois, inicie a API fora do Docker:
+A API estará em `http://localhost:8080`; a documentação OpenAPI fica em `http://localhost:8080/swagger-ui/index.html`.
+
+Para desenvolver na API fora do Docker, pare o serviço do Compose e inicie o `bootRun` local:
 
 ```bash
+docker compose stop backend
 cd apps/backend
 ./gradlew bootRun
 ```
-
-A API estará em `http://localhost:8080`; a documentação OpenAPI fica em `http://localhost:8080/swagger-ui/index.html`.
 
 Em outro terminal, inicie o frontend:
 
@@ -27,7 +28,7 @@ bun install
 bun run dev
 ```
 
-O Vite abre em `http://localhost:5173` e encaminha `/api` para o `bootRun` local. O login SSO usa o Keycloak em `http://localhost:8180`. O backend **não** é iniciado pelo Compose.
+O Vite abre em `http://localhost:5173` e encaminha `/api` para a API. O login SSO usa o Keycloak em `http://localhost:8180`.
 
 No ambiente local importado pelo Compose, `admin@vdev.local` é gestor. As contas abaixo são colaboradores para testar perfis, missões, envios de evidências e ranking:
 

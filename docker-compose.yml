@@ -118,6 +118,30 @@ services:
       cognito-local:
         condition: service_healthy
     restart: "no"
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    image: vdev-quest/backend:latest
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/vdev_quest
+      DATABASE_USERNAME: vdev_app
+      DATABASE_PASSWORD: vdev_app
+      FLYWAY_USERNAME: postgres
+      FLYWAY_PASSWORD: postgres
+      OIDC_ISSUER_URI: http://cognito-local:9229/us-east-1_vdevquest
+      OIDC_JWK_SET_URI: http://cognito-local:9229/us-east-1_vdevquest/.well-known/jwks.json
+      S3_ENDPOINT: http://minio:9000
+      S3_PUBLIC_ENDPOINT: http://localhost:9000
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+      cognito-init:
+        condition: service_completed_successfully
 
 volumes:
   postgres_data:
