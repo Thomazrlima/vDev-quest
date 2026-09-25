@@ -11,7 +11,7 @@ export function Heading<T extends ElementType = "h1">({ as, size = "md", classNa
     const Component = as ?? "h1";
     const sizes = { sm: "text-2xl sm:text-3xl", md: "text-3xl sm:text-4xl", lg: "text-3xl sm:text-4xl lg:text-5xl" };
     return (
-        <Component className={cn("font-black uppercase tracking-[.08em] text-primary-light [text-shadow:3px_3px_0_var(--color-primary-dark)]", sizes[size], className)} {...props}>
+        <Component className={cn("font-black leading-[.96] tracking-[-.035em] text-primary-light [text-shadow:0_2px_0_var(--color-primary-dark)]", sizes[size], className)} {...props}>
             {typeof children === "string" || typeof children === "number" ? renderTextWithNumericFont(children) : children}
         </Component>
     );

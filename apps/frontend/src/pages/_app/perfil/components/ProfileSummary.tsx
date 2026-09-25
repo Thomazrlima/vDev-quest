@@ -21,11 +21,11 @@ export function ProfileSummary({ profile }: { profile?: Profile }) {
 
     return (
         <Card className={cn("relative overflow-hidden", HALL_PANEL)}>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,var(--color-primary-overlay),transparent_36%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,var(--color-primary-overlay),transparent_42%)]" />
             <div className="relative grid gap-7 p-5 sm:p-8 lg:grid-cols-[auto_1fr_auto] lg:items-center lg:p-10">
                 <div className="relative mx-auto lg:mx-0">
-                    <div className="absolute -inset-3 border-2 border-dashed border-primary-dark" />
-                    <ManaSeedAvatar size="xl" alt={`Avatar de ${profile?.name ?? character.name}`} layers={layers} className="relative border-4 border-primary shadow-pixel" />
+                    <div className="absolute -inset-3 border border-primary-dark" />
+                    <ManaSeedAvatar size="xl" alt={`Avatar de ${profile?.name ?? character.name}`} layers={layers} className="relative border-2 border-primary shadow-[0_8px_18px_rgb(0_0_0/30%)]" />
                 </div>
                 <div className="text-center lg:text-left">
                     <Eyebrow className="mb-2">Perfil do aventureiro</Eyebrow>

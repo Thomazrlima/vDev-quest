@@ -9,12 +9,6 @@ import type { MuralMission } from "@/types/mission";
 import { daysUntil, formatDate } from "@/utils/date";
 import { deadlineLabel, isDeadlineUrgent, muralStateOf, openRefusal } from "@/utils/mural";
 
-/**
- * Papéis pregados à mão nunca ficam retos. A inclinação vem da posição no grid — e não de um
- * sorteio — para o mesmo card não dançar a cada render.
- */
-const tilts = ["-rotate-[1.4deg]", "rotate-[.9deg]", "-rotate-[.6deg]", "rotate-[1.5deg]", "-rotate-[1deg]", "rotate-[.5deg]"] as const;
-
 /** O que espera o colaborador do outro lado do clique muda com o estado da missão. */
 const callToAction = {
     disponiveis: "Enviar evidência",
@@ -23,17 +17,16 @@ const callToAction = {
     concluidas: "Ver conquista",
 } as const;
 
-export function MuralMissionCard({ mission, index = 0 }: { mission: MuralMission; index?: number }) {
+export function MuralMissionCard({ mission }: { mission: MuralMission; index?: number }) {
     const state = muralStateOf(mission);
     const refusal = openRefusal(mission);
     const remainingDays = daysUntil(mission.deadline);
     const urgent = isDeadlineUrgent(state, remainingDays);
 
     return (
-        // Ao passar o mouse o papel se endireita e sobe, como se fosse tirado do prego.
-        <Link to="/mural/$id" params={{ id: mission.id }} aria-label={`Abrir a missão ${mission.title}`} className={cn("group block h-full transition duration-200 hover:z-10 hover:-translate-y-1 hover:rotate-0 focus-visible:z-10 focus-visible:-translate-y-1 focus-visible:rotate-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-light", tilts[index % tilts.length])}>
-            <Card as="article" className={cn("relative flex h-full flex-col gap-4 p-5 pt-9 shadow-[5px_6px_0_rgb(15_14_14/55%)]", HALL_PANEL)}>
-                <span aria-hidden="true" className="absolute left-1/2 top-2.5 h-4 w-4 -translate-x-1/2 rounded-full border-2 border-(--color-black) bg-primary shadow-[inset_-1px_-1px_0_var(--color-primary-dark),0_2px_0_var(--color-black)]" />
+        <Link to="/mural/$id" params={{ id: mission.id }} aria-label={`Abrir a missão ${mission.title}`} className="group block h-full transition duration-200 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-light">
+            <Card as="article" className={cn("relative flex h-full flex-col gap-4 overflow-hidden p-5 transition duration-200 group-hover:border-primary", HALL_PANEL)}>
+                <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-primary" />
 
                 <header className="flex items-start justify-between gap-3">
                     <h3 className="min-w-0 text-[1.02rem] font-black leading-tight text-primary-light">{renderTextWithNumericFont(mission.title)}</h3>
