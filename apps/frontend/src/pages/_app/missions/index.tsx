@@ -9,20 +9,23 @@ import { missionService } from "@/api/missions";
 
 export type MissionSearch = {
     published?: "1";
+    updated?: "1";
 };
 
 export const Route = createFileRoute("/_app/missions/")({
     validateSearch: (search): MissionSearch => ({
         published: search.published === "1" ? "1" : undefined,
+        updated: search.updated === "1" ? "1" : undefined,
     }),
     component: MissionsPage,
 });
 
 function MissionsPage() {
     const navigate = useNavigate();
-    const { published: publishedSearch } = useSearch({ from: "/_app/missions/" });
+    const { published: publishedSearch, updated: updatedSearch } = useSearch({ from: "/_app/missions/" });
     const { data: missions = [], isPending: loading, error } = useQuery({ queryKey: ["missions"], queryFn: missionService.list });
     const published = publishedSearch === "1";
+    const updated = updatedSearch === "1";
 
     const actions = (
         <div className="flex flex-wrap gap-3">
@@ -46,6 +49,11 @@ function MissionsPage() {
                     {published ? (
                         <div role="status" className="mt-7 border-2 border-green bg-green-overlay px-4 py-3 text-xs font-bold text-green-light">
                             Missão criada com sucesso. Ela já está disponível para a guilda.
+                        </div>
+                    ) : null}
+                    {updated ? (
+                        <div role="status" className="mt-7 border-2 border-green bg-green-overlay px-4 py-3 text-xs font-bold text-green-light">
+                            Missão atualizada com sucesso.
                         </div>
                     ) : null}
                     {error ? <p role="alert" className="mt-7 border-2 border-red bg-red-overlay p-5 text-sm text-red-light">{error.message}</p> : <MissionList missions={missions} loading={loading} />}

@@ -24,6 +24,10 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
     } catch {
         throw new ApiError("Não foi possível conectar à API. Verifique se o backend está em execução e tente novamente.", 0);
     }
+    if (response.status === 401) {
+        await userManager.removeUser();
+        throw new ApiError("Sua sessão foi recusada. Entre novamente para continuar.", 401);
+    }
     if (response.status === 204) return undefined as T;
     if (!response.ok) {
         const problem = await response.json().catch(() => null) as ({ detail?: string; title?: string } & Record<string, unknown>) | null;

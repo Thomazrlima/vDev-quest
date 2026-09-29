@@ -160,7 +160,7 @@ function MissionFormEditor({ missionId, mission }: { missionId?: string; mission
             if (missionId) await missionService.update(missionId, form);
             else await missionService.create(form, createKey.current);
             await Promise.all([queryClient.invalidateQueries({ queryKey: ["missions"] }), queryClient.invalidateQueries({ queryKey: ["mural"] })]);
-            navigate({ to: "/missions", search: { published: "1" } });
+            navigate({ to: "/missions", search: missionId ? { updated: "1" } : { published: "1" } });
         } catch (cause) {
             setNotice(cause instanceof Error ? cause.message : "Não foi possível salvar a missão. Tente novamente.");
         } finally {

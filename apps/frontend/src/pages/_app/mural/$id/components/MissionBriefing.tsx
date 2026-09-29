@@ -21,7 +21,7 @@ export function MissionBriefing({ mission }: { mission: MuralMission }) {
         <Card as="article" className={cn("overflow-hidden", HALL_PANEL)}>
             <header className="border-b-2 border-primary-dark bg-black p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                    <Eyebrow>Mural de missões · FE-06</Eyebrow>
+                    <Eyebrow>Mural de missões</Eyebrow>
                     <div className="flex items-center gap-2">
                         {state === "concluidas" ? <TrophyIcon aria-label="Troféu da missão concluída" className="h-5 w-5 text-green-light" /> : null}
                         <MuralStateBadge state={state} />

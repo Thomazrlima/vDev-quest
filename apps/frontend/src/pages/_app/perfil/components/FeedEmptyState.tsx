@@ -13,7 +13,7 @@ export function FeedEmptyState({ filtering, onClear }: { filtering: boolean; onC
                 <ScrollIcon className="h-8 w-8" />
             </span>
             <strong className="mt-5 block text-base font-black uppercase tracking-[.08em] text-primary-light">{filtering ? "Nenhuma entrega com esse recorte" : "Seu feed ainda está vazio"}</strong>
-            <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-white-muted">{filtering ? "Troque a missão ou o status para ver outras entregas do seu histórico." : "Envie a evidência de uma missão do mural e ela aparece aqui, com o veredito do gestor."}</p>
+            <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-white-muted">{filtering ? "Troque a missão ou o status para ver outras entregas do seu histórico." : "Envie a evidência de uma missão do mural. Ela aparece aqui na hora, com a EXP recebida; se necessário, o gestor pode invalidá-la depois."}</p>
 
             {filtering ? (
                 <Button type="button" variant="secondary" onClick={onClear} className="mt-6 border-primary-dark px-5 text-[10px] text-primary-light">

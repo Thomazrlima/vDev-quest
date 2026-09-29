@@ -26,11 +26,15 @@ data class MissionRecord(
 class MissionRepository(private val jdbc: JdbcTemplate) {
     private val missionMapper = RowMapper { rs: ResultSet, _: Int -> rs.toMission() }
 
-    fun find(id: UUID, lock: Boolean = false): MissionRecord? = jdbc.query(
-        "select id, slug, created_by_email, title, description, evidence_type, start_date, end_date, recurrence_type, is_checkin, allows_multiple_submissions, status from quests.missions where id = ?${if (lock) " for update" else ""}",
-        missionMapper,
-        id,
-    ).firstOrNull()
+    fun find(id: UUID, lock: Boolean = false): MissionRecord? {
+        // Serialize submissions and administrative edits without granting mission updates to collaborators.
+        if (lock) jdbc.queryForObject("select 1 from pg_advisory_xact_lock(hashtextextended(?::text, 0))", Int::class.java, id.toString())
+        return jdbc.query(
+            "select id, slug, created_by_email, title, description, evidence_type, start_date, end_date, recurrence_type, is_checkin, allows_multiple_submissions, status from quests.missions where id = ?",
+            missionMapper,
+            id,
+        ).firstOrNull()
+    }
 
     fun list(): List<MissionRecord> = jdbc.query(
         "select id, slug, created_by_email, title, description, evidence_type, start_date, end_date, recurrence_type, is_checkin, allows_multiple_submissions, status from quests.missions order by created_at desc",
@@ -58,6 +62,17 @@ class MissionRepository(private val jdbc: JdbcTemplate) {
 
     fun updateText(id: UUID, title: String, description: String) {
         jdbc.update("update quests.missions set title = ?, description = ?, updated_at = current_timestamp where id = ?", title, description, id)
+    }
+
+    fun updateRules(id: UUID, request: MissionRequest) {
+        jdbc.update(
+            """update quests.missions set title = ?, description = ?, evidence_type = ?::quests.evidence_type,
+                start_date = ?, end_date = ?, recurrence_type = ?::quests.recurrence_type,
+                is_checkin = ?, allows_multiple_submissions = ?, updated_at = current_timestamp where id = ?""",
+            request.title.trim(), request.description.trim(), request.evidenceType.name, request.startDate,
+            request.endDate, request.recurrenceType.name, request.isCheckin, request.allowsMultipleSubmissions, id,
+        )
+        replaceRules(id, request.phases, request.weekdays)
     }
 
     fun replaceRules(id: UUID, phases: List<PhaseInput>, weekdays: Set<Weekday>) {

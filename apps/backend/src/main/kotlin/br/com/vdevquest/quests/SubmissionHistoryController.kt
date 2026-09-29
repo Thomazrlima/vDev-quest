@@ -106,7 +106,7 @@ class SubmissionHistoryController(
                 SubmissionHistoryItem(
                 rs.getObject("id", UUID::class.java), rs.getObject("mission_id", UUID::class.java), rs.getString("mission_title"),
                 rs.getInt("current_phase"), rs.getObject("occurrence_date", LocalDate::class.java), SubmissionStatus.valueOf(rs.getString("status")),
-                rs.getObject("submitted_at", Instant::class.java), rs.getObject("status_changed_at", Instant::class.java), rs.getString("invalidation_justification"),
+                rs.getTimestamp("submitted_at").toInstant(), rs.getTimestamp("status_changed_at")?.toInstant(), rs.getString("invalidation_justification"),
                 rs.getString("collaborator_name"), rs.getString("collaborator_email"), EvidenceType.valueOf(rs.getString("evidence_type")), evidences.lastOrNull()?.evidenceValue,
                 evidences.lastOrNull()?.originalFileName, evidences.lastOrNull()?.phaseNumber,
                 rs.getString("mission_description"), rs.getObject("mission_end_date", LocalDate::class.java), rs.getLong("mission_xp"), rs.getInt("mission_phase_count"),

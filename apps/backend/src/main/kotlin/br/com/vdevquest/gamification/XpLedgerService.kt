@@ -43,7 +43,7 @@ class XpLedgerService(
             from gamification.xp_awards credit
             where credit.submission_id = ? and credit.amount > 0
               and not exists (select 1 from gamification.xp_awards reversal where reversal.related_award_id = credit.id)
-            order by credit.created_at, credit.id for update
+            order by credit.created_at, credit.id
             """.trimIndent(),
             RowMapper { rs, _ -> OutstandingAward(UUID.fromString(rs.getString("id")), rs.getString("user_email"), rs.getInt("amount")) },
             submissionId,

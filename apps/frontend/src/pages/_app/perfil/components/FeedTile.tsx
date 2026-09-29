@@ -30,7 +30,9 @@ export function FeedTile({ entry, onOpen }: { entry: FeedEntry; onOpen: () => vo
                 {photo ? null : (
                     <>
                         <EvidenceIcon type={mission.evidenceType} aria-hidden="true" className="h-5 w-5 shrink-0 text-primary" />
-                        <p className={cn("mt-2 line-clamp-3 text-[.6rem] leading-relaxed text-white-soft", submission.kind !== "text" && "break-all font-bold text-primary-light")}>{submission.value}</p>
+                        <p className={cn("mt-2 line-clamp-3 text-[.6rem] leading-relaxed text-white-soft", submission.kind !== "text" && "break-all font-bold text-primary-light")}>{submission.evidences && submission.evidences.length > 1
+                            ? submission.evidences.map((evidence) => `Fase ${evidence.phaseNumber}: ${evidence.value}`).join(" · ")
+                            : submission.value}</p>
                     </>
                 )}
 
